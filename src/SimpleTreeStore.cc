@@ -206,7 +206,7 @@ SimpleTreeStore::SimpleTreeStore(int max_col)
 	  auffuellen_bool(), expandieren_bool(), block_save(),
 	  color_bool(),
 	  sortierspalte(invisible_column), invert_sortierspalte(), 
-	  stamp(reinterpret_cast<unsigned>(this)),
+	  stamp(reinterpret_cast<long>(this)),
 	  m_columns(max_col)
 {  
 #ifndef OLD_MODEL
