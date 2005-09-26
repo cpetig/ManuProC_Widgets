@@ -684,7 +684,7 @@ void SimpleTreeStore::iterinit(vfunc_iter_t iter,const const_iterator &schema) c
    STS_GTKMM_22_24(iter->stamp=stamp, iter.set_stamp(stamp));
    reinterpret_cast<SimpleTreeStore::const_iterator&>(iter STS_GTKMM_22_24(->,.gobj()->)user_data)=schema;
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2   
-   iter.set_model_gobject(const_cast<GtkTreeModel*>(Gtk::TreeModel::gobj()));
+   iter.set_model_gobject(const_cast<GtkTreeModel*>(gobj()));
 #endif   
    ManuProC::Trace(trace_channel,__FUNCTION__,iter STS_GTKMM_22_24(->stamp,.get_stamp()),
    		iter STS_GTKMM_22_24(->,.gobj()->)user_data,
@@ -1059,20 +1059,4 @@ void SimpleTreeStore::setSortierspalte(unsigned s,bool i)
 Glib::RefPtr<SimpleTreeStore> SimpleTreeStore::create(int cols)
 {
   return Glib::RefPtr<SimpleTreeStore>( new SimpleTreeStore(cols));
-}
-
-bool SimpleTreeStore::row_draggable_vfunc(const Gtk::TreeModel::Path& path) const
-{ return true;
-}
-bool SimpleTreeStore::drag_data_get_vfunc(const Gtk::TreeModel::Path& path, Gtk::SelectionData& selection_data) const
-{ return false;
-}
-bool SimpleTreeStore::drag_data_delete_vfunc(const Gtk::TreeModel::Path& path)
-{ return false;
-}
-bool SimpleTreeStore::drag_data_received_vfunc(const Gtk::TreeModel::Path& dest, const Gtk::SelectionData& selection_data)
-{ return false;
-}
-bool SimpleTreeStore::row_drop_possible_vfunc(const Gtk::TreeModel::Path& dest, const Gtk::SelectionData& selection_data) const
-{ return false;
 }
