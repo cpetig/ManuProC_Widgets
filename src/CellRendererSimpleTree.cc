@@ -76,6 +76,10 @@ void CellRendererSimpleTree::get_size_vfunc(Gtk::Widget& widget, const Gdk::Rect
    {  if (width) *width=property_xpad() * 2 + XSIZE;
       if (height) *height=property_ypad() * 2 + IMGSIZE;
    }
+   else
+   { if (width) *width=0;
+     if (height) *height=0;
+   }
 }
 
 void CellRendererSimpleTree::render_vfunc(const Glib::RefPtr<Gdk::Window>& window,
