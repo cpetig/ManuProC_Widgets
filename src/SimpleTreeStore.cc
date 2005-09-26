@@ -1065,7 +1065,8 @@ bool SimpleTreeStore::row_draggable_vfunc(const Gtk::TreeModel::Path& path) cons
 { return true;
 }
 bool SimpleTreeStore::drag_data_get_vfunc(const Gtk::TreeModel::Path& path, Gtk::SelectionData& selection_data) const
-{ return false;
+{ return path.set_in_selection_data(selection_data,
+      Glib::RefPtr<const SimpleTreeStore>(this));
 }
 bool SimpleTreeStore::drag_data_delete_vfunc(const Gtk::TreeModel::Path& path)
 { return false;
