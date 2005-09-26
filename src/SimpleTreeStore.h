@@ -127,7 +127,7 @@ private:
 
 	guint columns;
 	guint max_column;
-	guint showdeep;  // nicht hier benötigt
+	guint showdeep;  // nicht hier benï¿½igt
 	std::vector<bool> vec_hide_cols; // index is index
 	gpointer gp;
 

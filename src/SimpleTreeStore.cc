@@ -130,7 +130,7 @@ void SimpleTreeStore::load_remembered()
       b=e+1;
    }
    auffuellen_bool=value.second.find('a')!=std::string::npos;
-   // Menü und Anzeige anpassen
+   // Men und Anzeige anpassen
    block_save=true;
    on_visibly_changed(bvector_iterator());
    signal_save(0);
