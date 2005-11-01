@@ -1,4 +1,4 @@
-// $Id: CellRendererSimpleTree.cc,v 1.2 2005/09/26 07:31:29 christof Exp $
+// $Id: CellRendererSimpleTree.cc,v 1.4 2005/11/02 00:12:26 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2004 Adolf Petig GmbH & Co. KG, written by Christof Petig
  *
@@ -21,7 +21,7 @@
 #include <gdkmm/pixbufloader.h>
 #include <gtkmm/treeview.h>
 
-//#include <iostream>
+#include <iostream>
 
 static const unsigned char plus_png_data[] = 
 {	137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,
@@ -71,36 +71,59 @@ CellRendererSimpleTree::CellRendererSimpleTree(guint col)
 }
 
 void CellRendererSimpleTree::get_size_vfunc(Gtk::Widget& widget, const Gdk::Rectangle* cell_area, 
-			int* x_offset, int* y_offset, int* width, int* height)
-{  if (column && guint(childrens_deep)==column)
-   {  if (width) *width=property_xpad() * 2 + XSIZE;
-      if (height) *height=property_ypad() * 2 + IMGSIZE;
-   }
-   else
-   { if (width) *width=0;
-     if (height) *height=0;
+			int* x_offset, int* y_offset, int* width, int* height) const
+{  Parent::get_size_vfunc(widget,cell_area,x_offset,y_offset,width,height);
+//std::cerr << column << "," << guint(childrens_deep) << '\n';
+   if (column && guint(childrens_deep)==column)
+   {  if (width) 
+        *width+=property_xpad() * 2 + XSIZE;
+      if (height && *height<(2*property_ypad() + IMGSIZE)) 
+        *height=2*property_ypad() + IMGSIZE;
    }
 }
 
-void CellRendererSimpleTree::render_vfunc(const Glib::RefPtr<Gdk::Window>& window,
-			Gtk::Widget& widget, const Gdk::Rectangle& background_area, 
-			const Gdk::Rectangle& _cell_area, const Gdk::Rectangle& expose_area,
+static void adjust(Gdk::Rectangle &r,unsigned xp)
+{ r.set_x(r.get_x()+ 2*xp + XSIZE);
+  r.set_width(r.get_width() - (2*xp + XSIZE));
+}
+
+static void clamp(Gdk::Rectangle &r,Gdk::Rectangle const &mask)
+{ if (r.get_x()<mask.get_x())
+  { unsigned shift=mask.get_x()-r.get_x();
+    r.set_x(r.get_x()+shift);
+    r.set_width(r.get_width()-shift);
+  }
+}
+
+void CellRendererSimpleTree::render_vfunc(const Glib::RefPtr<Gdk::Drawable>& window,
+			Gtk::Widget& widget, 
+			const Gdk::Rectangle& _background_area, 
+			const Gdk::Rectangle& _cell_area, 
+			const Gdk::Rectangle& _expose_area,
 			Gtk::CellRendererState flags)
 {  if (column && guint(childrens_deep)==column)
    {  Gdk::Rectangle cell_area=_cell_area;
+      Gdk::Rectangle background_area=_background_area;
+      Gdk::Rectangle expose_area=_expose_area;
       const unsigned int cell_xpad = property_xpad();
       const unsigned int cell_ypad = property_ypad();
       
       int y_offset=cell_area.get_height()/2-IMGSIZE/2;
       
       create_plus_minus();
+//std::cerr << "render " << cell_area.get_y() << "," << y_offset << '\n';
       // background fehlt !
       window->draw_pixbuf(Gdk::GC::create(window),
       		property_is_expanded()?minus:plus,0,0,
       		cell_area.get_x() + cell_xpad,
       		cell_area.get_y() + y_offset + cell_ypad,
       		IMGSIZE,IMGSIZE,Gdk::RGB_DITHER_NORMAL,0,0);
+      adjust(cell_area,property_xpad());
+      clamp(expose_area,cell_area);
+      clamp(background_area,cell_area);
+      Parent::render_vfunc(window,widget,background_area,cell_area,expose_area,flags);
    }
+   else Parent::render_vfunc(window,widget,_background_area,_cell_area,_expose_area,flags);
 }
 
 bool CellRendererSimpleTree::activate_vfunc(GdkEvent* event, Gtk::Widget& widget,

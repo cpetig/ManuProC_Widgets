@@ -1,4 +1,4 @@
-// $Id: CellRendererSimpleTree.h,v 1.1 2004/01/06 09:07:09 christof Exp $
+// $Id: CellRendererSimpleTree.h,v 1.3 2005/11/02 00:12:26 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2004 Adolf Petig GmbH & Co. KG, written by Christof Petig
  *
@@ -20,19 +20,18 @@
 #ifndef KOMPONENTEN_CELLREND_SIMPLE_TREE
 #define KOMPONENTEN_CELLREND_SIMPLE_TREE
 
-#include <gtkmm/cellrenderer.h>
+#include <gtkmm/cellrenderertext.h>
 
-class CellRendererSimpleTree : public Gtk::CellRenderer
+class CellRendererSimpleTree : public Gtk::CellRendererText
 {protected:
-	typedef Gtk::CellRenderer Parent;
+	typedef Gtk::CellRendererText Parent;
 	
-//	SimpleTree &tree;
 	const guint column; // which column this is in
 	Glib::Property<guint> childrens_deep; // the changing property
 	
 	virtual void get_size_vfunc(Gtk::Widget& widget, const Gdk::Rectangle* cell_area, 
-			int* x_offset, int* y_offset, int* width, int* height);
-	virtual void render_vfunc(const Glib::RefPtr<Gdk::Window>& window,
+			int* x_offset, int* y_offset, int* width, int* height) const;
+	virtual void render_vfunc(const Glib::RefPtr<Gdk::Drawable>& window,
 			Gtk::Widget& widget, const Gdk::Rectangle& background_area, 
 			const Gdk::Rectangle& cell_area, const Gdk::Rectangle& expose_area,
 			Gtk::CellRendererState flags);
@@ -40,10 +39,7 @@ class CellRendererSimpleTree : public Gtk::CellRenderer
 			const Glib::ustring& path, const Gdk::Rectangle& background_area,
 			const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags);
 public:
-//	CellRendererSimpleTree(SimpleTree &t, int col) 
-//		: column(col), tree(t) {}
 	CellRendererSimpleTree(guint col);
-//		: column(col), childrens_deep(guint(-1)) {}
 	Glib::PropertyProxy<guint> property_childrens_deep();
 };
   
