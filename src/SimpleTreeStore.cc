@@ -1,6 +1,6 @@
-// $Id: SimpleTreeStore.cc,v 1.85 2005/04/13 22:58:57 christof Exp $
+// $Id: SimpleTreeStore.cc,v 1.89 2005/10/30 00:58:49 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
- *  Copyright (C) 2002 Adolf Petig GmbH & Co. KG, written by Christof Petig
+ *  Copyright (C) 2002-2005 Adolf Petig GmbH & Co. KG, written by Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -229,6 +229,7 @@ SimpleTreeStore::SimpleTreeStore(int max_col)
    getModel().signal_please_attach().connect(SigC::slot(*this,&SimpleTreeStore::redisplay));
    getModel().signal_line_appended().connect(SigC::slot(*this,&SimpleTreeStore::on_line_appended));
    getModel().signal_line_to_remove().connect(SigC::slot(*this,&SimpleTreeStore::on_line_removed));
+   getModel().signal_value_changed().connect(SigC::slot(*this,&SimpleTreeStore::value_change_impl));
    signal_save.connect(SigC::slot(*this,&SimpleTreeStore::save_remembered1));
    signal_visibly_changed.connect(SigC::slot(*this,&SimpleTreeStore::on_visibly_changed));
   Gdk::Color c;
@@ -620,16 +621,19 @@ std::list<SimpleTreeStore::iterator> SimpleTreeStore::find_row(const cH_RowDataB
   return result;
 }
 
+void SimpleTreeStore::redisplay_old(Gtk::TreeModel::iterator it, unsigned index)
+{  unsigned col=ColumnFromIndex(index);
+   if (col==invisible_column) return;
+   row_changed(get_path(it),it);
+}
+
 #if 1 // wird das noch gebraucht?
 void SimpleTreeStore::redisplay_old(cH_RowDataBase data, unsigned index)
 {  unsigned col=ColumnFromIndex(index);
    if (col==invisible_column) return;
    std::list<iterator> rows=find_row(data);
    if (rows.begin()!=rows.end())
-   {  // Node & row=**rows.begin();
-      // row[m_columns.cols[col]] = data->Value(index,ValueData())->getStrVal();
-      row_changed(getPath(rows.back()),getIter(rows.back()));
-   }
+     row_changed(getPath(rows.back()),getIter(rows.back()));
 }
 #endif
 
@@ -1075,4 +1079,8 @@ bool SimpleTreeStore::drag_data_received_vfunc(const Gtk::TreeModel::Path& dest,
 }
 bool SimpleTreeStore::row_drop_possible_vfunc(const Gtk::TreeModel::Path& dest, const Gtk::SelectionData& selection_data) const
 { return false;
+}
+
+void SimpleTreeStore::value_change_impl(cH_RowDataBase row,unsigned idx,std::string const& newval, bool &has_changed)
+{ has_changed|=row.cast_const<RowDataBase>()->changeValue(idx,gp,newval);
 }

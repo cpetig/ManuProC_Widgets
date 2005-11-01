@@ -1,6 +1,6 @@
-// $Id: SimpleTree.cc,v 1.57 2005/06/29 13:46:56 jacek Exp $
+// $Id: SimpleTree.cc,v 1.62 2005/10/30 00:58:44 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
- *  Copyright (C) 2002 Adolf Petig GmbH & Co. KG, written by Christof Petig
+ *  Copyright (C) 2002-2005 Adolf Petig GmbH & Co. KG, written by Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -79,8 +79,12 @@ SimpleTree_Basic::~SimpleTree_Basic()
 void SimpleTree_Basic::on_column_edited(const Glib::ustring &path,const Glib::ustring&new_text,unsigned idx)
 {  const Gtk::TreeRow row=*getTreeModel()->get_iter(Gtk::TreeModel::Path(path));
    if (!row) return;
-   // return value?
-   getModel().signal_value_changed()(row[getStore()->m_columns.leafdata],idx,new_text);
+   cH_RowDataBase rdb=row[getStore()->m_columns.leafdata];
+   // 2do: think about optimizing if nothing changes (unlikely)
+   getModel().about_to_change(rdb);
+   bool changed=false;
+   getModel().signal_value_changed()(rdb,idx,new_text,changed);
+   getModel().has_changed(rdb);
 }
 
 void SimpleTree_Basic::on_spaltenzahl_geaendert()
@@ -176,13 +180,14 @@ void SimpleTree_Basic::on_title_changed(guint nr)
 }
 
 void SimpleTree_Basic::sel_change_cb(const Gtk::TreeModel::iterator&it,
-		std::vector<cH_RowDataBase> *l,std::vector<Handle<TreeRow> > *n)
+		std::vector<cH_RowDataBase> *l,std::vector<Handle<const TreeRow> > *n)
 {  Gtk::TreeRow row=*it;
    if (!row[getStore()->m_columns.childrens_deep])
       l->push_back(row[getStore()->m_columns.leafdata]);
    else
    {  Handle<TreeRow> htr=row[getStore()->m_columns.row];
-      if (htr) n->push_back(htr);
+      if (htr) n->push_back(Handle<const TreeRow>(htr));
+//std::cerr << &*htr << '\n';
    }
 }
 
@@ -192,7 +197,7 @@ void SimpleTree_Basic::on_selection_changed()
      _leaf_unselected();
    else
    {  std::vector<cH_RowDataBase> leaves;
-      std::vector<Handle<TreeRow> > nodes;
+      std::vector<Handle<const TreeRow> > nodes;
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
       get_selection()->selected_foreach_iter(sigc::bind(sigc::mem_fun(*this,
       		&SimpleTree_Basic::sel_change_cb),&leaves,&nodes));
@@ -203,9 +208,9 @@ void SimpleTree_Basic::on_selection_changed()
       for (std::vector<cH_RowDataBase>::const_iterator i=leaves.begin();
       		i!=leaves.end();++i)
       	 _leaf_selected(*i);
-      for (std::vector<Handle<TreeRow> >::const_iterator i=nodes.begin();
+      for (std::vector<Handle<const TreeRow> >::const_iterator i=nodes.begin();
       		i!=nodes.end();++i)
-      	 _node_selected(**i);
+      	 _node_selected(*i);
    }
 }
 
@@ -247,11 +252,11 @@ Handle<const TreeRow> SimpleTree::getSelectedNode() const
    if (sel)
    { const Gtk::TreeRow &row=*sel;  
      if (row[getStore()->m_columns.childrens_deep])
-       return static_cast<Handle<TreeRow> >(row[getStore()->m_columns.row]);
+       return Handle<const TreeRow>(static_cast<Handle<TreeRow> >(row[getStore()->m_columns.row]));
      else
        throw notNodeSelected();
    }
-   else throw noRowSelected(); // oder multipleRowsSelected()
+   else throw noNodeSelected(); // oder multipleRowsSelected()
 }
 
 void SimpleTree_Basic::Expand_recursively()
@@ -267,24 +272,25 @@ void SimpleTree_Basic::Collapse()
 // expand_row(path,false)/collapse_row(path)
 
 void SimpleTree::getSelectedRowDataBase_vec_cb(const Gtk::TreeModel::iterator&it, 
-		std::vector<cH_RowDataBase> *res)
-{  Gtk::TreeRow row=*it;
-   if (!row[getStore()->m_columns.childrens_deep])
+		std::vector<cH_RowDataBase> *res, bool include_nodes)
+{ Gtk::TreeRow row=*it;
+  if (!row[getStore()->m_columns.childrens_deep])
+      res->push_back(row[getStore()->m_columns.leafdata]);
+  else if (include_nodes)
       res->push_back(row[getStore()->m_columns.leafdata]);
 }
 
-std::vector<cH_RowDataBase> SimpleTree::getSelectedRowDataBase_vec() const
-	throw (SimpleTree::notLeafSelected)
+std::vector<cH_RowDataBase> SimpleTree::getSelectedRowDataBase_vec(bool include_nodes) const throw()
 {  std::vector<cH_RowDataBase> result;
    SimpleTree *non_const_this=const_cast<SimpleTree*>(this);
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
    get_selection()->selected_foreach_iter(sigc::bind(
    		sigc::mem_fun(*non_const_this,
-      		&SimpleTree::getSelectedRowDataBase_vec_cb),&result));
+      		&SimpleTree::getSelectedRowDataBase_vec_cb),&result,include_nodes));
 #else
    non_const_this->get_selection()->selected_foreach(SigC::bind(
    		SigC::slot(*non_const_this,
-      		&SimpleTree::getSelectedRowDataBase_vec_cb),&result));
+      		&SimpleTree::getSelectedRowDataBase_vec_cb),&result,include_nodes));
 #endif      		
    return result;
 }
