@@ -48,7 +48,7 @@ struct SimpleTreeModel_Properties_Proxy::Standard : public SimpleTreeModel_Prope
       column_editable(cols), node_creation(), 
       gp(), alignment(cols), v_resizeable(cols,true) {}
   virtual unsigned Columns() const { return columns; }
-  virtual gpointer user_data() const { return gp; }
+  virtual gpointer ValueData() const { return gp; }
   virtual Glib::ustring Title(guint _seqnr) const { return titles[_seqnr]; }
   virtual gfloat Alignment(guint _seqnr) const { return alignment[_seqnr]; }
   virtual bool editable(guint _seqnr) const { return column_editable[_seqnr]; }
