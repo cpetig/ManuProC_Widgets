@@ -31,7 +31,8 @@ libManuProC_Widgets_a_SOURCES=EingabeBox.cc \
 		Association.cc Event.cc TooltipView.cc \
 		SimpleTreeStore_test.cc CellRendererSimpleTree.cc \
 		TreeModelDebug.cc int_ImageButton.cc \
-		IntStringBox_gui.cc IntStringBox.cc IntStringBox_glade.cc
+		IntStringBox_gui.cc IntStringBox.cc IntStringBox_glade.cc \
+		IntStringPopup_glade.cc
 
 dummy_SOURCES=datewin.cc datewin_glade.cc
 
