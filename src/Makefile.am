@@ -11,9 +11,10 @@ include_HEADERS = logwin.h EingabeBox.hh \
 	TreeViewUtility.h bool_properties.hh bool_ImageButton.hh \
 	ModelWidgetConnection.h string_Label.hh RefPtr_Pixmap.hh \
 	Association.h TreeModelDebug.h \
-	SearchComboContent.hh int_ImageButton.hh
+	SearchComboContent.hh int_ImageButton.hh \
+	IntStringBox_gui.hh
 	
-noinst_HEADERS=SimpleTree.hh
+noinst_HEADERS=SimpleTree.hh IntStringBox.hh
 
 lib_LIBRARIES= libManuProC_Widgets.a
 EXTRA_PROGRAMS=dummy
@@ -29,11 +30,12 @@ libManuProC_Widgets_a_SOURCES=EingabeBox.cc \
 		bool_properties.cc bool_ImageButton.cc string_Label.cc \
 		Association.cc Event.cc TooltipView.cc \
 		SimpleTreeStore_test.cc CellRendererSimpleTree.cc \
-		TreeModelDebug.cc int_ImageButton.cc
+		TreeModelDebug.cc int_ImageButton.cc \
+		IntStringBox_gui.cc IntStringBox.cc IntStringBox_glade.cc
 
 dummy_SOURCES=datewin.cc datewin_glade.cc
 
-BUILT_SOURCES=datewin.hh logwin.hh
+BUILT_SOURCES=datewin.hh logwin.hh IntStringBox_sql.cc
 
 # alias links
 datewin.hh: datewin.h
