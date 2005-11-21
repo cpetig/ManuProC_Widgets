@@ -21,7 +21,7 @@
 #  include "IntStringBox_gui.hh"
 #  define _INTSTRINGBOX_HH
 
-#include <Aux/Transaction.h>
+#include <Misc/Transaction.h>
 #include <BaseObjects/ManuProcEntity.h>
 
 class IntStringBox : public IntStringBox_gui
