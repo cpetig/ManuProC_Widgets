@@ -1,4 +1,4 @@
-// $Id: datewin.cc,v 1.20 2005/10/30 00:58:22 christof Exp $
+// $Id: datewin.cc,v 1.19 2004/09/27 15:47:17 jacek Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 1998-2000 Adolf Petig GmbH & Co. KG, written by Christof Petig
  *
