@@ -33,7 +33,7 @@ libManuProC_Widgets_a_SOURCES=EingabeBox.cc \
 		TreeModelDebug.cc int_ImageButton.cc \
 		IntStringBox_gui.cc IntStringBox.cc IntStringBox_glade.cc \
 		IntStringPopup_glade.cc datewin.cc datewin_glade.cc \
-		datewin_popup.cc datewin_popup_glade.cc
+		datewin_popup.cc datewin_popup_glade.cc BasicExcel.cpp
 
 BUILT_SOURCES=datewin.hh logwin.hh IntStringBox_sql.cc
 
