@@ -1,4 +1,4 @@
-# $Id: Makefile.am,v 1.35 2004/07/15 08:10:00 christof Exp $
+# $Id: Makefile.am,v 1.39 2006/05/17 08:47:48 christof Exp $
 AM_CXXFLAGS= @COMMONGTK2_INCLUDES@ @COMMONXX_INCLUDES@
 
 %.cc: %.pgcc ; @ECPG@ -o $*.cc $<

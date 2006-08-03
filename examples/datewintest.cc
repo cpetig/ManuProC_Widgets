@@ -1,4 +1,4 @@
-// $Id: owntreemodel.cc,v 1.5 2003/10/15 13:41:27 christof Exp $
+// $Id: datewintest.cc,v 1.1 2006/05/03 07:31:20 christof Exp $
 /*  ManuProcWidgets: ManuProC's GUI element library
  *  Copyright (C) 2006 Christof Petig
  *

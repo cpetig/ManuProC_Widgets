@@ -6,7 +6,7 @@
 #include <sqlca.h>
 /* End of automatic include section */
 #line 1 "IntStringBox_sql.pgcc"
-// $Id: IntStringBox_sql.pgcc,v 1.7 2003/10/06 13:21:27 jacek Exp $
+// $Id: IntStringBox_sql.cc,v 1.1 2005/11/21 18:21:53 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++ Copyright (C)
  *  1998-2000 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *

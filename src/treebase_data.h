@@ -1,4 +1,4 @@
-/* $Id: treebase_data.h,v 1.10 2005/10/28 21:51:17 christof Exp $ */
+/* $Id: treebase_data.h,v 1.9 2003/10/07 06:49:57 christof Exp $ */
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Jacek Jakubowski
  *

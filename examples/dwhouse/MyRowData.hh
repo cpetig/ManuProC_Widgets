@@ -1,4 +1,4 @@
-// $Id: MyRowData.hh,v 1.5 2005/12/01 18:36:27 christof Exp $
+// $Id: MyRowData.hh,v 1.3 2002/07/05 12:36:56 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Jacek Jakubowski
  *

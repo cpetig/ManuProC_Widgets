@@ -1,4 +1,4 @@
-// $Id: IntStringBox.hh,v 1.4 2006/02/23 16:13:00 christof Exp $
+// $Id: IntStringBox.hh,v 1.2 2005/11/22 13:00:22 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -72,6 +72,8 @@ public:
    void Einschraenken(bool an);
    void Einschraenkung(const std::string &e, bool an=true);
    void Join(const std::string j);
+   
+   void FocusToString1();
 	
 private:
 	SigC::Signal0<void> activate;

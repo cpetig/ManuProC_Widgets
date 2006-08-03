@@ -1,4 +1,4 @@
-// $Id: CellRendererSimpleTree.h,v 1.6 2005/12/21 07:23:34 christof Exp $
+// $Id: CellRendererSimpleTree.h,v 1.1 2004/01/06 09:07:09 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2004 Adolf Petig GmbH & Co. KG, written by Christof Petig
  *
