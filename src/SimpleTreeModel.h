@@ -1,6 +1,7 @@
 // $Id: SimpleTreeModel.h,v 1.12 2004/12/04 10:53:34 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2002 Adolf Petig GmbH & Co. KG, written by Christof Petig
+ *  Copyright (C) 2008 Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -79,6 +80,8 @@ public:
 	void remove_line(const cH_RowDataBase &row);
 	
 	void setDataVec(const datavec_t &d);
+	// slower variant which incrementally changes contents
+	void changeDataVec(const datavec_t &d);
 	const datavec_t &getDataVec() const
 	{  return datavec; }
 

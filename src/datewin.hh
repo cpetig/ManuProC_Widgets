@@ -22,40 +22,37 @@
 #  define _DATEWIN_HH
 #include <Misc/Datum.h>
 
+class datewin_popup;
+
 class datewin : public datewin_glade
-{  	friend class datewin_glade;
+{  	friend class datewin_popup;
 	static gint try_grab_focus(GtkWidget *w,gpointer gp) throw();
         enum FELD {TAG=1,MONAT};
-        enum PAGE { p_Datum, p_Woche, p_Kalender, p_leer };
-        bool block;
+        enum PAGE { p_Datum, p_Woche, p_leer };
+//        bool block;
         bool expandyear;
         std::string instance;
+        bool kw_bevorzugen;
+        datewin_popup *popup;
+        SigC::Connection switch_page_connection;
 
-        static PAGE defaultpage;
+//        static PAGE defaultpage;
 
 	void on_tag_activate();
 	void on_monat_activate();	
         void datum_activate();
         void kw_activate();
-        void on_day_selected();
-        void datum_setzen();
-        void save_settings() const;
-        int load_settings() const;
-        void on_datewin_switch_page(_GtkNotebookPage *p0, guint p1);
+        void on_togglebutton_menu_toggled();
+        void on_datewin_change_current_page(GtkNotebookPage *p0, guint p1);
 
    public:
-	datewin(const std::string &instance="");
-#if 0 // COMPATIBILITY ONLY
-	ManuProC::Datum get_Datum() const throw()
-	{  return get_value(); }
-	void set_Datum(const ManuProC::Datum &d) throw()
-	{  set_value(d); }
-#endif	
+	datewin();
+	~datewin();
 	ManuProC::Datum get_value() const throw(); 
 	void set_value(const ManuProC::Datum &d) throw();
 	void setLabel(const std::string &s);
-	void setInstance(const std::string &s);
 	void setExpandYear(bool exp) { expandyear=exp; }
+	void preferWeek(bool b=true);
 	
 private:	
 	SigC::Signal0<void> activate;

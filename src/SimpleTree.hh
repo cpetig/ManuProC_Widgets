@@ -2,7 +2,7 @@
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2001-2005 Adolf Petig GmbH & Co. KG
  *  written by Jacek Jakubowski and Christof Petig
- *  Copyright (C) 2006 Christof Petig
+ *  Copyright (C) 2006-2008 Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -55,6 +55,8 @@ public:
 
 	// these are from model
 	void setDataVec(const std::vector<cH_RowDataBase> &d) {  sts->getModel()=d; }
+	// slower variant which incrementally changes contents
+	void changeDataVec(const std::vector<cH_RowDataBase> &d) {  sts->getModel()->changeDataVec(d); }
 	const Glib::RefPtr<SimpleTreeStore> &getStore() { return sts; }
 	const Glib::RefPtr<Gtk::TreeModel> getTreeModel() { return Glib::RefPtr<Gtk::TreeModel>(sts); }
 	SimpleTreeModel &getModel() { return sts->getModel(); }
