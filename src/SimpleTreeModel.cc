@@ -56,7 +56,7 @@ void SimpleTreeModel::changeDataVec(const std::vector<cH_RowDataBase> &d)
    std::vector<cH_RowDataBase> to_add; // so that we do not have to search the newly added lines, too
    // this would get faster if we remove matching lines once found and add them again later
    // lines in datavec, but not in d: remove
-   for (std::vector<cH_RowDataBase>::const_iterator j=datavec.begin(); j!=datavec.end(); ++j)
+   for (std::vector<cH_RowDataBase>::iterator j=datavec.begin(); j!=datavec.end(); ++j)
    {
      std::vector<cH_RowDataBase>::const_iterator i=d.begin()
      for (; i!=d.end() && *i!=*j; ++i);
