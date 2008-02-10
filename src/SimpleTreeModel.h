@@ -81,7 +81,7 @@ public:
 	
 	void setDataVec(const datavec_t &d);
 	// slower variant which incrementally changes contents
-	void changeDataVec(const datavec_t &d);
+	void changeDataVec(const datavec_t &d, bool (*equal)(cH_RowDataBase const& a,cH_RowDataBase const& b));
 	const datavec_t &getDataVec() const
 	{  return datavec; }
 

@@ -56,7 +56,7 @@ public:
 	// these are from model
 	void setDataVec(const std::vector<cH_RowDataBase> &d) {  sts->getModel()=d; }
 	// slower variant which incrementally changes contents
-	void changeDataVec(const std::vector<cH_RowDataBase> &d) {  sts->getModel()->changeDataVec(d); }
+	void changeDataVec(const std::vector<cH_RowDataBase> &d, bool (*equal)(cH_RowDataBase const& a,cH_RowDataBase const& b)) {  sts->getModel().changeDataVec(d,equal); }
 	const Glib::RefPtr<SimpleTreeStore> &getStore() { return sts; }
 	const Glib::RefPtr<Gtk::TreeModel> getTreeModel() { return Glib::RefPtr<Gtk::TreeModel>(sts); }
 	SimpleTreeModel &getModel() { return sts->getModel(); }
