@@ -19,6 +19,7 @@
  */
 
 #include <SimpleTreeModel.h>
+#include <algorithm>
 
 void SimpleTreeModel::append_line(const cH_RowDataBase &row)
 {  datavec.push_back(row);
