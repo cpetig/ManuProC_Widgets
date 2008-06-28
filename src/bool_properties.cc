@@ -48,12 +48,12 @@ sigc::connection Gtk::AssociateVisibility(Gtk::Widget *w,const Model_ref<bool> &
 {  void (*cb)(gpointer gp,Model_ref<bool> model,Gtk::Widget *w)
 	=invert ? &visibility_cb_inv : &visibility_cb;
    (*cb)(const_cast<gpointer>(static_cast<const void*>(&model.Value())),model,w);
-   return model.signal_changed().connect(sigc::bind(sigc::mem_fun(cb), model, w));
+   return model.signal_changed().connect(sigc::bind(sigc::ptr_fun(cb), model, w));
 }
 
 sigc::connection Gtk::AssociateSensitivity(Gtk::Widget *w,const Model_ref<bool> &model, bool invert)
 {  void (*cb)(gpointer gp,Model_ref<bool> model,Gtk::Widget *w)
 	=invert ? &sensitivity_cb_inv : &sensitivity_cb;
    (*cb)(const_cast<gpointer>(static_cast<const void*>(&model.Value())),model,w);
-   return model.signal_changed().connect(sigc::bind(sigc::mem_fun(cb), model, w));
+   return model.signal_changed().connect(sigc::bind(sigc::ptr_fun(cb), model, w));
 }

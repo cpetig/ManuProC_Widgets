@@ -157,7 +157,7 @@ void SimpleTreeModel_Properties_Proxy::setProperties(SimpleTreeModel_Properties 
     delete props;
   props=&p;
   we_own_props=we_own;
-  props->column_changed.connect(column_changed.slot());
+  props->column_changed.connect(column_changed.make_slot());
 }
 
 void SimpleTreeStore::setProperties(SimpleTreeModel_Properties &p, bool we_own)
@@ -325,7 +325,7 @@ void SimpleTreeStore::init()
   for (std::vector<bool>::iterator i=vec_hide_cols.begin();i!=vec_hide_cols.end();++i)
     (*i) = true;
    defaultSequence();
-   getModel().signal_please_detach().connect(please_detach.slot());
+   getModel().signal_please_detach().connect(please_detach.make_slot());
    getModel().signal_please_attach().connect(sigc::mem_fun(*this,&SimpleTreeStore::redisplay));
    getModel().signal_line_appended().connect(sigc::mem_fun(*this,&SimpleTreeStore::on_line_appended));
    getModel().signal_line_to_remove().connect(sigc::mem_fun(*this,&SimpleTreeStore::on_line_removed));

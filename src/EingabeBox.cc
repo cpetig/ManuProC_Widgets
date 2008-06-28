@@ -89,7 +89,7 @@ EingabeBox::EingabeBox(unsigned cols,unsigned per_row)
 
  int j=0;
  for(t_entries::iterator i=entries.begin();i!=entries.end();++i)
-   (*i)->signal_activate().connect(sigc::bind(_activate_entry.slot(),j++));
+   (*i)->signal_activate().connect(sigc::bind(_activate_entry.make_slot(),j++));
 }
 
 
