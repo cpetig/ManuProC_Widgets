@@ -21,9 +21,6 @@
 #include "bool_properties.hh"
 #include <gtkmm/widget.h>
 #include <sigc++/bind.h>
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 static void visibility_cb(gpointer gp,Model_ref<bool> model,Gtk::Widget *w)
 {  if (model.matches(gp))
@@ -47,16 +44,16 @@ static void sensitivity_cb_inv(gpointer gp,Model_ref<bool> model,Gtk::Widget *w)
 {  if (model.matches(gp)) w->set_sensitive(!model.Value());
 }
 
-SigC::Connection Gtk::AssociateVisibility(Gtk::Widget *w,const Model_ref<bool> &model, bool invert)
+sigc::connection Gtk::AssociateVisibility(Gtk::Widget *w,const Model_ref<bool> &model, bool invert)
 {  void (*cb)(gpointer gp,Model_ref<bool> model,Gtk::Widget *w)
 	=invert ? &visibility_cb_inv : &visibility_cb;
    (*cb)(const_cast<gpointer>(static_cast<const void*>(&model.Value())),model,w);
-   return model.signal_changed().connect(SigC::bind(SigC::slot(cb), model, w));
+   return model.signal_changed().connect(sigc::bind(sigc::mem_fun(cb), model, w));
 }
 
-SigC::Connection Gtk::AssociateSensitivity(Gtk::Widget *w,const Model_ref<bool> &model, bool invert)
+sigc::connection Gtk::AssociateSensitivity(Gtk::Widget *w,const Model_ref<bool> &model, bool invert)
 {  void (*cb)(gpointer gp,Model_ref<bool> model,Gtk::Widget *w)
 	=invert ? &sensitivity_cb_inv : &sensitivity_cb;
    (*cb)(const_cast<gpointer>(static_cast<const void*>(&model.Value())),model,w);
-   return model.signal_changed().connect(SigC::bind(SigC::slot(cb), model, w));
+   return model.signal_changed().connect(sigc::bind(sigc::mem_fun(cb), model, w));
 }

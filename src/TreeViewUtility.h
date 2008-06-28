@@ -23,23 +23,20 @@
 #include <vector>
 #include <gtkmm/treeview.h>
 #include <gtkmm/liststore.h>
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 // see webkartei/src/Kette.cc for a nice example on how to use this
 
 namespace TreeViewUtility {  
 
-class CListEmulator : public SigC::Object, public Gtk::TreeModelColumnRecord
+class CListEmulator : public sigc::trackable, public Gtk::TreeModelColumnRecord
 {	std::vector<Gtk::TreeModelColumn<Glib::ustring> > cols;
 	std::vector<Glib::ustring> titles;
 	Glib::RefPtr<Gtk::ListStore> m_refStore;
 	Gtk::TreeView *view;
 	
-	SigC::Signal2<void,int,int> select_row_sig;
+	sigc::signal<void,int,int> select_row_sig;
 	bool button_press_handler(GdkEventButton *event);
-	SigC::Connection con;
+	sigc::connection con;
 public:	
 	CListEmulator(const std::vector<Glib::ustring> &titles);
 	// List like
@@ -70,7 +67,7 @@ public:
 	
 	void add(Gtk::TreeModelColumnBase& column);
 	// clicking on a cell
-	SigC::Signal2<void,int,int> &signal_select_row() { return select_row_sig; }
+	sigc::signal<void,int,int> &signal_select_row() { return select_row_sig; }
 };
 
 class CList : public Gtk::TreeView
@@ -84,7 +81,7 @@ public:
 	{ return emu.get_store(); }
 };
 
-void MakeColumnEditable(Gtk::TreeView *tv,unsigned col,const SigC::Slot2<void,const Glib::ustring&,const Glib::ustring&> &slot);
+void MakeColumnEditable(Gtk::TreeView *tv,unsigned col,const sigc::slot<void,const Glib::ustring&,const Glib::ustring&> &slot);
 
 }
 #endif

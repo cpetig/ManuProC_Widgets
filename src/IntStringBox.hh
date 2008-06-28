@@ -76,10 +76,10 @@ public:
    void FocusToString1();
 	
 private:
-	SigC::Signal0<void> activate;
-	SigC::Signal0<void> reset_signal;
+	sigc::signal<void> activate;
+	sigc::signal<void> reset_signal;
 public:
-	SigC::Signal0<void> &signal_activate() { return activate; }
-	SigC::Signal0<void> &signal_reset_signal() { return reset_signal; }
+	sigc::signal<void> &signal_activate() { return activate; }
+	sigc::signal<void> &signal_reset_signal() { return reset_signal; }
 };
 #endif

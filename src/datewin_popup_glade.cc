@@ -28,7 +28,6 @@
 #endif
 #include <gtkmmconfig.h>
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#include <sigc++/compatibility.h>
 #include <sigc++/bind.h>
 #define GMM_GTKMM_22_24(a,b) b
 #else //gtkmm 2.2
@@ -132,10 +131,10 @@ datewin_popup_glade::datewin_popup_glade(
    calendar1->show();
    vbox2->show();
    frame1->show();
-   toolbutton1->signal_clicked().connect(SigC::slot(*this, &datewin_popup_glade::datum_clicked), false);
-   toolbutton2->signal_clicked().connect(SigC::slot(*this, &datewin_popup_glade::woche_clicked), false);
-   toolbutton3->signal_clicked().connect(SigC::slot(*this, &datewin_popup_glade::empty_clicked), false);
-   calendar1->signal_day_selected().connect(SigC::slot(*this, &datewin_popup_glade::on_day_selected), false);
+   toolbutton1->signal_clicked().connect(sigc::mem_fun(*this, &datewin_popup_glade::datum_clicked), false);
+   toolbutton2->signal_clicked().connect(sigc::mem_fun(*this, &datewin_popup_glade::woche_clicked), false);
+   toolbutton3->signal_clicked().connect(sigc::mem_fun(*this, &datewin_popup_glade::empty_clicked), false);
+   calendar1->signal_day_selected().connect(sigc::mem_fun(*this, &datewin_popup_glade::on_day_selected), false);
    toolbutton1->grab_default();
 }
 

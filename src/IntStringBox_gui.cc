@@ -20,7 +20,6 @@
 #include "IntStringBox_gui.hh"
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
 #include <sigc++/bind.h>
-#include <sigc++/compatibility.h>
 #endif
 
 //static GlademmData gd=GlademmData(Glib::RefPtr<Gtk::AccelGroup>());
@@ -31,7 +30,7 @@ IntStringPopup::IntStringPopup() : IntStringPopup_glade()
 IntStringBox_gui::IntStringBox_gui() 
 : IntStringBox_glade(), menu(0)
 {  fuelleMenu();
-  this->signal_button_press_event().connect(SigC::slot(*this,&IntStringBox_gui::MouseButton));
+  this->signal_button_press_event().connect(sigc::mem_fun(*this,&IntStringBox_gui::MouseButton));
   // request smaller entries
   sc_int->get_entry()->set_width_chars(7);
   sc1_string->get_entry()->set_width_chars(8);
@@ -45,7 +44,7 @@ void IntStringBox_gui::fuelleMenu()
        menu=0;
     }
   menu=new IntStringPopup();
-  menu->signal_zurueck().connect(SigC::slot(*this,&IntStringBox_gui::reset));
+  menu->signal_zurueck().connect(sigc::mem_fun(*this,&IntStringBox_gui::reset));
 }
 
 bool IntStringBox_gui::MouseButton(GdkEventButton *event)

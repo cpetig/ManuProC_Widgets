@@ -18,9 +18,6 @@
 
 #include "FlashingPixmap.hh"
 #include <glibmm/main.h> 
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 FlashingPixmap::FlashingPixmap(const gchar * const *d,const gchar * const *f,unsigned int msec)
  : stop(true),def(true)
@@ -52,7 +49,7 @@ void FlashingPixmap::setTime(unsigned int msec)
    {
      stop=false;
      Gtk::Image::set(flashPix); def=false;
-     des = Glib::signal_timeout().connect(SigC::slot(*this,&FlashingPixmap::timeout),msec);
+     des = Glib::signal_timeout().connect(sigc::mem_fun(*this,&FlashingPixmap::timeout),msec);
    }
 }
 

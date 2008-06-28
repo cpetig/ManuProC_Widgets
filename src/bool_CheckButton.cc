@@ -19,9 +19,6 @@
  */
 
 #include "bool_CheckButton.hh"
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 void bool_CheckButton::Connection::model2widget()
 {  widget->set_active(model.get_value());
@@ -31,8 +28,8 @@ void bool_CheckButton::Connection::widget2model()
 {  model=widget->get_active();
 }
 
-SigC::Connection bool_CheckButton::Connection::connect()
-{  return widget->signal_toggled().connect(SigC::slot(*this,&bool_CheckButton::Connection::controller2model));
+sigc::connection bool_CheckButton::Connection::connect()
+{  return widget->signal_toggled().connect(sigc::mem_fun(*this,&bool_CheckButton::Connection::controller2model));
 }
 
 bool_CheckButton::bool_CheckButton(const Model_ref<T> &m, const std::string &text)

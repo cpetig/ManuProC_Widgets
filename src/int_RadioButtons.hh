@@ -32,7 +32,7 @@ class int_RadioButtons : public Gtk::VBox
 	typedef std::pair<int, std::string> key_name_t;
 	
 private:	
-	SigC::Connection ch_con, my_ch_con;
+	sigc::connection ch_con, my_ch_con;
 	Model_ref<T> model;
 	std::vector<key_name_t> key_names;
 	std::vector<Gtk::RadioButton> buttons;

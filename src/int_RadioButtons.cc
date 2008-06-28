@@ -24,19 +24,19 @@ void int_RadioButtons::refresh(gpointer x)
 {  if (model.matches(x))
    {  my_ch_con.disconnect();
       Gtk::CheckButton::set_active(model.get_value());
-      my_ch_con=toggled.connect(SigC::slot(this,&int_RadioButtons::on_toggled));
+      my_ch_con=toggled.connect(sigc::mem_fun(this,&int_RadioButtons::on_toggled));
    }
 }
 
 int_RadioButtons::int_RadioButtons(const Model_ref<T> &m, const std::string &text)
 	: Gtk::CheckButton(text), model(m)
 {  Gtk::ToggleButton::set_active(m.get_value());
-   my_ch_con=toggled.connect(SigC::slot(this,&int_RadioButtons::on_toggled));
-   ch_con=model.changed.connect(SigC::slot(this,&int_RadioButtons::refresh));
+   my_ch_con=toggled.connect(sigc::mem_fun(this,&int_RadioButtons::on_toggled));
+   ch_con=model.changed.connect(sigc::mem_fun(this,&int_RadioButtons::refresh));
 };
 
 void int_RadioButtons::on_toggled()
 {  ch_con.disconnect();
    model=Gtk::CheckButton::get_active();
-   ch_con=model.changed.connect(SigC::slot(this,&int_RadioButtons::refresh));
+   ch_con=model.changed.connect(sigc::mem_fun(this,&int_RadioButtons::refresh));
 }

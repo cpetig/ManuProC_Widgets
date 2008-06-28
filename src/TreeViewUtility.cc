@@ -21,7 +21,6 @@
 #include <stdarg.h>
 #include <cassert>
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
 #  include <sigc++/bind.h>
 #endif
 
@@ -48,7 +47,7 @@ void TreeViewUtility::CListEmulator::attach_to(Gtk::TreeView &tv)
    for (unsigned i=0;i<cols.size();++i)
       view->append_column(titles.at(i),cols.at(i));
    con=view->signal_button_press_event().connect(
-       SigC::slot(*this,&TreeViewUtility::CListEmulator::button_press_handler),
+       sigc::mem_fun(*this,&TreeViewUtility::CListEmulator::button_press_handler),
            false);
 }
 
@@ -100,7 +99,7 @@ int TreeViewUtility::CListEmulator::get_selected_row_num() const
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
    view->get_selection()->selected_foreach_path(sigc::bind(sigc::ptr_fun(&mark_line),&row));
 #else
-   view->get_selection()->selected_foreach(SigC::bind(SigC::slot(&mark_line),&row));
+   view->get_selection()->selected_foreach(sigc::bind(sigc::mem_fun(&mark_line),&row));
 #endif
    return row;
 }
@@ -112,7 +111,7 @@ bool TreeViewUtility::CListEmulator::selection_empty() const
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
    view->get_selection()->selected_foreach_iter(sigc::bind(sigc::ptr_fun(&increment),&num));
 #else
-   view->get_selection()->selected_foreach(SigC::bind(SigC::slot(&increment),&num));
+   view->get_selection()->selected_foreach(sigc::bind(sigc::mem_fun(&increment),&num));
 #endif   
    return !num;
 }
@@ -157,7 +156,7 @@ void TreeViewUtility::CListEmulator::add(Gtk::TreeModelColumnBase& column)
       attach_to(*view);
 }
 
-void TreeViewUtility::MakeColumnEditable(Gtk::TreeView *tv,unsigned _col,const SigC::Slot2<void,const Glib::ustring&,const Glib::ustring&> &slot)
+void TreeViewUtility::MakeColumnEditable(Gtk::TreeView *tv,unsigned _col,const sigc::slot<void,const Glib::ustring&,const Glib::ustring&> &slot)
 {  Gtk::TreeViewColumn* col=tv->get_column(_col);
    Gtk::CellRendererText* cr=dynamic_cast<Gtk::CellRendererText*>(col->get_first_cell_renderer());
    assert(cr);

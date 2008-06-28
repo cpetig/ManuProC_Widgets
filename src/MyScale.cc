@@ -21,9 +21,6 @@
 #include <gtkmm/label.h>
 #include <gtkmm/arrow.h>
 #include <Misc/itos.h>
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 void MyScale::init()
 {
@@ -45,17 +42,17 @@ void MyScale::init()
    bup->set_flags(Gtk::CAN_FOCUS);
    bup->set_relief(Gtk::RELIEF_NONE);
    bup->add(*arrowup);
-   bup->signal_clicked().connect(SigC::slot(*this, &MyScale::on_bup_clicked));
+   bup->signal_clicked().connect(sigc::mem_fun(*this, &MyScale::on_bup_clicked));
    bdown = manage(new class Gtk::Button());
    bdown->set_flags(Gtk::CAN_FOCUS);
    bdown->set_relief(Gtk::RELIEF_NONE);
    bdown->add(*arrowdown);
-   bdown->signal_clicked().connect(SigC::slot(*this, &MyScale::on_bdown_clicked));
+   bdown->signal_clicked().connect(sigc::mem_fun(*this, &MyScale::on_bdown_clicked));
 
 
    Gtk::Adjustment *adj= manage(new class Gtk::Adjustment(value, 0, 100, 1, 1, 0));
    scale = manage(new class Gtk::VScale(*adj));  
-   scale->signal_button_release_event().connect(SigC::slot(*static_cast<class MyScale*>(this),&MyScale::on_scale_release_event));
+   scale->signal_button_release_event().connect(sigc::mem_fun(*static_cast<class MyScale*>(this),&MyScale::on_scale_release_event));
    scale->set_digits(0);
    scale->set_draw_value(false);
    scale->set_flags(Gtk::CAN_FOCUS);

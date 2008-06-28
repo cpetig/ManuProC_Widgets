@@ -26,7 +26,7 @@
 #include <gtkmm/tooltips.h>
 #include <sigc++/object.h>
 
-struct TooltipAssociation : SigC::Object
+struct TooltipAssociation : sigc::trackable
 {	Gtk::Widget *widget;
 	Gtk::Tooltips *tips;
 	TooltipAssociation() : widget(), tips() {}

@@ -31,7 +31,7 @@ public:
 	class Connection : public ModelWidgetConnection<T,Gtk::CheckMenuItem>
 	{	void model2widget();
 		void widget2model();
-		SigC::Connection connect();
+		sigc::connection connect();
 	public:
 		Connection(widget_t *w=0) { set_widget(w); }
 		Connection(const Model_ref<T> &m, widget_t *w=0) 

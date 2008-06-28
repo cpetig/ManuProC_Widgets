@@ -45,7 +45,7 @@ namespace ManuProC
     ModelWidgetConnection<int,Gtk::Image> &Association(Gtk::EventBox &,Gtk::Image &);
 
 // attach an object to a widget    
-    void attach(Glib::Object &widget, SigC::Object &connobj, 
+    void attach(Glib::Object &widget, sigc::trackable &connobj, 
 	std::auto_ptr<Glib::Quark> &q,const char * const qname);
 }
 #endif

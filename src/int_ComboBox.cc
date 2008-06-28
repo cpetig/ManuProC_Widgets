@@ -46,9 +46,9 @@ void int_ComboBox::Connection::model2widget()
   widget->set(props[model.Value()].pixbuf);
 }
 
-SigC::Connection int_ComboBox::Connection::connect()
-{ if (eventbox) toggleconn=eventbox->signal_button_press_event().connect(SigC::slot(*this,&int_ComboBox::Connection::toggle));
-  return SigC::Connection();
+sigc::connection int_ComboBox::Connection::connect()
+{ if (eventbox) toggleconn=eventbox->signal_button_press_event().connect(sigc::mem_fun(*this,&int_ComboBox::Connection::toggle));
+  return sigc::connection();
 }
 
 void int_ComboBox::Connection::disconnect()

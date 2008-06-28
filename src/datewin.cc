@@ -35,7 +35,6 @@ void datewin::preferWeek(bool b)
 
 //#include <glib-object.h>
 //#include <gtk/gtknotebook.h>
-#include <sigc++/compatibility.h>
 
 datewin::~datewin()
 {
@@ -63,7 +62,7 @@ datewin::datewin() : // const std::string &inst) : block(false),
    jahr->signal_changed().connect(changed.slot());
    kw_spinbutton->signal_changed().connect(changed.slot());
    jahr_spinbutton->signal_changed().connect(changed.slot());
-   switch_page_connection=notebook->signal_switch_page().connect(SigC::slot(*this, &datewin::on_datewin_change_current_page), true);
+   switch_page_connection=notebook->signal_switch_page().connect(sigc::mem_fun(*this, &datewin::on_datewin_change_current_page), true);
 }
 
 ManuProC::Datum datewin::get_value() const throw()

@@ -36,11 +36,11 @@ public:
 		struct Columns;
 		Columns columns;
 		widget_t *combo;
-		SigC::Connection toggleconn;
+		sigc::connection toggleconn;
 
 		void model2widget();
 		void widget2model() {}
-		SigC::Connection connect();
+		sigc::connection connect();
 		void disconnect();
 		
 	public:
@@ -52,7 +52,7 @@ public:
 	};
 	
 private:	
-	SigC::Connection conn;
+	sigc::connection conn;
 	
 public:
 	int_ComboBox(const Model_ref<T> &model);

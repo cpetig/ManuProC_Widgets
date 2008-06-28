@@ -31,27 +31,27 @@
 class EingabeBox : public Gtk::Table
 {	typedef std::vector<Gtk::Label *> t_labels;
 	typedef std::vector<Gtk::Entry *> t_entries;
-	typedef std::vector<SigC::Connection> t_cons;
+	typedef std::vector<sigc::connection> t_cons;
 
         t_labels labels;
         t_entries entries;
         // activate->grab_focus connects
         // x -0-> 0 -1-> 1 -last-> y
         t_cons cons;
-        SigC::Connection last_con;
+        sigc::connection last_con;
         unsigned visible_size;
         unsigned boxes_per_row;
         
 //        Signal_Converter::signal0_on_focus_in signal_adaptor;
 //	friend gint try_grab_focus(GtkWidget *w,gpointer);
-        SigC::Signal0<void> grab_focus_tried;
+        sigc::signal<void> grab_focus_tried;
         
         void grow(int cols);
         void check() const;
         static gint try_grab_focus(GtkWidget *w,gpointer gp);
 
-	SigC::Signal0<void> _activate;
-	SigC::Signal1<void,int> _activate_entry;
+	sigc::signal<void> _activate;
+	sigc::signal<void,int> _activate_entry;
 	
 	void activate() { _activate(); }
 public:
@@ -69,8 +69,8 @@ public:
 	{  return visible_size; }
 	void reset();
 
-	SigC::Signal0<void> &signal_activate() { return _activate; }
-	SigC::Signal1<void,int> &signal_activate_entry() 
+	sigc::signal<void> &signal_activate() { return _activate; }
+	sigc::signal<void,int> &signal_activate_entry() 
 			{ return _activate_entry; }
 };
 #endif

@@ -25,25 +25,22 @@
 #include <sigc++/object.h>
 #include <glib/gtypes.h>
 #include <gtkmmconfig.h>
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 template <typename T,typename W,typename ID=gpointer>
- class ModelWidgetConnection : public SigC::Object
+ class ModelWidgetConnection : public sigc::trackable
 {public: // protected:  work around a g++ 3.3.0 bug
 	typedef ModelWidgetConnection<T,W,ID> this_t;
 	typedef W widget_t;
 	
 protected:
-	SigC::Connection mv_con, cm_con;
+	sigc::connection mv_con, cm_con;
 	Model_ref<T> model;
 	widget_t *widget;
 
 	// these default actions fit for views, override them for controllers
 	virtual void model2widget()=0;
 	virtual void widget2model() {}
-	virtual SigC::Connection connect() { return SigC::Connection(); }
+	virtual sigc::connection connect() { return sigc::connection(); }
 
 	virtual void disconnect() { cm_con.disconnect(); }
 
@@ -83,7 +80,7 @@ public:
 	{  mv_con.disconnect();
 	   model=m;
 	   if (widget) model2view();
-	   mv_con=model.signal_changed().connect(SigC::slot(*this,&this_t::refresh));
+	   mv_con=model.signal_changed().connect(sigc::mem_fun(*this,&this_t::refresh));
 	}
 	void set(const Model_ref<T> &m,widget_t *w)
 	{  set_widget(w);

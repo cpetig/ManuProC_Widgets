@@ -27,7 +27,6 @@
 #include <gtkmm/treepath.h>
 #include <Misc/EntryValueSort.h>
 #include <Misc/EntryValueInvert.h>
-#include <sigc++/compatibility.h>
 
 #ifdef __MINGW32__
 #define getuid() 0
@@ -327,13 +326,13 @@ void SimpleTreeStore::init()
     (*i) = true;
    defaultSequence();
    getModel().signal_please_detach().connect(please_detach.slot());
-   getModel().signal_please_attach().connect(SigC::slot(*this,&SimpleTreeStore::redisplay));
-   getModel().signal_line_appended().connect(SigC::slot(*this,&SimpleTreeStore::on_line_appended));
-   getModel().signal_line_to_remove().connect(SigC::slot(*this,&SimpleTreeStore::on_line_removed));
-   getModel().signal_value_changed().connect(SigC::slot(*this,&SimpleTreeStore::value_change_impl));
-   signal_save.connect(SigC::slot(*this,&SimpleTreeStore::save_remembered1));
-   signal_redisplay_save.connect(SigC::slot(*this,&SimpleTreeStore::save_and_redisplay));
-   signal_visibly_changed.connect(SigC::slot(*this,&SimpleTreeStore::on_visibly_changed));
+   getModel().signal_please_attach().connect(sigc::mem_fun(*this,&SimpleTreeStore::redisplay));
+   getModel().signal_line_appended().connect(sigc::mem_fun(*this,&SimpleTreeStore::on_line_appended));
+   getModel().signal_line_to_remove().connect(sigc::mem_fun(*this,&SimpleTreeStore::on_line_removed));
+   getModel().signal_value_changed().connect(sigc::mem_fun(*this,&SimpleTreeStore::value_change_impl));
+   signal_save.connect(sigc::mem_fun(*this,&SimpleTreeStore::save_remembered1));
+   signal_redisplay_save.connect(sigc::mem_fun(*this,&SimpleTreeStore::save_and_redisplay));
+   signal_visibly_changed.connect(sigc::mem_fun(*this,&SimpleTreeStore::on_visibly_changed));
   Gdk::Color c;
   c.set_rgb(col1,col1,col1); colors.push_back(c); // white
   c.set_rgb(col1,col0,col0); colors.push_back(c); // red

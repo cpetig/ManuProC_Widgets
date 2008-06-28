@@ -21,9 +21,6 @@
 #include "bool_CheckMenuItem.hh"
 #include "bool_properties.hh"
 #include <bvector_item_CheckMenuItem.hh>
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 void bool_CheckMenuItem::Connection::model2widget()
 {  widget->set_active(model.get_value());
@@ -33,8 +30,8 @@ void bool_CheckMenuItem::Connection::widget2model()
 {  model=widget->get_active();
 }
 
-SigC::Connection bool_CheckMenuItem::Connection::connect()
-{  return widget->signal_toggled().connect(SigC::slot(*this,&bool_CheckMenuItem::Connection::controller2model));
+sigc::connection bool_CheckMenuItem::Connection::connect()
+{  return widget->signal_toggled().connect(sigc::mem_fun(*this,&bool_CheckMenuItem::Connection::controller2model));
 }
 
 bool_CheckMenuItem::bool_CheckMenuItem(const Model_ref<T> &m, const std::string &text)
@@ -60,8 +57,8 @@ void bvector_item_CheckMenuItem::Connection::widget2model()
 {  model=widget->get_active();
 }
 
-SigC::Connection bvector_item_CheckMenuItem::Connection::connect()
-{  return widget->signal_toggled().connect(SigC::slot(*this,&bvector_item_CheckMenuItem::Connection::controller2model));
+sigc::connection bvector_item_CheckMenuItem::Connection::connect()
+{  return widget->signal_toggled().connect(sigc::mem_fun(*this,&bvector_item_CheckMenuItem::Connection::controller2model));
 }
 
 bvector_item_CheckMenuItem::bvector_item_CheckMenuItem(const Model_ref<T> &m, const std::string &text)

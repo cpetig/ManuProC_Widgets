@@ -101,11 +101,11 @@ private:
 	// a vector copies its items on adding, this is not a good idea with signals
 	std::list<std::pair<sigc::signal0<void>,Glib::ustring> > user_menuitems;
 
-	SigC::Signal0<void> _leaf_unselected;
-	SigC::Signal1<void,cH_RowDataBase> _leaf_selected;
-	SigC::Signal1<void,Handle<const TreeRow> > _node_selected;
-	SigC::Signal0<void> _reorder;
-	SigC::Signal3<void,const cH_RowDataBase &,int,bool&> clicked_sig;
+	sigc::signal<void> _leaf_unselected;
+	sigc::signal<void,cH_RowDataBase> _leaf_selected;
+	sigc::signal<void,Handle<const TreeRow> > _node_selected;
+	sigc::signal<void> _reorder;
+	sigc::signal<void,const cH_RowDataBase &,int,bool&> clicked_sig;
 
 protected:	
 	cH_RowDataBase menuContext;
@@ -136,16 +136,16 @@ public:
 	SimpleTree_Basic(SimpleTreeModel_Properties &props);
 	~SimpleTree_Basic();
 	
-	SigC::Signal1<void,cH_RowDataBase> &signal_leaf_selected()
+	sigc::signal<void,cH_RowDataBase> &signal_leaf_selected()
 	{ return _leaf_selected; }
-	SigC::Signal0<void> &signal_leaf_unselected()
+	sigc::signal<void> &signal_leaf_unselected()
 	{ return _leaf_unselected; }
 	// argument had been "const TreeRow &"
-	SigC::Signal1<void,Handle<const TreeRow> > signal_node_selected()
+	sigc::signal<void,Handle<const TreeRow> > signal_node_selected()
 	{ return _node_selected; }
-	SigC::Signal0<void> &signal_reorder()
+	sigc::signal<void> &signal_reorder()
 	{ return _reorder; }
-	SigC::Signal3<void,const cH_RowDataBase&,int,bool&> &signal_clicked();
+	sigc::signal<void,const cH_RowDataBase&,int,bool&> &signal_clicked();
 	
 	void detach();
 	void attach();

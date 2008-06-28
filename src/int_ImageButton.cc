@@ -38,9 +38,9 @@ void int_ImageButton::Connection::model2widget()
    if (tips) tips->set_tip(*eventbox, props[model.Value()].tooltip);
 }
 
-SigC::Connection int_ImageButton::Connection::connect()
-{  if (eventbox) toggleconn=eventbox->signal_button_press_event().connect(SigC::slot(*this,&int_ImageButton::Connection::toggle));
-   return SigC::Connection();
+sigc::connection int_ImageButton::Connection::connect()
+{  if (eventbox) toggleconn=eventbox->signal_button_press_event().connect(sigc::mem_fun(*this,&int_ImageButton::Connection::toggle));
+   return sigc::connection();
 }
 
 void int_ImageButton::Connection::disconnect()

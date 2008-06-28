@@ -27,7 +27,6 @@
 #include <bool_CheckMenuItem.hh>
 #include <CellRendererSimpleTree.h>
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
 #  include <sigc++/bind.h>
 #endif
 #include <iostream>
@@ -73,15 +72,15 @@ void SimpleTree_Basic::attach()
 void SimpleTree_Basic::init()
 {  on_spalten_geaendert();
 
-   get_selection()->signal_changed().connect(SigC::slot(*this,&SimpleTree_Basic::on_selection_changed));
+   get_selection()->signal_changed().connect(sigc::mem_fun(*this,&SimpleTree_Basic::on_selection_changed));
    // stammt eigentlich aus Prefs_proxy   
-   getStore()->signal_column_changed().connect(SigC::slot(*this,&SimpleTree_Basic::on_column_changed));
+   getStore()->signal_column_changed().connect(sigc::mem_fun(*this,&SimpleTree_Basic::on_column_changed));
    // Store
-   getStore()->signal_please_detach().connect(SigC::slot(*this,&SimpleTree_Basic::detach));
-   getStore()->signal_please_attach().connect(SigC::slot(*this,&SimpleTree_Basic::attach));
-   getStore()->signal_spalten_geaendert().connect(SigC::slot(*this,&SimpleTree_Basic::on_spalten_geaendert));
+   getStore()->signal_please_detach().connect(sigc::mem_fun(*this,&SimpleTree_Basic::detach));
+   getStore()->signal_please_attach().connect(sigc::mem_fun(*this,&SimpleTree_Basic::attach));
+   getStore()->signal_spalten_geaendert().connect(sigc::mem_fun(*this,&SimpleTree_Basic::on_spalten_geaendert));
    fillMenu();
-   signal_button_press_event().connect(SigC::slot(*this,&SimpleTree_Basic::MouseButton),false);
+   signal_button_press_event().connect(sigc::mem_fun(*this,&SimpleTree_Basic::MouseButton),false);
 }
 
 SimpleTree_Basic::SimpleTree_Basic(unsigned maxcol)
@@ -122,7 +121,7 @@ void SimpleTree_Basic::on_spalten_geaendert()
 #if 1
       CellRendererSimpleTree *crst = Gtk::manage(new CellRendererSimpleTree(i));
       Gtk::TreeView::Column* pColumn = Gtk::manage(new Gtk::TreeView::Column(getColTitle(i),*crst));
-      pColumn->signal_clicked().connect(SigC::bind(SigC::slot(*this,&SimpleTree_Basic::on_title_clicked),i));
+      pColumn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_title_clicked),i));
       pColumn->add_attribute(crst->property_text(),sts->m_columns.cols[i]);
       if (getStore()->OptionColor().Value())
          pColumn->add_attribute(crst->property_background_gdk(),sts->m_columns.background);
@@ -140,7 +139,7 @@ void SimpleTree_Basic::on_spalten_geaendert()
       
       if (Properties().editable(idx))
       {  crst->property_editable()=true;
-         crst->signal_edited().connect(SigC::bind(SigC::slot(*this,&SimpleTree_Basic::on_column_edited),idx));
+         crst->signal_edited().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_column_edited),idx));
       }
       append_column(*pColumn);
 #else
@@ -242,7 +241,7 @@ void SimpleTree_Basic::on_selection_changed()
       get_selection()->selected_foreach_iter(sigc::bind(sigc::mem_fun(*this,
       		&SimpleTree_Basic::sel_change_cb),&leaves,&nodes));
 #else
-      get_selection()->selected_foreach(SigC::bind(SigC::slot(*this,
+      get_selection()->selected_foreach(sigc::bind(sigc::mem_fun(*this,
       		&SimpleTree_Basic::sel_change_cb),&leaves,&nodes));
 #endif
       for (std::vector<cH_RowDataBase>::const_iterator i=leaves.begin();
@@ -335,8 +334,8 @@ std::vector<cH_RowDataBase> SimpleTree::getSelectedRowDataBase_vec(bool include_
    		sigc::mem_fun(*non_const_this,
       		&SimpleTree::getSelectedRowDataBase_vec_cb),&result,include_nodes));
 #else
-   non_const_this->get_selection()->selected_foreach(SigC::bind(
-   		SigC::slot(*non_const_this,
+   non_const_this->get_selection()->selected_foreach(sigc::bind(
+   		sigc::mem_fun(*non_const_this,
       		&SimpleTree::getSelectedRowDataBase_vec_cb),&result,include_nodes));
 #endif      		
    return result;
@@ -365,7 +364,7 @@ static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text)
    return it;
 }
 
-static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text,const SigC::Slot0<void> &callback)
+static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text,const sigc::slot<void> &callback)
 {  Gtk::MenuItem *it=add_mitem(m,text);
    it->signal_activate().connect(callback);
    return it;
@@ -375,9 +374,9 @@ void SimpleTree_Basic::fillMenu()
 {  assert(menu==0); 
   menu=new Gtk::Menu();
   // Hauptmenü
-  add_mitem(menu,_("Zurücksetzen"),SigC::slot(*this,&SimpleTree_Basic::on_zuruecksetzen_clicked));
-  add_mitem(menu,_("Abbrechen"),SigC::slot(*this,&SimpleTree_Basic::on_abbrechen_clicked));
-  add_mitem(menu,_("Neuordnen"),SigC::slot(*this,&SimpleTree_Basic::on_neuordnen_clicked));
+  add_mitem(menu,_("Zurücksetzen"),sigc::mem_fun(*this,&SimpleTree_Basic::on_zuruecksetzen_clicked));
+  add_mitem(menu,_("Abbrechen"),sigc::mem_fun(*this,&SimpleTree_Basic::on_abbrechen_clicked));
+  add_mitem(menu,_("Neuordnen"),sigc::mem_fun(*this,&SimpleTree_Basic::on_neuordnen_clicked));
 
   Gtk::MenuItem *spalten=add_mitem(menu,_("Sichtbare Spalten"));
   Gtk::Menu *spalten_menu=manage(new Gtk::Menu);
@@ -398,10 +397,10 @@ void SimpleTree_Basic::fillMenu()
   add_mitem(optionen_menu,_("Zeilen zählen"),getStore()->OptionCount());
 
   optionen->set_submenu(*optionen_menu);
-  add_mitem(menu,_("Alles aufklappen"),SigC::slot(*this,&SimpleTree_Basic::Expand_recursively));
-  add_mitem(menu,_("Alles zuklappen"),SigC::slot(*this,&SimpleTree_Basic::Collapse));
+  add_mitem(menu,_("Alles aufklappen"),sigc::mem_fun(*this,&SimpleTree_Basic::Expand_recursively));
+  add_mitem(menu,_("Alles zuklappen"),sigc::mem_fun(*this,&SimpleTree_Basic::Collapse));
 #ifdef MPC_ST_EXCEL_EXPORT
-  add_mitem(menu,_("Excel-Datei schreiben"),SigC::slot(*this,&SimpleTree_Basic::write_excel_via_filerequester));
+  add_mitem(menu,_("Excel-Datei schreiben"),sigc::mem_fun(*this,&SimpleTree_Basic::write_excel_via_filerequester));
 #endif
   
   // separator
@@ -509,19 +508,19 @@ static void sig3piI(const Gtk::TreeModel::Path&p,const Gtk::TreeModel::iterator&
 }
 
 void SimpleTree_Basic::debug()
-{ getStore()->signal_please_detach().connect(SigC::bind(&sig0,"please_detach"));
-  getStore()->signal_please_attach().connect(SigC::bind(&sig0,"please_attach"));
-  getStore()->signal_spalten_geaendert().connect(SigC::bind(&sig0,"spalten_geaendert"));
-  getStore()->signal_column_changed().connect(SigC::bind(&sig1i,"column_changed"));
-  getModel().signal_line_appended().connect(SigC::bind(&sig1r,"line_appended"));
-  getModel().signal_line_to_remove().connect(SigC::bind(&sig1r,"line_to_remove"));
-  getModel().signal_please_detach().connect(SigC::bind(&sig0,"Model::please_detach"));
-  getModel().signal_please_attach().connect(SigC::bind(&sig0,"Model::please_attach"));
-  getStore()->signal_row_changed().connect(SigC::bind(&sig2pi,"row_changed"));
-  getStore()->signal_row_inserted().connect(SigC::bind(&sig2pi,"row_inserted"));
-  getStore()->signal_row_has_child_toggled().connect(SigC::bind(&sig2pi,"row_has_child_toggled"));
-  getStore()->signal_row_deleted().connect(SigC::bind(&sig1p,"row_deleted"));
-  getStore()->signal_rows_reordered().connect(SigC::bind(&sig3piI,"rows_reordered"));
+{ getStore()->signal_please_detach().connect(sigc::bind(&sig0,"please_detach"));
+  getStore()->signal_please_attach().connect(sigc::bind(&sig0,"please_attach"));
+  getStore()->signal_spalten_geaendert().connect(sigc::bind(&sig0,"spalten_geaendert"));
+  getStore()->signal_column_changed().connect(sigc::bind(&sig1i,"column_changed"));
+  getModel().signal_line_appended().connect(sigc::bind(&sig1r,"line_appended"));
+  getModel().signal_line_to_remove().connect(sigc::bind(&sig1r,"line_to_remove"));
+  getModel().signal_please_detach().connect(sigc::bind(&sig0,"Model::please_detach"));
+  getModel().signal_please_attach().connect(sigc::bind(&sig0,"Model::please_attach"));
+  getStore()->signal_row_changed().connect(sigc::bind(&sig2pi,"row_changed"));
+  getStore()->signal_row_inserted().connect(sigc::bind(&sig2pi,"row_inserted"));
+  getStore()->signal_row_has_child_toggled().connect(sigc::bind(&sig2pi,"row_has_child_toggled"));
+  getStore()->signal_row_deleted().connect(sigc::bind(&sig1p,"row_deleted"));
+  getStore()->signal_rows_reordered().connect(sigc::bind(&sig3piI,"rows_reordered"));
 }
 
 // deprecated proxies
@@ -537,7 +536,7 @@ bool SimpleTree_Basic::clicked_impl(SimpleTree_Basic *_this, const cH_RowDataBas
    return handled;
 }
 
-SigC::Signal3<void,const cH_RowDataBase &,int,bool&> 
+sigc::signal<void,const cH_RowDataBase &,int,bool&> 
 	  &SimpleTree_Basic::signal_clicked()
 { button_press_vfunc=&SimpleTree_Basic::clicked_impl;
   return clicked_sig;

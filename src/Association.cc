@@ -32,20 +32,20 @@
 static std::auto_ptr<Glib::Quark> quark;
 static const char * const quarkname = "ManuProC::Association";
 
-static void attach(Glib::Object &widget, SigC::Object &connobj)
+static void attach(Glib::Object &widget, sigc::trackable &connobj)
 {  ManuProC::attach(widget,connobj,quark,quarkname);
 }
 
 static void destruct_object(void *obj)
-{  if (obj) delete static_cast<SigC::Object*>(obj);
+{  if (obj) delete static_cast<sigc::trackable*>(obj);
 }
 
-static SigC::Object *lookup(Glib::Object &widget)
+static sigc::trackable *lookup(Glib::Object &widget)
 {  if (!quark.get()) quark.reset(new Glib::Quark(quarkname));
-   return static_cast<SigC::Object *>(widget.get_data(*quark));
+   return static_cast<sigc::trackable *>(widget.get_data(*quark));
 }
 
-void ManuProC::attach(Glib::Object &widget, SigC::Object &connobj, 
+void ManuProC::attach(Glib::Object &widget, sigc::trackable &connobj, 
 	std::auto_ptr<Glib::Quark> &q,const char * const qname)
 {  if (!q.get()) q.reset(new Glib::Quark(qname));
    widget.set_data(*q,&connobj,&destruct_object);
@@ -53,7 +53,7 @@ void ManuProC::attach(Glib::Object &widget, SigC::Object &connobj,
 
 template <class T,class W,class C >
  static typename C::Connection &Association_impl(W &w)
-{  SigC::Object *r=0;
+{  sigc::trackable *r=0;
    if ((r=lookup(w))) 
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
       // since sigc::trackable is not polymorphic ...
