@@ -54,14 +54,14 @@ std::cerr << "- " << num << '\n';
 datewin::datewin() : // const std::string &inst) : block(false), 
 	expandyear(true),kw_bevorzugen(), popup()
 {  set_value(ManuProC::Datum::today());
-   jahr->signal_activate().connect(activate.slot());
+   jahr->signal_activate().connect(activate.make_slot());
    gtk_signal_connect_after(GTK_OBJECT(gobj()), "grab_focus",
     		GTK_SIGNAL_FUNC (&try_grab_focus),(gpointer)this);
-   tag->signal_changed().connect(changed.slot());
-   monat->signal_changed().connect(changed.slot());
-   jahr->signal_changed().connect(changed.slot());
-   kw_spinbutton->signal_changed().connect(changed.slot());
-   jahr_spinbutton->signal_changed().connect(changed.slot());
+   tag->signal_changed().connect(changed.make_slot());
+   monat->signal_changed().connect(changed.make_slot());
+   jahr->signal_changed().connect(changed.make_slot());
+   kw_spinbutton->signal_changed().connect(changed.make_slot());
+   jahr_spinbutton->signal_changed().connect(changed.make_slot());
    switch_page_connection=notebook->signal_switch_page().connect(sigc::mem_fun(*this, &datewin::on_datewin_change_current_page), true);
 }
 
