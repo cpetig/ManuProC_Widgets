@@ -18,7 +18,7 @@
  */
 
 #include "config.h"
-#include <libintl.h>
+//#include <libintl.h>
 #include <Misc/i18n.h>
 #include <SimpleTree.hh>
 #include <Misc/itos.h>

@@ -21,7 +21,7 @@
 #ifndef MANUPROC_WIDGETS_TOOLTIPVIEW_H
 #define MANUPROC_WIDGETS_TOOLTIPVIEW_H
 
-#include <Misc/Model.h>
+#include <BaseObjects/Model.h>
 #include <list>
 #include <gtkmm/tooltips.h>
 #include <sigc++/object.h>

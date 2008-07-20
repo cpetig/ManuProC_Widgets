@@ -219,10 +219,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\int_RadioButtons.cc"
-				>
-			</File>
-			<File
 				RelativePath="..\src\int_SpinButton.cc"
 				>
 			</File>
@@ -287,15 +283,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\tclistrowdata.cc"
-				>
-			</File>
-			<File
 				RelativePath="..\src\TooltipView.cc"
-				>
-			</File>
-			<File
-				RelativePath="..\src\treebase.cc"
 				>
 			</File>
 			<File
