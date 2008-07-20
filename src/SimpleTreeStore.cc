@@ -20,7 +20,11 @@
 
 #include <SimpleTreeStore.h>
 #include <Misc/Global_Settings.h>
-#include <unistd.h> // getuid
+#if defined __MINGW32__ || defined WIN32
+# define getuid() 0
+#else
+# include <unistd.h> // getuid
+#endif
 #include <Misc/itos.h>
 #include <Misc/TraceNV.h>
 //#include <GType_cH_EntryValue.h>
@@ -596,7 +600,8 @@ SimpleTreeStore::iterator SimpleTreeStore::MoveTree(iterator current_iter,
    STSN_CHECK_MAGIC(newnode.parent);
 
 //   if (node_creation) 
-   {  Handle<TreeRow> htr= create_node(oldnode.row);
+   {  Handle<const TreeRow> arg=oldnode.row; // to convert between Handle and Handle<const>
+	  Handle<TreeRow> htr= create_node(arg);
       newnode.row=htr;
       // leaves have no row (so initial sum is always 0), 
       // so we need to cumulate their data
