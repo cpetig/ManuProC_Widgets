@@ -56,12 +56,18 @@ protected:
 	   model2widget();
 	   cm_con.unblock();
 	}
+#ifdef _MSC_VER // don't know why ...
+public:
+#endif
 	void controller2model()
 	{  if (!model) return;
 	   mv_con.block();
 	   widget2model();
            mv_con.unblock();
 	}
+#ifdef _MSC_VER // don't know why ...
+protected:
+#endif
 	// I cannot call set_widget since model2view is pure
 	// virtual at this point, please do it in your ctor
 	ModelWidgetConnection(const Model_ref<T> &m=Model_ref<T>())
