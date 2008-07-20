@@ -24,9 +24,9 @@
 LabelSpin::LabelSpin(int v,int lower,int upper)
 : value(v)
 {
-   label=manage(new class Gtk::Label(itos(value)));
-   Gtk::Adjustment *adj = manage(new class Gtk::Adjustment(value, lower, upper));
-   spinbutton = manage(new class Gtk::SpinButton(*adj));
+   label=Gtk::manage(new class Gtk::Label(itos(value)));
+   Gtk::Adjustment *adj = Gtk::manage(new class Gtk::Adjustment(value, lower, upper));
+   spinbutton = Gtk::manage(new class Gtk::SpinButton(*adj));
    spinbutton->signal_activate().connect(sigc::mem_fun(*static_cast<class LabelSpin*>(this), &LabelSpin::spin_activate),true);   
    
    set_flags(Gtk::CAN_FOCUS);

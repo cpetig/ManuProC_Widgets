@@ -20,7 +20,7 @@
 #include "datewin.h"
 #include <Misc/itos.h>
 #include <Misc/Global_Settings.h>
-#include <unistd.h>
+//#include <unistd.h>
 #include <iostream>
 #include <cassert>
 #include <gtk/gtksignal.h>

@@ -19,10 +19,11 @@
 #include "MyWindow.hh"
 #include <Misc/Global_Settings.h>
 #include <Misc/itos.h>
-#include <unistd.h>
 
-#ifdef __MINGW32__
-#define getuid() 0
+#if defined __MINGW32__ || defined WIN32
+# define getuid() 0
+#else
+# include <unistd.h>
 #endif
 
 void MyWindow::saveWindowSize(Gtk::Window &window,const std::string &programm)
