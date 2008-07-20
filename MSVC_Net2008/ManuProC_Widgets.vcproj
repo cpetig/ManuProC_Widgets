@@ -105,7 +105,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../src;.;../../glibmm/glib;../../glibmm/MSVC_Net2003/glibmm;&quot;../../gtk-dev/include/glib-2.0&quot;;&quot;../../gtk-dev/lib/glib-2.0/include&quot;;&quot;../../libsigc++&quot;;&quot;../../libsigc++/MSVC_Net2003&quot;;&quot;../../gtk-dev/include/pango-1.0&quot;;../../cairomm/cairo;&quot;../../gtk-dev/include/cairo&quot;;&quot;../../gtk-dev/include/gtk-2.0&quot;;&quot;../../gtk-dev/lib/gtk-2.0/include&quot;;&quot;../../gtk-dev/include/atk-1.0&quot;;../../gtkmm/gtk;../../gtkmm/pango;../../gtkmm/gdk;../../gtkmm/atk;../../gtkmm/MSVC_Net2003/gtkmm;../../gtkmm/MSVC_Net2003/gdkmm;../../ManuProC_Base/src;../../ManuProC_Base/MSVC_Net2008;../../GtkmmAddons/src"
+				AdditionalIncludeDirectories="../src;.;../../glibmm/glib;../../glibmm/MSVC_Net2003/glibmm;&quot;../../gtk-dev/include/glib-2.0&quot;;&quot;../../gtk-dev/lib/glib-2.0/include&quot;;&quot;../../libsigc++&quot;;&quot;../../libsigc++/MSVC_Net2003&quot;;&quot;../../gtk-dev/include/pango-1.0&quot;;../../cairomm/cairo;&quot;../../gtk-dev/include/cairo&quot;;&quot;../../gtk-dev/include/gtk-2.0&quot;;&quot;../../gtk-dev/lib/gtk-2.0/include&quot;;&quot;../../gtk-dev/include/atk-1.0&quot;;../../gtkmm/gtk;../../gtkmm/pango;../../gtkmm/gdk;../../gtkmm/atk;../../gtkmm/MSVC_Net2003/gtkmm;../../gtkmm/MSVC_Net2003/gdkmm;../../ManuProC_Base/src;../../ManuProC_Base/MSVC_Net2008;../../GtkmmAddons/src;../../GtkmmAddons/searchcombo/src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -268,10 +268,6 @@
 			</File>
 			<File
 				RelativePath="..\src\SimpleTreeStore.cc"
-				>
-			</File>
-			<File
-				RelativePath="..\src\SimpleTreeStore_test.cc"
 				>
 			</File>
 			<File
