@@ -344,21 +344,21 @@ std::vector<cH_RowDataBase> SimpleTree::getSelectedRowDataBase_vec(bool include_
 
 static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text,const Model_ref<bvector_item> &model)
 {  bvector_item_CheckMenuItem *it = 
-	manage(new bvector_item_CheckMenuItem(model,text));
+   Gtk::manage(new bvector_item_CheckMenuItem(model,text));
    m->append(*it);
    it->show();
    return it;
 }
 
 static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text,const Model_ref<bool> &model)
-{  bool_CheckMenuItem *it = manage(new bool_CheckMenuItem(model,text));
+{  bool_CheckMenuItem *it = Gtk::manage(new bool_CheckMenuItem(model,text));
    m->append(*it);
    it->show();
    return it;
 }
 
 static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text)
-{  Gtk::MenuItem *it=manage(new class Gtk::MenuItem(text));
+{  Gtk::MenuItem *it=Gtk::manage(new class Gtk::MenuItem(text));
    m->append(*it);
    it->show();
    return it;
