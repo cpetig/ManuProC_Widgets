@@ -198,7 +198,11 @@ class SimpleTreeStore : virtual public Glib::Object, public Gtk::TreeModel,
 	typedef std::deque<guint> sequence_t;
 
 	static const UniqueValue::value_t trace_channel;
-	static const unsigned invisible_column=unsigned(-1);
+	static const unsigned invisible_column
+#ifndef _MSC_VER
+										=unsigned(-1)
+#endif
+													;
 protected:
 	// first value is ":order", second is ":visible"
         static std::pair<std::string,std::string> default_load(const std::string&program, const std::string&instance);

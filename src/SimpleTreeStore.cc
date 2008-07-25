@@ -1232,7 +1232,11 @@ void SimpleTreeStore::value_change_impl(cH_RowDataBase row,unsigned idx,std::str
 { has_changed|=row.cast_const<RowDataBase>()->changeValue(idx,ValueData(),newval);
 }
 
-const unsigned SimpleTreeStore::invisible_column;
+const unsigned SimpleTreeStore::invisible_column
+#ifdef _MSC_VER
+												=unsigned(-1)
+#endif
+												;
 
 void SimpleTreeStore::save_and_redisplay(gpointer g)
 { signal_save(g);
