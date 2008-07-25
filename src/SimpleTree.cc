@@ -18,7 +18,9 @@
  */
 
 #include "config.h"
-//#include <libintl.h>
+#if defined __GNUC__ && __GNUC__ == 4 && __GNUC_MINOR__==0 /* local strangeness? */
+# include <libintl.h>
+#endif
 #include <Misc/i18n.h>
 #include <SimpleTree.hh>
 #include <Misc/itos.h>
