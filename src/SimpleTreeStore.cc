@@ -605,7 +605,8 @@ SimpleTreeStore::iterator SimpleTreeStore::MoveTree(iterator current_iter,
       newnode.row=htr;
       // leaves have no row (so initial sum is always 0), 
       // so we need to cumulate their data
-      if (!oldnode.childrens_deep && htr) // leaf
+	  // VC7 needs the explicit cast
+      if (!oldnode.childrens_deep && bool(htr)) // leaf
          htr->cumulate(oldnode.leafdata);
    }
 
