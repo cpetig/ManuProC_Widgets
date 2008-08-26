@@ -42,7 +42,7 @@ bool IntStringBox::try_to_get_id()
 	q << sc2_string->get_text();
 
   SQLerror::test(__FILELINE__,100);
-  if (sqlca.sqlcode) return false;
+  if (Query::Code()) return false;
 
   Query::Row is = q >> id;
   sc_int->set_text(itos(id));
@@ -88,7 +88,7 @@ void IntStringBox::int_search(gboolean *_continue, GtkSCContext newsearch)
 	    int intnr;
  	    (Query("fetch from int_search")).FetchOne() >> intnr;
       	    SQLerror::test(__FILELINE__,100);
-      	    if (sqlca.sqlcode) return;
+      	    if (Query::Code()) return;
       	    sc_int->add_item(itos(intnr));
       	    *_continue=true;
       	    break;
@@ -154,7 +154,7 @@ void IntStringBox::string2_search(gboolean *_continue, GtkSCContext newsearch)
 	    std::string name;
  	    (Query("fetch from str2_search")).FetchOne() >> name;
       	    SQLerror::test(__FILELINE__,100);
-      	    if (sqlca.sqlcode) return;
+      	    if (Query::Code()) return;
       	    sc2_string->add_item(name);
       	    *_continue=true;
       	    break;
@@ -221,7 +221,7 @@ void IntStringBox::string1_search(gboolean *_continue, GtkSCContext newsearch)
 	    std::string name;
  	    (Query("fetch from str1_search")).FetchOne() >> name;
       	    SQLerror::test(__FILELINE__,100);
-      	    if (sqlca.sqlcode) return;
+      	    if (Query::Code()) return;
       	    sc1_string->add_item(name);
       	    *_continue=true;
       	    break;
