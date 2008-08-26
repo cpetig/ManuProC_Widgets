@@ -36,7 +36,7 @@ libManuProC_Widgets_a_SOURCES=EingabeBox.cc \
 		datewin_popup.cc datewin_popup_glade.cc BasicExcel.cpp \
 		IntStringBox_sql.cc
 
-BUILT_SOURCES=datewin.hh logwin.hh IntStringBox_sql.cc
+BUILT_SOURCES=datewin.hh logwin.hh 
 
 # alias links
 datewin.hh: datewin.h
