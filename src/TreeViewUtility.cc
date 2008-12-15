@@ -73,13 +73,13 @@ TreeViewUtility::CList::CList(const char *title1, ...)
 
 void TreeViewUtility::CListEmulator::set_titles(const std::vector<Glib::ustring> &_titles)
 {  unsigned old_size=titles.size(),new_size=_titles.size();
-   assert(new_size>=old_size); // nur vergrößern
+   assert(new_size>=old_size); // nur vergrï¿½ï¿½ern
    cols.resize(new_size);
    titles=_titles;
    for (unsigned i=old_size;i<new_size;++i)
       add(cols[i]);
    m_refStore=Gtk::ListStore::create(*this);
-   if (view) // eigentlich sollte das attach erst später passiert sein ...
+   if (view) // eigentlich sollte das attach erst spï¿½ter passiert sein ...
       attach_to(*view);
 }
 
@@ -152,7 +152,7 @@ Gtk::TreeModel::iterator TreeViewUtility::CListEmulator::append(const std::vecto
 void TreeViewUtility::CListEmulator::add(Gtk::TreeModelColumnBase& column)
 {  Gtk::TreeModelColumnRecord::add(column);
    m_refStore=Gtk::ListStore::create(*this);
-   if (view) // eigentlich sollte das attach erst später passiert sein ...
+   if (view) // eigentlich sollte das attach erst spï¿½ter passiert sein ...
       attach_to(*view);
 }
 
@@ -183,4 +183,15 @@ bool TreeViewUtility::CListEmulator::button_press_handler(GdkEventButton *event)
 //      return true;
    }
    return false;
+}
+
+int TreeViewUtility::CListEmulator::get_row_num(Gtk::TreeModel::iterator i) const
+{  Gtk::TreeModel::Path p = m_refStore->get_path(i);
+   if (p.empty()) return -1;
+   return p[0];
+}
+
+int TreeViewUtility::CListEmulator::get_row_num(Gtk::TreeSelection::ListHandle_Path::iterator i) const
+{  if ((*i).empty()) return -1;
+   return (*i)[0];
 }

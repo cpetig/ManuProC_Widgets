@@ -1,4 +1,4 @@
-// $Id: SimpleTree.cc,v 1.80 2005/11/18 09:55:52 christof Exp $
+// $Id: SimpleTree.cc,v 1.94 2006/08/03 11:27:11 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2002-2005 Adolf Petig GmbH & Co. KG, written by Christof Petig
  *
@@ -36,6 +36,7 @@
 #include <Misc/EntryValueIntString.h>
 
 #define FIRST_COLUMN 1
+#define MPC_ST_ADVANCED
 
 #ifdef MPC_ST_EXCEL_EXPORT
 # include <WinFileReq.hh>
@@ -126,7 +127,7 @@ void SimpleTree_Basic::on_spalten_geaendert()
       pColumn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_title_clicked),i));
       pColumn->add_attribute(crst->property_text(),sts->m_columns.cols[i]);
       if (getStore()->OptionColor().Value())
-         pColumn->add_attribute(crst->property_background_gdk(),sts->m_columns.background);
+         pColumn->add_attribute(crst->property_cell_background_gdk(),sts->m_columns.background);
       pColumn->add_attribute(crst->property_childrens_deep(),sts->m_columns.childrens_deep);
       if (getStore()->OptionCount().Value())
          pColumn->add_attribute(crst->property_children_count(),sts->m_columns.children_count);
@@ -372,6 +373,18 @@ static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text,const sigc:
    return it;
 }
 
+static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text, Gtk::RadioMenuItem::Group &group, const sigc::slot<void> &callback)
+{  Gtk::RadioMenuItem *it=manage(new class Gtk::RadioMenuItem(group,text));
+   m->append(*it);
+   it->show();
+   it->signal_activate().connect(callback);
+   return it;
+}
+
+void SimpleTree_Basic::menu_ranking(int column)
+{ getStore()->setSortierspalte(column, true);
+}
+
 void SimpleTree_Basic::fillMenu()
 {  assert(menu==0); 
   menu=new Gtk::Menu();
@@ -403,6 +416,15 @@ void SimpleTree_Basic::fillMenu()
   add_mitem(menu,_("Alles zuklappen"),sigc::mem_fun(*this,&SimpleTree_Basic::Collapse));
 #ifdef MPC_ST_EXCEL_EXPORT
   add_mitem(menu,_("Excel-Datei schreiben"),sigc::mem_fun(*this,&SimpleTree_Basic::write_excel_via_filerequester));
+#endif
+#ifdef MPC_ST_ADVANCED
+  Gtk::RadioMenuItem::Group group;
+  Gtk::MenuItem *ranking=add_mitem(menu,_("Rangfolge"));
+  Gtk::Menu *ranking_menu=manage(new Gtk::Menu);
+  ranking->set_submenu(*ranking_menu);
+  add_mitem(ranking_menu,_(" aus "),group,sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::menu_ranking),-1));
+  for (guint i=0;i<getStore()->MaxCol();++i)
+    add_mitem(ranking_menu,Properties().Title(i),group,sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::menu_ranking),i));
 #endif
   
   // separator

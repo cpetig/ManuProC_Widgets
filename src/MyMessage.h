@@ -45,7 +45,9 @@ struct MyMessage : Gtk::MessageDialog
  
   MyMessage(Glib::ustring const& s,Gtk::MessageType mt=Gtk::MESSAGE_INFO)
       : Gtk::MessageDialog(s,false,mt)
-  { }
+  { 
+   property_window_position().set_value(Gtk::WIN_POS_CENTER);
+  }
   
   MyMessage(const LagerError &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
       : Gtk::MessageDialog(e.Text()+" ArtID:"+itos(e.ArtID()),false,mt)

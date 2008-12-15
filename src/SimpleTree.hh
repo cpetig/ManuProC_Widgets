@@ -131,6 +131,7 @@ private:
         void on_column_edited(const Glib::ustring &path,
                   const Glib::ustring&new_text,unsigned idx);
 	static bool clicked_impl(SimpleTree_Basic *_this, const cH_RowDataBase &row, int col_idx);
+        void menu_ranking(int column);
 public:
 	SimpleTree_Basic(unsigned max_col);
 	SimpleTree_Basic(SimpleTreeModel_Properties &props);

@@ -26,6 +26,15 @@
 
 // see webkartei/src/Kette.cc for a nice example on how to use this
 
+// generally:
+//   add "TreeViewUtility::CListEmulator emu;" to your class
+//   ->rows().size() => ->rows_size()
+//   Gtk::CList_Helpers::SelectionList &  => Glib::RefPtr<const Gtk::TreeSelection>
+//   Gtk::CList_Helpers::SelectionList::iterator => Gtk::TreeModel::iterator
+//   (*i).get_row_num() => ->get_row_num(i)
+
+// but honestly: Porting to a TreeView and dropping the second data list is preferable
+
 namespace TreeViewUtility {  
 
 class CListEmulator : public sigc::trackable, public Gtk::TreeModelColumnRecord
@@ -52,10 +61,6 @@ public:
 	// one column only
 	void set_title(const Glib::ustring &title);
 	
-	int get_selected_row_num() const;
-	bool selection_empty() const;
-	void set_selection_mode(Gtk::SelectionMode x)
-	{  view->get_selection()->set_mode(x); }
 	void set_column_justification(int col, Gtk::AlignmentEnum just);
 	void set_column_justification(int col, Gtk::Justification just);
 	void column_titles_passive() { view->set_headers_clickable(false); }
@@ -64,6 +69,16 @@ public:
 	void freeze() {}
 	void thaw() {}
 	void clear() { get_store()->clear(); }
+	
+	// selection
+	size_t rows_size() const { return m_refStore->children().size();  }
+	Glib::RefPtr<const Gtk::TreeSelection> selection() const { return view->get_selection(); }
+	int get_row_num(Gtk::TreeModel::iterator i) const;
+	int get_row_num(Gtk::TreeSelection::ListHandle_Path::iterator i) const;
+	int get_selected_row_num() const; // number of the selected row, or -1
+	bool selection_empty() const;
+	void set_selection_mode(Gtk::SelectionMode x)
+	{  view->get_selection()->set_mode(x); }
 	
 	void add(Gtk::TreeModelColumnBase& column);
 	// clicking on a cell

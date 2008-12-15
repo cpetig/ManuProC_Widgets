@@ -1,4 +1,4 @@
-// $Id: IntStringBox.hh,v 1.2 2005/11/22 13:00:22 christof Exp $
+// $Id: IntStringBox.hh,v 1.5 2006/08/03 11:27:11 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -44,6 +44,7 @@ class IntStringBox : public IntStringBox_gui
    bool eingeschraenkt:1;
    bool string_2_info_only:1;
    bool translate:1;
+   bool multiple:1;
 
    bool try_to_get_id();
 

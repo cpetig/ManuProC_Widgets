@@ -1,4 +1,4 @@
-// $Id: IntStringBox.cc,v 1.1 2005/11/21 18:21:53 christof Exp $
+// $Id: IntStringBox.cc,v 1.5 2006/08/03 11:27:11 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++ Copyright (C)
  *  1998-2006 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *
@@ -99,9 +99,9 @@ gint IntStringBox::try_grab_focus(GtkWidget *w,gpointer gp)
 IntStringBox::IntStringBox(ManuProcEntity<>::ID __none_id) 
 : id(__none_id),tr("",false), tr2("",false), 
 tr3("",false),
-  eingeschraenkt(false),
-  string_2_info_only(false),
-  translate(false),
+  eingeschraenkt(),
+  string_2_info_only(),
+  translate(), multiple(),
   _none_id_(__none_id)
 {
  show_string2(false);
@@ -113,6 +113,7 @@ tr3("",false),
 void IntStringBox::set_value(ManuProcEntity<>::ID i,const std::string &s, 
 				const std::string& sz)
 {
+   multiple=false;
    sc_int->set_text(itos(i));
    sc1_string->set_text(s);
    sc2_string->set_text(sz);
@@ -121,6 +122,7 @@ void IntStringBox::set_value(ManuProcEntity<>::ID i,const std::string &s,
 
 void IntStringBox::reset()
 {  
+   multiple=false;
    sc_int->reset();
    sc1_string->reset();
    sc1_string->set_always_fill(false);
@@ -149,6 +151,7 @@ void IntStringBox::Einschraenken(bool an)
 
 void IntStringBox::Einschraenkung(const std::string &e, bool an)
 {
+ multiple=false;
  eingeschraenkt=an;
  einschraenkung=e;
 }
