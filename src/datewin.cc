@@ -54,7 +54,7 @@ std::cerr << "- " << num << '\n';
 datewin::datewin() : // const std::string &inst) : block(false), 
 	expandyear(true),kw_bevorzugen(), popup()
 {  set_value(ManuProC::Datum::today());
-   jahr->signal_activate().connect(activate.make_slot());
+//   jahr->signal_activate().connect(activate.make_slot());
    gtk_signal_connect_after(GTK_OBJECT(gobj()), "grab_focus",
     		GTK_SIGNAL_FUNC (&try_grab_focus),(gpointer)this);
    tag->signal_changed().connect(changed.make_slot());
