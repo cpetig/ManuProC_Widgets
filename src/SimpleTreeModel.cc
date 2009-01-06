@@ -1,7 +1,7 @@
 // $Id: SimpleTreeModel.cc,v 1.6 2004/12/04 10:53:34 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2002-2005 Adolf Petig GmbH & Co. KG, written by Christof Petig
- *  Copyright (C) 2008 Christof Petig
+ *  Copyright (C) 2008-2009 Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ void SimpleTreeModel::changeDataVec(const std::vector<cH_RowDataBase> &d, bool (
    std::vector<cH_RowDataBase> to_add; // so that we do not have to search the newly added lines, too
    // this would get faster if we remove matching lines once found and add them again later
    // lines in datavec, but not in d: remove
-   for (std::vector<cH_RowDataBase>::iterator j=datavec.begin(); j!=datavec.end(); ++j)
+   for (std::vector<cH_RowDataBase>::iterator j=datavec.begin(); j!=datavec.end();)
    {
      std::vector<cH_RowDataBase>::const_iterator i=d.begin();
      for (; i!=d.end() && !(*equal)(*i,*j); ++i);
@@ -65,6 +65,7 @@ void SimpleTreeModel::changeDataVec(const std::vector<cH_RowDataBase> &d, bool (
      { line_to_remove(*j);
        j=datavec.erase(j);
      }
+     else ++j;
    }
    // lines in d, but not in datavec: add
    for (std::vector<cH_RowDataBase>::const_iterator i=d.begin(); i!=d.end(); ++i)
