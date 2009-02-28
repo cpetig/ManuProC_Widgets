@@ -637,7 +637,7 @@ SimpleTreeStore::iterator SimpleTreeStore::MoveTree(iterator current_iter,
    }
    // row_has_child_toggled(newnode), row_changed(newnode)
    
-//   ManuProC::Trace(trace_channel,"",&oldnode,&newnode,&newchild);
+//   ManuProC::Trace(trace_channel,std::string(),&oldnode,&newnode,&newchild);
 //   oldnode.fix_pointer();
    if (live) 
    { row_has_child_toggled(getPath(current_iter),getIter(current_iter));
@@ -737,15 +737,15 @@ bool SimpleTreeStore::find_row(Node &parent, const cH_RowDataBase &r,bool optimi
   ManuProC::Trace _t(trace_channel,__FUNCTION__,&parent,&*r);
    if (optimize && parent.childrens_deep && sortierspalte==invisible_column)
    {  cH_EntryValue val=r->Value(currseq[parent.childrens_deep],ValueData());
-      ManuProC::Trace(trace_channel,"",NV("depth",parent.childrens_deep),
+      ManuProC::Trace(trace_channel,std::string(),NV("depth",parent.childrens_deep),
                 NV("val",val->getStrVal()));
       std::pair<iterator,iterator> p=parent.children.equal_range(val);
       if (p.first==p.second) 
-      { ManuProC::Trace(trace_channel,"","empty equal_range");
+      { ManuProC::Trace(trace_channel,std::string(),"empty equal_range");
         return false;
       }
       if (!p.first->second.childrens_deep) // nodes
-      {  ManuProC::Trace(trace_channel,"","leaves");
+      {  ManuProC::Trace(trace_channel,std::string(),"leaves");
          for (iterator i=p.first;i!=p.second;++i) 
          {  STSN_CHECK_MAGIC(&i->second);
             STSN_CHECK_MAGIC(i->second.parent);
@@ -756,13 +756,13 @@ bool SimpleTreeStore::find_row(Node &parent, const cH_RowDataBase &r,bool optimi
          }
       }
       else 
-      {  ManuProC::Trace(trace_channel,"","nodes");
+      {  ManuProC::Trace(trace_channel,std::string(),"nodes");
          if (find_row(p.first->second,r,optimize,result))
          {  result.push_back(p.first);
             return true;
          }
       }
-      ManuProC::Trace(trace_channel,"","not found");
+      ManuProC::Trace(trace_channel,std::string(),"not found");
       return false;
    }
    
@@ -770,14 +770,14 @@ bool SimpleTreeStore::find_row(Node &parent, const cH_RowDataBase &r,bool optimi
    {  STSN_CHECK_MAGIC(&i->second);
       STSN_CHECK_MAGIC(i->second.parent);
       if (i->second.children.empty())
-      {  ManuProC::Trace(trace_channel,"",NV("found",&*i->second.leafdata));
+      {  ManuProC::Trace(trace_channel,std::string(),NV("found",&*i->second.leafdata));
          if (&*i->second.leafdata==&*r)
          {  result.push_back(i);
             return true;
          }
       }
       else 
-      {  ManuProC::Trace(trace_channel,"","recurse");
+      {  ManuProC::Trace(trace_channel,std::string(),"recurse");
          if (find_row(i->second,r,optimize,result))
          {  result.push_back(i);
             return true;

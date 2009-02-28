@@ -46,19 +46,21 @@ class IntStringBox : public IntStringBox_gui
    bool translate:1;
    bool multiple:1;
 
+
    bool try_to_get_id();
 
 protected:
-   std::string _tabelle_,_string1_,_string2_,_int_;
+   std::string _tabelle_,_alias_,_string1_,_string2_,_int_;
    int _none_id_;
+   bool prefix_only:1;
 
 public:
 	IntStringBox(ManuProcEntity<>::ID __none_id=ManuProcEntity<>::none_id);
 
-   void setLabel(const std::string &nr,const std::string &name,const std::string& namez="");
+   void setLabel(const std::string &nr,const std::string &name,const std::string& namez=std::string());
 
 	ManuProcEntity<>::ID get_value() const { return id; }
-	void set_value(ManuProcEntity<>::ID i,const std::string &s,const std::string &sz="") ;
+	void set_value(ManuProcEntity<>::ID i,const std::string &s,const std::string &sz=std::string()) ;
 	virtual void set_value(int i)=0 ;
    void hide_int(bool b);
    void show_string2(bool b);
@@ -73,6 +75,7 @@ public:
    void Einschraenken(bool an);
    void Einschraenkung(const std::string &e, bool an=true);
    void Join(const std::string j);
+   void PrefixOnly(bool p);
    
    void FocusToString1();
 	

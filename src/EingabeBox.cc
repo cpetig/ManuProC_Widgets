@@ -108,7 +108,7 @@ EingabeBox::~EingabeBox()
 }
 
 const std::string EingabeBox::get_label(int col) const
-{  if (col<0 || col>=labels.size()) return "";
+{  if (col<0 || col>=labels.size()) return std::string();
    return labels[col]->get_text(); 
 }
 
@@ -116,7 +116,7 @@ void EingabeBox::set_label(int col,const std::string &s)
 {  grow(col+1); labels[col]->set_text(s); }
 
 const std::string EingabeBox::get_value(int col) const
-{  if (col<0 || col>=entries.size()) return "";
+{  if (col<0 || col>=entries.size()) return std::string();
    return entries[col]->get_text(); 
 }
 
@@ -181,6 +181,6 @@ void EingabeBox::activate_entry(int nr)
 
 void EingabeBox::reset()
 {  for (t_entries::iterator i=entries.begin();i!=entries.end();++i)
-      (*i)->set_text("");
+      (*i)->set_text(Glib::ustring());
 }
 

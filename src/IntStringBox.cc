@@ -97,11 +97,11 @@ gint IntStringBox::try_grab_focus(GtkWidget *w,gpointer gp)
 }
 
 IntStringBox::IntStringBox(ManuProcEntity<>::ID __none_id) 
-: id(__none_id),tr("",false), tr2("",false), 
-tr3("",false),
+: id(__none_id),tr(std::string(),false), tr2(std::string(),false), 
+tr3(std::string(),false),
   eingeschraenkt(),
   string_2_info_only(),
-  translate(), multiple(),
+  translate(), multiple(),prefix_only(true),
   _none_id_(__none_id)
 {
  show_string2(false);
@@ -123,6 +123,7 @@ void IntStringBox::set_value(ManuProcEntity<>::ID i,const std::string &s,
 void IntStringBox::reset()
 {  
    multiple=false;
+   prefix_only=true;
    sc_int->reset();
    sc1_string->reset();
    sc1_string->set_always_fill(false);
@@ -154,6 +155,11 @@ void IntStringBox::Einschraenkung(const std::string &e, bool an)
  multiple=false;
  eingeschraenkt=an;
  einschraenkung=e;
+}
+
+void IntStringBox::PrefixOnly(bool p)
+{
+ prefix_only=p;
 }
 
 void IntStringBox::Join(const std::string j)

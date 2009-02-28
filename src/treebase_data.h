@@ -33,8 +33,8 @@ class RowDataStrings : public RowDataBase
  std::string data[max_arguments];
 public:
 
- RowDataStrings(const std::string &a, const std::string &b="", const std::string &c="", 
- 	   const std::string &d="", const std::string &e="", const std::string &f="")
+ RowDataStrings(const std::string &a, const std::string &b=std::string(), const std::string &c=std::string(), 
+ 	   const std::string &d=std::string(), const std::string &e=std::string(), const std::string &f=std::string())
  { data[0]=a;
    data[1]=b;
    data[2]=c;
@@ -50,12 +50,12 @@ public:
 // ... wenns auch einfach geht
  const std::string operator[](guint i) const
    {if (i>=0 && i<max_arguments) return data[i];
-    return "";
+    return std::string();
    }
    
  virtual cH_EntryValue Value(guint _seqnr, gpointer gp) const
  {if (_seqnr>=0 && _seqnr<max_arguments) return cH_EntryValueIntString(data[_seqnr]);
-  return cH_EntryValueIntString("");
+  return cH_EntryValueIntString(std::string());
  }
 };
 
@@ -63,8 +63,8 @@ class cH_RowDataStrings : public cH_RowDataBase
 {
  cH_RowDataStrings(const RowDataStrings *r) : cH_RowDataBase(r) {}
 public:
- cH_RowDataStrings(const std::string &a, const std::string &b="", const std::string &c="", 
- 	   const std::string &d="", const std::string &e="", const std::string &f="")
+ cH_RowDataStrings(const std::string &a, const std::string &b=std::string(), const std::string &c=std::string(), 
+ 	   const std::string &d=std::string(), const std::string &e=std::string(), const std::string &f=std::string())
 	: cH_RowDataBase(new RowDataStrings(a,b,c,d,e,f)) {}
 	
  		

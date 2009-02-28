@@ -1,6 +1,7 @@
 // $Id: TreeViewUtility.cc,v 1.23 2004/06/30 13:43:13 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2002-2004 Adolf Petig GmbH & Co. KG, written by Christof Petig
+ *  Copyright (C) 2008 Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -195,3 +196,18 @@ int TreeViewUtility::CListEmulator::get_row_num(Gtk::TreeSelection::ListHandle_P
 {  if ((*i).empty()) return -1;
    return (*i)[0];
 }
+
+Glib::ustring TreeViewUtility::CListEmulator::cell_get_text(int row, int col) const
+{
+  Gtk::TreeModel::iterator iter=m_refStore->get_iter(Gtk::TreePath(1u,row));
+  if (!iter || col<0 || col>=cols.size()) return Glib::ustring();
+  return Glib::ustring((*iter)[cols[col]]);
+}
+
+Glib::ustring TreeViewUtility::CListEmulator::selection_get_text(int col) const
+{
+  Gtk::TreeModel::iterator iter=view->get_selection()->get_selected();
+  if (!iter || col<0 || col>=cols.size()) return Glib::ustring();
+  return Glib::ustring((*iter)[cols[col]]);
+}
+

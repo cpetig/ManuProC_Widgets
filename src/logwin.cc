@@ -30,7 +30,7 @@ logwin::logwin(guint minimum_size) : color()
    gtklist.show();
    set_size_request(-1,minimum_size);
    set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-   emu.set_title("");
+   emu.set_title(Glib::ustring());
    emu.attach_to(gtklist);
 }
 
