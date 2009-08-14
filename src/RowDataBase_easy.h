@@ -36,6 +36,7 @@
 //
 
 #include <Misc/EntryValue_easy.h>
+#include <Misc/create_parse.h>
 #include <RowDataBase.h>
 
 template <typename A, typename B=EntryValue_easy::nil, typename C=EntryValue_easy::nil, 
@@ -84,6 +85,24 @@ public:
      case 6: return EntryValue_easy::create(g);
      default: return cH_EntryValue();
    }
+ }
+ virtual bool changeValue(guint _seqnr,gpointer _g, const Glib::ustring &newvalue)
+ {
+   try
+   {
+     switch(_seqnr)
+     { case 0: a = ManuProC::parse<A>(newvalue); return true;
+       case 1: b = ManuProC::parse<B>(newvalue); return true;
+       case 2: c = ManuProC::parse<C>(newvalue); return true;
+       case 3: d = ManuProC::parse<D>(newvalue); return true;
+       case 4: e = ManuProC::parse<E>(newvalue); return true;
+       case 5: f = ManuProC::parse<F>(newvalue); return true;
+       case 6: g = ManuProC::parse<G>(newvalue); return true;
+     }
+   }
+   catch (...) 
+   {}
+   return false;
  }
 };
 

@@ -41,6 +41,7 @@ int main(int argc, char**argv)
   std::vector<gfloat> align(3);
   align[0]=1.0;
   tree.getStore()->setAlignment(align);
+  tree.getStore()->set_editable(0, true);
   tree.getStore()->set_editable(2, true);
 #endif
   
