@@ -21,14 +21,24 @@
 #define KOMPONENTEN_CELLREND_SIMPLE_TREE
 
 #include <gtkmm/cellrenderertext.h>
+#include <gtkmm/cellrenderertoggle.h>
 
-class CellRendererSimpleTree : public Gtk::CellRendererText
-{protected:
-	typedef Gtk::CellRendererText Parent;
-	
+class CellRendererSimpleTree : virtual public Glib::Object //: public Gtk::CellRendererText
+{
+protected:
 	const guint column; // which column this is in
 	Glib::Property<guint> childrens_deep; // the changing properties
 	Glib::Property<guint> children_count;
+	
+public:
+	CellRendererSimpleTree(guint col);
+	Glib::PropertyProxy<guint> property_childrens_deep();
+	Glib::PropertyProxy<guint> property_children_count();
+};
+  
+class CellRendererSimpleTreeText : public Gtk::CellRendererText, public CellRendererSimpleTree
+{protected:
+	typedef Gtk::CellRendererText Parent;
 	
 	virtual void get_size_vfunc(Gtk::Widget& widget, const Gdk::Rectangle* cell_area, 
 			int* x_offset, int* y_offset, int* width, int* height) const;
@@ -40,9 +50,24 @@ class CellRendererSimpleTree : public Gtk::CellRendererText
 			const Glib::ustring& path, const Gdk::Rectangle& background_area,
 			const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags);
 public:
-	CellRendererSimpleTree(guint col);
-	Glib::PropertyProxy<guint> property_childrens_deep();
-	Glib::PropertyProxy<guint> property_children_count();
+	CellRendererSimpleTreeText(guint col);
+};
+  
+class CellRendererSimpleTreeBool : public Gtk::CellRendererToggle, public CellRendererSimpleTree
+{protected:
+	typedef Gtk::CellRendererToggle Parent;
+	
+	virtual void get_size_vfunc(Gtk::Widget& widget, const Gdk::Rectangle* cell_area, 
+			int* x_offset, int* y_offset, int* width, int* height) const;
+	virtual void render_vfunc(const Glib::RefPtr<Gdk::Drawable>& window,
+			Gtk::Widget& widget, const Gdk::Rectangle& background_area, 
+			const Gdk::Rectangle& cell_area, const Gdk::Rectangle& expose_area,
+			Gtk::CellRendererState flags);
+	virtual bool activate_vfunc(GdkEvent* event, Gtk::Widget& widget, 
+			const Glib::ustring& path, const Gdk::Rectangle& background_area,
+			const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags);
+public:
+	CellRendererSimpleTreeBool(guint col);
 };
   
 #endif

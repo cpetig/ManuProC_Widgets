@@ -122,7 +122,7 @@ void SimpleTree_Basic::on_spalten_geaendert()
    for (unsigned int i=0;i<VisibleColumns();++i)
    {
 #if 1
-      CellRendererSimpleTree *crst = Gtk::manage(new CellRendererSimpleTree(i));
+      CellRendererSimpleTreeText *crst = Gtk::manage(new CellRendererSimpleTreeText(i));
       Gtk::TreeView::Column* pColumn = Gtk::manage(new Gtk::TreeView::Column(getColTitle(i),*crst));
       pColumn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_title_clicked),i));
       pColumn->add_attribute(crst->property_text(),sts->m_columns.cols[i]);

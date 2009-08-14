@@ -67,10 +67,16 @@ CellRendererSimpleTree::CellRendererSimpleTree(guint col)
 	: Glib::ObjectBase(typeid(CellRendererSimpleTree)),
 	  column(col), childrens_deep(*this,"childrens_deep",0),
 	  children_count(*this,"children_count",0)
+{  // property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
+}
+
+CellRendererSimpleTreeText::CellRendererSimpleTreeText(guint col)
+	: Glib::ObjectBase(typeid(CellRendererSimpleTreeText)),
+	  CellRendererSimpleTree(col)
 {  property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
 }
 
-void CellRendererSimpleTree::get_size_vfunc(Gtk::Widget& widget, const Gdk::Rectangle* cell_area, 
+void CellRendererSimpleTreeText::get_size_vfunc(Gtk::Widget& widget, const Gdk::Rectangle* cell_area, 
 			int* x_offset, int* y_offset, int* width, int* height) const
 {  Parent::get_size_vfunc(widget,cell_area,x_offset,y_offset,width,height);
 //std::cerr << column << "," << guint(childrens_deep) << '\n';
@@ -95,7 +101,7 @@ static void clamp(Gdk::Rectangle &r,Gdk::Rectangle const &mask)
   }
 }
 
-void CellRendererSimpleTree::render_vfunc(const Glib::RefPtr<Gdk::Drawable>& window,
+void CellRendererSimpleTreeText::render_vfunc(const Glib::RefPtr<Gdk::Drawable>& window,
 			Gtk::Widget& widget, 
 			const Gdk::Rectangle& _background_area, 
 			const Gdk::Rectangle& _cell_area, 
@@ -128,7 +134,7 @@ void CellRendererSimpleTree::render_vfunc(const Glib::RefPtr<Gdk::Drawable>& win
    else Parent::render_vfunc(window,widget,_background_area,_cell_area,_expose_area,flags);
 }
 
-bool CellRendererSimpleTree::activate_vfunc(GdkEvent* event, Gtk::Widget& widget,
+bool CellRendererSimpleTreeText::activate_vfunc(GdkEvent* event, Gtk::Widget& widget,
 			const Glib::ustring& path, const Gdk::Rectangle& background_area,
 			const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags)
 {  if (column && guint(childrens_deep)==column) 
@@ -148,55 +154,3 @@ Glib::PropertyProxy<guint> CellRendererSimpleTree::property_childrens_deep()
 Glib::PropertyProxy<guint> CellRendererSimpleTree::property_children_count()
 {  return children_count.get_proxy();
 }
-
-#if 0
-enum { PROP_CHILDRENS_DEEP };
-
-namespace {
-class CellRendererSimpleTree_Class : public Glib::Class
-{	typedef Gtk::CellRenderer_Class CppClassParent;
-	typedef GtkCellRendererClass BaseClassParent;
-public:
-        const Glib::Class& init();
-        static void class_init_function(void* g_class, void* class_data);
-};
-}
-
-static CellRendererSimpleTree_Class myclass;
-
-void CellRendererSimpleTree_Class::class_init_function(void* g_class, void* class_data)
-{ BaseClassType *const klass = static_cast<BaseClassType*>(g_class);
-  CppClassParent::class_init_function(klass, class_data);
-
-  G_OBJECT_CLASS(klass)->get_property = gtk_cell_renderer_toggle_get_property;
-  G_OBJECT_CLASS(klass)->set_property = gtk_cell_renderer_toggle_set_property;
-  klass->plug_added = &plug_added_callback;
-  klass->plug_removed = &plug_removed_callback;
-}
-
-static void gtk_cell_renderer_SimpleTree_init(GtkCellRenderer *cell)
-{  GTK_CELL_RENDERER(cell)->mode = GTK_CELL_RENDERER_MODE_ACTIVATABLE;
-}
-
-const Glib::Class& CellRendererSimpleTree_Class::init()
-{
-    if (!gtype_)
-    {
-      static const GTypeInfo cell_SimpleTree_info =
-      {
-        sizeof (CellRendererClass),
-        NULL,           /* base_init */
-        NULL,           /* base_finalize */
-        (GClassInitFunc) gtk_cell_renderer_SimpleTree_class_init,
-        NULL,           /* class_finalize */
-        NULL,           /* class_data */
-        sizeof (GtkCellRenderer),
-        0,              /* n_preallocs */
-        (GInstanceInitFunc) gtk_cell_renderer_SimpleTree_init,
-      };
-      type = g_type_register_static (GTK_TYPE_CELL_RENDERER_TEXT,
-		"CellRendererSimpleTree",&cell_SimpleTree_info, GTypeFlags(0));
-    }
-   return *this;
-}
-#endif

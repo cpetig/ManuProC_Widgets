@@ -836,7 +836,14 @@ GType SimpleTreeStore::get_column_type_vfunc(int index) const
       case s_children_count: return m_columns.children_count.type();
       case s_leafdata: return m_columns.leafdata.type();
       case s_background: return m_columns.background.type();
-      default: return G_TYPE_STRING;
+      default:
+        {
+          int colno=index-int(s_text_start);
+          if (colno<0 || colno>=int(Cols())) return G_TYPE_STRING;
+          unsigned idx=currseq[colno];
+          if (Properties().get_column_type(idx)==SimpleTreeModel_Properties::ct_bool) return G_TYPE_BOOLEAN;
+        }
+        return G_TYPE_STRING;
    }
 }
 
@@ -922,10 +929,16 @@ void SimpleTreeStore::get_value_vfunc(const TreeModel::iterator& iter,
          return;
       default:
          if (int(s_text_start)<=column && column<int(s_text_start)+int(max_column))
-         {  VALUE_INIT0(G_TYPE_STRING);
-            int colno=column-int(s_text_start);
-            if (colno<0 || colno>=int(Cols())) return;
+         {  int colno=column-int(s_text_start);
+            if (colno<0 || colno>=int(Cols())) { VALUE_INIT0(G_TYPE_STRING); return; }
             unsigned idx=currseq[colno];
+            if (Properties().get_column_type(idx)==SimpleTreeModel_Properties::ct_bool)
+            {
+              VALUE_INIT0(G_TYPE_BOOLEAN);
+              VALUE_SET(boolean,nd.leafdata->Value(idx,ValueData())->getIntVal());
+              return;
+            }
+            VALUE_INIT0(G_TYPE_STRING);
             if (nd.row)
             {  if (colno<int(nd.deep)) return;
                if (colno<int(nd.childrens_deep))
