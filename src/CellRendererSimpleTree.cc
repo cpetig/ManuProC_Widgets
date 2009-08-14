@@ -148,3 +148,75 @@ Glib::PropertyProxy<guint> CellRendererSimpleTreeText::property_childrens_deep()
 Glib::PropertyProxy<guint> CellRendererSimpleTreeText::property_children_count()
 {  return children_count.get_proxy();
 }
+
+CellRendererSimpleTreeBool::CellRendererSimpleTreeBool(guint col)
+	: Glib::ObjectBase(typeid(CellRendererSimpleTreeBool)),
+	  column(col), childrens_deep(*this,"childrens_deep",0),
+	  children_count(*this,"children_count",0)
+{  //property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
+}
+
+void CellRendererSimpleTreeBool::get_size_vfunc(Gtk::Widget& widget, const Gdk::Rectangle* cell_area, 
+			int* x_offset, int* y_offset, int* width, int* height) const
+{  Parent::get_size_vfunc(widget,cell_area,x_offset,y_offset,width,height);
+//std::cerr << column << "," << guint(childrens_deep) << '\n';
+   if (column && guint(childrens_deep)==column)
+   {  if (width) 
+        *width+=property_xpad() * 2 + XSIZE;
+      if (height && *height<(2*property_ypad() + IMGSIZE)) 
+        *height=2*property_ypad() + IMGSIZE;
+   }
+}
+
+void CellRendererSimpleTreeBool::render_vfunc(const Glib::RefPtr<Gdk::Drawable>& window,
+			Gtk::Widget& widget, 
+			const Gdk::Rectangle& _background_area, 
+			const Gdk::Rectangle& _cell_area, 
+			const Gdk::Rectangle& _expose_area,
+			Gtk::CellRendererState flags)
+{  if (column && guint(childrens_deep)==column)
+   {  Gdk::Rectangle cell_area=_cell_area;
+      Gdk::Rectangle background_area=_background_area;
+      Gdk::Rectangle expose_area=_expose_area;
+      const unsigned int cell_xpad = property_xpad();
+      const unsigned int cell_ypad = property_ypad();
+      
+      int y_offset=cell_area.get_height()/2-IMGSIZE/2;
+      
+      create_plus_minus();
+//std::cerr << "render " << cell_area.get_y() << "," << y_offset << '\n';
+      // background fehlt !
+      window->draw_pixbuf(Gdk::GC::create(window),
+      		property_is_expanded()?minus:plus,0,0,
+      		cell_area.get_x() + cell_xpad,
+      		cell_area.get_y() + y_offset + cell_ypad,
+      		IMGSIZE,IMGSIZE,Gdk::RGB_DITHER_NORMAL,0,0);
+      adjust(cell_area,property_xpad());
+      clamp(expose_area,cell_area);
+      clamp(background_area,cell_area);
+      Parent::render_vfunc(window,widget,background_area,cell_area,expose_area,flags);
+   }
+   else Parent::render_vfunc(window,widget,_background_area,_cell_area,_expose_area,flags);
+}
+
+bool CellRendererSimpleTreeBool::activate_vfunc(GdkEvent* event, Gtk::Widget& widget,
+			const Glib::ustring& path, const Gdk::Rectangle& background_area,
+			const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags)
+{  if (column && guint(childrens_deep)==column) 
+   {  Gtk::TreeView &tv=dynamic_cast<Gtk::TreeView &>(widget);
+      Gtk::TreeModel::Path p=Gtk::TreeModel::Path(path);
+      if (tv.row_expanded(p)) tv.collapse_row(p);
+      else tv.expand_row(p,false);
+      return true;
+   }
+   return false;
+}
+
+Glib::PropertyProxy<guint> CellRendererSimpleTreeBool::property_childrens_deep()
+{  return childrens_deep.get_proxy();
+}
+
+Glib::PropertyProxy<guint> CellRendererSimpleTreeBool::property_children_count()
+{  return children_count.get_proxy();
+}
+

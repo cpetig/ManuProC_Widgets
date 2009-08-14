@@ -111,6 +111,17 @@ void SimpleTree_Basic::on_column_edited(const Glib::ustring &path,const Glib::us
    getModel().has_changed(rdb);
 }
 
+void SimpleTree_Basic::on_column_toggled(const Glib::ustring &path,unsigned idx)
+{  const Gtk::TreeRow row=*getTreeModel()->get_iter(Gtk::TreeModel::Path(path));
+   if (!row) return;
+   cH_RowDataBase rdb=row[getStore()->m_columns.leafdata];
+   // 2do: think about optimizing if nothing changes (unlikely)
+   getModel().about_to_change(rdb);
+   bool changed=false;
+   getModel().signal_value_changed()(rdb,idx,rdb->Value(idx,getStore()->ValueData())->getIntVal()?"f":"t",changed);
+   getModel().has_changed(rdb);
+}
+
 void SimpleTree_Basic::on_spalten_geaendert()
 {  remove_all_columns();
 #if FIRST_COLUMN==1 // hide normal tree expanders
@@ -122,28 +133,50 @@ void SimpleTree_Basic::on_spalten_geaendert()
    for (unsigned int i=0;i<VisibleColumns();++i)
    {
 #if 1
-      CellRendererSimpleTreeText *crst = Gtk::manage(new CellRendererSimpleTreeText(i));
-      Gtk::TreeView::Column* pColumn = Gtk::manage(new Gtk::TreeView::Column(getColTitle(i),*crst));
-      pColumn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_title_clicked),i));
-      pColumn->add_attribute(crst->property_text(),sts->m_columns.cols[i]);
-      if (getStore()->OptionColor().Value())
-         pColumn->add_attribute(crst->property_cell_background_gdk(),sts->m_columns.background);
-      pColumn->add_attribute(crst->property_childrens_deep(),sts->m_columns.childrens_deep);
-      if (getStore()->OptionCount().Value())
-         pColumn->add_attribute(crst->property_children_count(),sts->m_columns.children_count);
-
+      Gtk::CellRenderer *crs=NULL;
+      Gtk::TreeView::Column* pColumn=NULL;
       unsigned idx(IndexFromColumn(i));
+      if (Properties().get_column_type(idx)==SimpleTreeModel_Properties::ct_bool)
+      {
+        CellRendererSimpleTreeBool *crst = Gtk::manage(new CellRendererSimpleTreeBool(i));
+        if (Properties().editable(idx))
+        {  crst->property_activatable()=true;
+           crst->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_column_toggled),idx));
+        }
+
+        pColumn = Gtk::manage(new Gtk::TreeView::Column(getColTitle(i),*crst));
+        pColumn->add_attribute(crst->property_active(),sts->m_columns.cols[i]);
+        pColumn->add_attribute(crst->property_childrens_deep(),sts->m_columns.childrens_deep);
+        if (getStore()->OptionCount().Value())
+          pColumn->add_attribute(crst->property_children_count(),sts->m_columns.children_count);
+        crs= crst;
+      }
+      else // text/number
+      {
+        CellRendererSimpleTreeText *crst = Gtk::manage(new CellRendererSimpleTreeText(i));
+        if (Properties().editable(idx))
+        {  crst->property_editable()=true;
+           crst->signal_edited().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_column_edited),idx));
+        }
+
+        pColumn = Gtk::manage(new Gtk::TreeView::Column(getColTitle(i),*crst));
+        pColumn->add_attribute(crst->property_text(),sts->m_columns.cols[i]);
+        pColumn->add_attribute(crst->property_childrens_deep(),sts->m_columns.childrens_deep);
+        if (getStore()->OptionCount().Value())
+          pColumn->add_attribute(crst->property_children_count(),sts->m_columns.children_count);
+        crs= crst;
+      }
+      crs->property_xalign()=Properties().Alignment(idx);
+      pColumn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_title_clicked),i));
+      if (getStore()->OptionColor().Value())
+         pColumn->add_attribute(crs->property_cell_background_gdk(),sts->m_columns.background);
+
       pColumn->set_alignment(Properties().Alignment(idx));
-      crst->property_xalign()=Properties().Alignment(idx);
       pColumn->set_sizing(Properties().get_sizing(idx));
       if (Properties().get_sizing(idx)==Gtk::TREE_VIEW_COLUMN_FIXED)
         pColumn->set_fixed_width(Properties().get_fixed_width(idx));
       pColumn->set_resizable(Properties().resizeable(idx));
       
-      if (Properties().editable(idx))
-      {  crst->property_editable()=true;
-         crst->signal_edited().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_column_edited),idx));
-      }
       append_column(*pColumn);
 #else
       append_column(getColTitle(i),sts->m_columns.cols[i]);
