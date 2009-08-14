@@ -49,7 +49,7 @@ struct SimpleTreeModel_Properties_Proxy::Standard : public SimpleTreeModel_Prope
 	std::vector<bool> v_resizeable;
 
   Standard(guint cols) : columns(cols), titles(cols), 
-      column_editable(cols), node_creation(), 
+      column_editable(cols), column_type(cols), node_creation(), 
       gp(), alignment(cols), v_resizeable(cols,true) {}
   virtual unsigned Columns() const { return columns; }
   virtual gpointer ValueData() const { return gp; }
@@ -106,6 +106,11 @@ void SimpleTreeModel_Properties_Proxy::set_value_data(gpointer p)
 void SimpleTreeModel_Properties_Proxy::setTitles(const std::vector<std::string> &T)
 {  stdProperties().setTitles(T);
    column_changed(SimpleTreeStore::invisible_column);
+}
+
+void SimpleTreeModel_Properties_Proxy::set_column_type(unsigned idx, SimpleTreeModel_Properties::column_type_t t)
+{  stdProperties().set_column_type(idx,t);
+   column_changed(idx);
 }
 
 void SimpleTreeStore::set_remember(const std::string &program, const std::string &instance)

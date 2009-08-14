@@ -1,7 +1,7 @@
 SUBDIRS=newtree tree_simplest dwhouse MVC
 
 EXTRA_PROGRAMS = Event TreeViewUtil TreeSelection test_sts test_logwin \
-	test_clist datewintest
+	test_clist datewintest EvenMoreSimpleUsage
 
 AM_CXXFLAGS=@KOMPONENTEN_INCLUDES@ 
 #-Wl,--enable-runtime-pseudo-reloc
@@ -20,5 +20,7 @@ test_clist_SOURCES=test_clist.cc
 test_clist_LDADD=@KOMPONENTEN_LIBS@
 datewintest_SOURCES=datewintest.cc
 datewintest_LDADD = @KOMPONENTEN_LIBS@
+EvenMoreSimpleUsage_SOURCES=EvenMoreSimpleUsage.cc
+EvenMoreSimpleUsage_LDADD= @KOMPONENTEN_LIBS@
 
 AM_LDFLAGS=@KOMPONENTEN_LDFLAGS@
