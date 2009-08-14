@@ -21,8 +21,18 @@
 #include <RowDataBase_easy.h>
 #include <gtkmm/main.h>
 #include <gtkmm/window.h>
+#include <iostream>
 
 typedef RowDataBase_easy<int,std::string,bool> row_t;
+
+struct OutputFunctor
+{
+  void operator()(const cH_RowDataBase &b)
+  {
+	Handle<row_t const> r = b.cast_dynamic<row_t const>();
+        std::cout << r->get_0() << ',' << r->get_1() << ',' << r->get_2() << '\n';
+  }
+};
 
 int main(int argc, char**argv)
 {
@@ -53,5 +63,8 @@ int main(int argc, char**argv)
   tree.show();
   w.show();
   m.run(w);
+
+  OutputFunctor o;
+  tree.ForEachLeaf(o);
   return 0;
 }

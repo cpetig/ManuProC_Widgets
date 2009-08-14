@@ -209,7 +209,11 @@ bool CellRendererSimpleTreeBool::activate_vfunc(GdkEvent* event, Gtk::Widget& wi
       else tv.expand_row(p,false);
       return true;
    }
-   return false;
+   if ((bool)property_activatable())
+    { 
+      g_signal_emit_by_name (gobj(), "toggled", path.c_str());
+    }
+   return true;
 }
 
 Glib::PropertyProxy<guint> CellRendererSimpleTreeBool::property_childrens_deep()
