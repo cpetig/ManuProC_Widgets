@@ -23,22 +23,13 @@
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/cellrenderertoggle.h>
 
-class CellRendererSimpleTree : virtual public Glib::Object //: public Gtk::CellRendererText
-{
-protected:
+class CellRendererSimpleTreeText : public Gtk::CellRendererText
+{protected:
+	typedef Gtk::CellRendererText Parent;
+	
 	const guint column; // which column this is in
 	Glib::Property<guint> childrens_deep; // the changing properties
 	Glib::Property<guint> children_count;
-	
-public:
-	CellRendererSimpleTree(guint col);
-	Glib::PropertyProxy<guint> property_childrens_deep();
-	Glib::PropertyProxy<guint> property_children_count();
-};
-  
-class CellRendererSimpleTreeText : public Gtk::CellRendererText, public CellRendererSimpleTree
-{protected:
-	typedef Gtk::CellRendererText Parent;
 	
 	virtual void get_size_vfunc(Gtk::Widget& widget, const Gdk::Rectangle* cell_area, 
 			int* x_offset, int* y_offset, int* width, int* height) const;
@@ -51,11 +42,17 @@ class CellRendererSimpleTreeText : public Gtk::CellRendererText, public CellRend
 			const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags);
 public:
 	CellRendererSimpleTreeText(guint col);
+	Glib::PropertyProxy<guint> property_childrens_deep();
+	Glib::PropertyProxy<guint> property_children_count();
 };
   
-class CellRendererSimpleTreeBool : public Gtk::CellRendererToggle, public CellRendererSimpleTree
+class CellRendererSimpleTreeBool : public Gtk::CellRendererToggle
 {protected:
 	typedef Gtk::CellRendererToggle Parent;
+	
+	const guint column; // which column this is in
+	Glib::Property<guint> childrens_deep; // the changing properties
+	Glib::Property<guint> children_count;
 	
 	virtual void get_size_vfunc(Gtk::Widget& widget, const Gdk::Rectangle* cell_area, 
 			int* x_offset, int* y_offset, int* width, int* height) const;
@@ -68,6 +65,8 @@ class CellRendererSimpleTreeBool : public Gtk::CellRendererToggle, public CellRe
 			const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags);
 public:
 	CellRendererSimpleTreeBool(guint col);
+	Glib::PropertyProxy<guint> property_childrens_deep();
+	Glib::PropertyProxy<guint> property_children_count();
 };
   
 #endif

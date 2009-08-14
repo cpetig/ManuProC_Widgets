@@ -63,16 +63,10 @@ static void create_plus_minus()
 #define IMGSIZE 9
 #define XSIZE IMGSIZE+2
 
-CellRendererSimpleTree::CellRendererSimpleTree(guint col)
-	: Glib::ObjectBase(typeid(CellRendererSimpleTree)),
-	  column(col), childrens_deep(*this,"childrens_deep",0),
-	  children_count(*this,"children_count",0)
-{  // property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
-}
-
 CellRendererSimpleTreeText::CellRendererSimpleTreeText(guint col)
 	: Glib::ObjectBase(typeid(CellRendererSimpleTreeText)),
-	  CellRendererSimpleTree(col)
+	  column(col), childrens_deep(*this,"childrens_deep",0),
+	  children_count(*this,"children_count",0)
 {  property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
 }
 
@@ -147,10 +141,10 @@ bool CellRendererSimpleTreeText::activate_vfunc(GdkEvent* event, Gtk::Widget& wi
    return false;
 }
 
-Glib::PropertyProxy<guint> CellRendererSimpleTree::property_childrens_deep()
+Glib::PropertyProxy<guint> CellRendererSimpleTreeText::property_childrens_deep()
 {  return childrens_deep.get_proxy();
 }
 
-Glib::PropertyProxy<guint> CellRendererSimpleTree::property_children_count()
+Glib::PropertyProxy<guint> CellRendererSimpleTreeText::property_children_count()
 {  return children_count.get_proxy();
 }
