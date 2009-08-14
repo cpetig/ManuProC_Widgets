@@ -701,7 +701,10 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
 }
 
 void SimpleTree::write_excel(std::string const& filename) const
-{ YExcel::BasicExcel e;
+{ 
+
+
+  YExcel::BasicExcel e;
   e.New(1);
   std::string name=getStore()->Properties().InstanceName();
   if (name.empty()) name=_("Tabelle");
@@ -717,12 +720,29 @@ void SimpleTree::write_excel(std::string const& filename) const
   }
   unsigned row=1;
   SimpleTree* non_const_this=const_cast<SimpleTree*>(this);
-  write_excel_sub(non_const_this,sheet,row,non_const_this->get_model()->children());
+  if(non_const_this->get_selection()->get_mode() != Gtk::SELECTION_MULTIPLE)
+   {Gtk::TreeModel::iterator iter = non_const_this->get_selection()->get_selected() ; 
+    write_excel_sub(non_const_this,sheet,row,iter->children());
+   }
+  else
+    write_excel_sub(non_const_this,sheet,row,non_const_this->get_model()->children());
+//  non_const_this->get_selection()->selected_foreach_iter(sigc::mem_fun(
+//                      *this,&write_excel_sub),non_const_this,&sheet,&row,non_const_this->get_model()->children());
+  
+//  konten_tree->get_selection()->selected_foreach_iter(sigc::bind(sigc::mem_fun(*this,
+//                   &fibumain::konto_print_one_node),&tf,&os));
+
+
+                   
   e.SaveAs(filename.c_str());
 }
 
 void SimpleTree::write_excel_via_filerequester() const
-{ std::string fname=getStore()->Properties().InstanceName();
+{
+  if(get_selection()->get_selected_rows().size()!=1)
+      return;
+    
+  std::string fname=getStore()->Properties().InstanceName();
   if (fname.empty()) fname=_("Tabelle");
   if (getenv("HOME")) fname=std::string(getenv("HOME"))+"/"+fname;
   fname+=".xls";
