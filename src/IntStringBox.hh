@@ -1,6 +1,7 @@
 // $Id: IntStringBox.hh,v 1.5 2006/08/03 11:27:11 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
+ *  Copyright (C) 2009 Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -44,10 +45,10 @@ class IntStringBox : public IntStringBox_gui
    bool eingeschraenkt:1;
    bool string_2_info_only:1;
    bool translate:1;
-   bool multiple:1;
+   bool restricted_int_search:1;
 
 
-   bool try_to_get_id();
+   bool try_to_get_id(bool &multiple);
 
 protected:
    std::string _tabelle_,_alias_,_string1_,_string2_,_int_;
