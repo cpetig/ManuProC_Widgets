@@ -20,21 +20,18 @@
 #include "LabelSpin.hh"
 #include <Misc/itos.h>
 #include <gtkmm/adjustment.h>
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 LabelSpin::LabelSpin(int v,int lower,int upper)
 : value(v)
 {
-   label=manage(new class Gtk::Label(itos(value)));
-   Gtk::Adjustment *adj = manage(new class Gtk::Adjustment(value, lower, upper));
-   spinbutton = manage(new class Gtk::SpinButton(*adj));
-   spinbutton->signal_activate().connect(SigC::slot(*static_cast<class LabelSpin*>(this), &LabelSpin::spin_activate),true);   
+   label=Gtk::manage(new class Gtk::Label(itos(value)));
+   Gtk::Adjustment *adj = Gtk::manage(new class Gtk::Adjustment(value, lower, upper));
+   spinbutton = Gtk::manage(new class Gtk::SpinButton(*adj));
+   spinbutton->signal_activate().connect(sigc::mem_fun(*static_cast<class LabelSpin*>(this), &LabelSpin::spin_activate),true);   
    
    set_flags(Gtk::CAN_FOCUS);
-   signal_focus_in_event().connect(SigC::slot(*this, &LabelSpin::Focus_in_event),true);
-   signal_focus_out_event().connect(SigC::slot(*this, &LabelSpin::Focus_out_event),true);
+   signal_focus_in_event().connect(sigc::mem_fun(*this, &LabelSpin::Focus_in_event),true);
+   signal_focus_out_event().connect(sigc::mem_fun(*this, &LabelSpin::Focus_out_event),true);
 
 
    pack_start(*label);

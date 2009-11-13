@@ -28,7 +28,6 @@
 #endif
 #include <gtkmmconfig.h>
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#include <sigc++/compatibility.h>
 #include <sigc++/bind.h>
 #define GMM_GTKMM_22_24(a,b) b
 #else //gtkmm 2.2
@@ -86,14 +85,14 @@ IntStringBox_glade::IntStringBox_glade(
    sc_int->show();
    table->show();
    IntStringBox->show();
-   sc1_string->signal_activate().connect(SigC::slot(*this, &IntStringBox_glade::string1_activate));
-   sc1_string->signal_search().connect(SigC::slot(*this, &IntStringBox_glade::string1_search), false);
-   sc2_string->signal_activate().connect(SigC::slot(*this, &IntStringBox_glade::string2_activate));
-   sc2_string->signal_search().connect(SigC::slot(*this, &IntStringBox_glade::string2_search), false);
-   button3->signal_clicked().connect(SigC::slot(*this, &IntStringBox_glade::reset), false);
-   sc_int->signal_activate().connect(SigC::slot(*this, &IntStringBox_glade::int_activate));
-   sc_int->signal_search().connect(SigC::slot(*this, &IntStringBox_glade::int_search), false);
-   table->signal_button_press_event().connect(SigC::slot(*this, &IntStringBox_glade::MouseButton), false);
+   sc1_string->signal_activate().connect(sigc::mem_fun(*this, &IntStringBox_glade::string1_activate));
+   sc1_string->signal_search().connect(sigc::mem_fun(*this, &IntStringBox_glade::string1_search), false);
+   sc2_string->signal_activate().connect(sigc::mem_fun(*this, &IntStringBox_glade::string2_activate));
+   sc2_string->signal_search().connect(sigc::mem_fun(*this, &IntStringBox_glade::string2_search), false);
+   button3->signal_clicked().connect(sigc::mem_fun(*this, &IntStringBox_glade::reset), false);
+   sc_int->signal_activate().connect(sigc::mem_fun(*this, &IntStringBox_glade::int_activate));
+   sc_int->signal_search().connect(sigc::mem_fun(*this, &IntStringBox_glade::int_search), false);
+   table->signal_button_press_event().connect(sigc::mem_fun(*this, &IntStringBox_glade::MouseButton), false);
 }
 
 IntStringBox_glade::~IntStringBox_glade()

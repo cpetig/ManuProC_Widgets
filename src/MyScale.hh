@@ -41,7 +41,7 @@ class MyScale : public Gtk::Table
       Gtk::VScale *scale;
       Gtk::Button *bup,*bdown;
 
-      SigC::Signal0<void> activate;
+      sigc::signal<void> activate;
    public:
       MyScale():value(50),ltop(0),lbottom(0),bup(0),bdown(0) {init();}
 
@@ -50,7 +50,7 @@ class MyScale : public Gtk::Table
       int get_value() const {return value;}
       void set_value(int v);
 
-      SigC::Signal0<void> &signal_activate()
+      sigc::signal<void> &signal_activate()
       {  return activate; }
 };
 

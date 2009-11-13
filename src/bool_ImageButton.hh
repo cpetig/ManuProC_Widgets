@@ -32,14 +32,14 @@ public:
 	class Connection : public ModelWidgetConnection<T,Gtk::Image>
 	{	Glib::RefPtr<Gdk::Pixbuf> off,on;
 		Gtk::Widget *eventbox;
-		SigC::Connection toggleconn;
+		sigc::connection toggleconn;
 		// tooltips
 		Gtk::Tooltips *tips;
 		std::string tip_off,tip_on;
 
 		void model2widget();
 		void widget2model() {}
-		SigC::Connection connect();
+		sigc::connection connect();
 		void disconnect();
 		
 		bool toggle(GdkEventButton *ev);

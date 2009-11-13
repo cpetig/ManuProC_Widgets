@@ -19,9 +19,6 @@
  */
 
 #include <TooltipView.h>
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 namespace {
 struct TooltipAssociation_bool : TooltipAssociation
@@ -53,7 +50,7 @@ void TooltipViewList::Associate(Gtk::Widget &w,const Model_ref<bool> &m,
    tta->model=m;
    tta->falsetip=falsetip;
    tta->truetip=truetip;
-   m.signal_changed().connect(SigC::slot(*tta,&TooltipAssociation_bool::changed_cb));
+   m.signal_changed().connect(sigc::mem_fun(*tta,&TooltipAssociation_bool::changed_cb));
    tta->changed_cb(0);
 }
 

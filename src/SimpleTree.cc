@@ -1,4 +1,4 @@
-// $Id: SimpleTree.cc,v 1.80 2005/11/18 09:55:52 christof Exp $
+// $Id: SimpleTree.cc,v 1.94 2006/08/03 11:27:11 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2002-2005 Adolf Petig GmbH & Co. KG, written by Christof Petig
  *
@@ -18,7 +18,9 @@
  */
 
 #include "config.h"
-#include <libintl.h>
+#if defined __GNUC__ && __GNUC__ == 4 && __GNUC_MINOR__==0 /* local strangeness? */
+# include <libintl.h>
+#endif
 #include <Misc/i18n.h>
 #include <SimpleTree.hh>
 #include <Misc/itos.h>
@@ -27,7 +29,6 @@
 #include <bool_CheckMenuItem.hh>
 #include <CellRendererSimpleTree.h>
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
 #  include <sigc++/bind.h>
 #endif
 #include <iostream>
@@ -35,6 +36,7 @@
 #include <Misc/EntryValueIntString.h>
 
 #define FIRST_COLUMN 1
+#define MPC_ST_ADVANCED
 
 #ifdef MPC_ST_EXCEL_EXPORT
 # include <WinFileReq.hh>
@@ -73,15 +75,15 @@ void SimpleTree_Basic::attach()
 void SimpleTree_Basic::init()
 {  on_spalten_geaendert();
 
-   get_selection()->signal_changed().connect(SigC::slot(*this,&SimpleTree_Basic::on_selection_changed));
+   get_selection()->signal_changed().connect(sigc::mem_fun(*this,&SimpleTree_Basic::on_selection_changed));
    // stammt eigentlich aus Prefs_proxy   
-   getStore()->signal_column_changed().connect(SigC::slot(*this,&SimpleTree_Basic::on_column_changed));
+   getStore()->signal_column_changed().connect(sigc::mem_fun(*this,&SimpleTree_Basic::on_column_changed));
    // Store
-   getStore()->signal_please_detach().connect(SigC::slot(*this,&SimpleTree_Basic::detach));
-   getStore()->signal_please_attach().connect(SigC::slot(*this,&SimpleTree_Basic::attach));
-   getStore()->signal_spalten_geaendert().connect(SigC::slot(*this,&SimpleTree_Basic::on_spalten_geaendert));
+   getStore()->signal_please_detach().connect(sigc::mem_fun(*this,&SimpleTree_Basic::detach));
+   getStore()->signal_please_attach().connect(sigc::mem_fun(*this,&SimpleTree_Basic::attach));
+   getStore()->signal_spalten_geaendert().connect(sigc::mem_fun(*this,&SimpleTree_Basic::on_spalten_geaendert));
    fillMenu();
-   signal_button_press_event().connect(SigC::slot(*this,&SimpleTree_Basic::MouseButton),false);
+   signal_button_press_event().connect(sigc::mem_fun(*this,&SimpleTree_Basic::MouseButton),false);
 }
 
 SimpleTree_Basic::SimpleTree_Basic(unsigned maxcol)
@@ -109,6 +111,17 @@ void SimpleTree_Basic::on_column_edited(const Glib::ustring &path,const Glib::us
    getModel().has_changed(rdb);
 }
 
+void SimpleTree_Basic::on_column_toggled(const Glib::ustring &path,unsigned idx)
+{  const Gtk::TreeRow row=*getTreeModel()->get_iter(Gtk::TreeModel::Path(path));
+   if (!row) return;
+   cH_RowDataBase rdb=row[getStore()->m_columns.leafdata];
+   // 2do: think about optimizing if nothing changes (unlikely)
+   getModel().about_to_change(rdb);
+   bool changed=false;
+   getModel().signal_value_changed()(rdb,idx,rdb->Value(idx,getStore()->ValueData())->getIntVal()?"f":"t",changed);
+   getModel().has_changed(rdb);
+}
+
 void SimpleTree_Basic::on_spalten_geaendert()
 {  remove_all_columns();
 #if FIRST_COLUMN==1 // hide normal tree expanders
@@ -120,28 +133,50 @@ void SimpleTree_Basic::on_spalten_geaendert()
    for (unsigned int i=0;i<VisibleColumns();++i)
    {
 #if 1
-      CellRendererSimpleTree *crst = Gtk::manage(new CellRendererSimpleTree(i));
-      Gtk::TreeView::Column* pColumn = Gtk::manage(new Gtk::TreeView::Column(getColTitle(i),*crst));
-      pColumn->signal_clicked().connect(SigC::bind(SigC::slot(*this,&SimpleTree_Basic::on_title_clicked),i));
-      pColumn->add_attribute(crst->property_text(),sts->m_columns.cols[i]);
-      if (getStore()->OptionColor().Value())
-         pColumn->add_attribute(crst->property_background_gdk(),sts->m_columns.background);
-      pColumn->add_attribute(crst->property_childrens_deep(),sts->m_columns.childrens_deep);
-      if (getStore()->OptionCount().Value())
-         pColumn->add_attribute(crst->property_children_count(),sts->m_columns.children_count);
-
+      Gtk::CellRenderer *crs=NULL;
+      Gtk::TreeView::Column* pColumn=NULL;
       unsigned idx(IndexFromColumn(i));
+      if (Properties().get_column_type(idx)==SimpleTreeModel_Properties::ct_bool)
+      {
+        CellRendererSimpleTreeBool *crst = Gtk::manage(new CellRendererSimpleTreeBool(i));
+        if (Properties().editable(idx))
+        {  crst->property_activatable()=true;
+           crst->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_column_toggled),idx));
+        }
+
+        pColumn = Gtk::manage(new Gtk::TreeView::Column(getColTitle(i),*crst));
+        pColumn->add_attribute(crst->property_active(),sts->m_columns.cols[i]);
+        pColumn->add_attribute(crst->property_childrens_deep(),sts->m_columns.childrens_deep);
+        if (getStore()->OptionCount().Value())
+          pColumn->add_attribute(crst->property_children_count(),sts->m_columns.children_count);
+        crs= crst;
+      }
+      else // text/number
+      {
+        CellRendererSimpleTreeText *crst = Gtk::manage(new CellRendererSimpleTreeText(i));
+        if (Properties().editable(idx))
+        {  crst->property_editable()=true;
+           crst->signal_edited().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_column_edited),idx));
+        }
+
+        pColumn = Gtk::manage(new Gtk::TreeView::Column(getColTitle(i),*crst));
+        pColumn->add_attribute(crst->property_text(),sts->m_columns.cols[i]);
+        pColumn->add_attribute(crst->property_childrens_deep(),sts->m_columns.childrens_deep);
+        if (getStore()->OptionCount().Value())
+          pColumn->add_attribute(crst->property_children_count(),sts->m_columns.children_count);
+        crs= crst;
+      }
+      crs->property_xalign()=Properties().Alignment(idx);
+      pColumn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::on_title_clicked),i));
+      if (getStore()->OptionColor().Value())
+         pColumn->add_attribute(crs->property_cell_background_gdk(),sts->m_columns.background);
+
       pColumn->set_alignment(Properties().Alignment(idx));
-      crst->property_xalign()=Properties().Alignment(idx);
       pColumn->set_sizing(Properties().get_sizing(idx));
       if (Properties().get_sizing(idx)==Gtk::TREE_VIEW_COLUMN_FIXED)
         pColumn->set_fixed_width(Properties().get_fixed_width(idx));
       pColumn->set_resizable(Properties().resizeable(idx));
       
-      if (Properties().editable(idx))
-      {  crst->property_editable()=true;
-         crst->signal_edited().connect(SigC::bind(SigC::slot(*this,&SimpleTree_Basic::on_column_edited),idx));
-      }
       append_column(*pColumn);
 #else
       append_column(getColTitle(i),sts->m_columns.cols[i]);
@@ -242,7 +277,7 @@ void SimpleTree_Basic::on_selection_changed()
       get_selection()->selected_foreach_iter(sigc::bind(sigc::mem_fun(*this,
       		&SimpleTree_Basic::sel_change_cb),&leaves,&nodes));
 #else
-      get_selection()->selected_foreach(SigC::bind(SigC::slot(*this,
+      get_selection()->selected_foreach(sigc::bind(sigc::mem_fun(*this,
       		&SimpleTree_Basic::sel_change_cb),&leaves,&nodes));
 #endif
       for (std::vector<cH_RowDataBase>::const_iterator i=leaves.begin();
@@ -335,8 +370,8 @@ std::vector<cH_RowDataBase> SimpleTree::getSelectedRowDataBase_vec(bool include_
    		sigc::mem_fun(*non_const_this,
       		&SimpleTree::getSelectedRowDataBase_vec_cb),&result,include_nodes));
 #else
-   non_const_this->get_selection()->selected_foreach(SigC::bind(
-   		SigC::slot(*non_const_this,
+   non_const_this->get_selection()->selected_foreach(sigc::bind(
+   		sigc::mem_fun(*non_const_this,
       		&SimpleTree::getSelectedRowDataBase_vec_cb),&result,include_nodes));
 #endif      		
    return result;
@@ -345,39 +380,51 @@ std::vector<cH_RowDataBase> SimpleTree::getSelectedRowDataBase_vec(bool include_
 
 static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text,const Model_ref<bvector_item> &model)
 {  bvector_item_CheckMenuItem *it = 
-	manage(new bvector_item_CheckMenuItem(model,text));
+   Gtk::manage(new bvector_item_CheckMenuItem(model,text));
    m->append(*it);
    it->show();
    return it;
 }
 
 static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text,const Model_ref<bool> &model)
-{  bool_CheckMenuItem *it = manage(new bool_CheckMenuItem(model,text));
+{  bool_CheckMenuItem *it = Gtk::manage(new bool_CheckMenuItem(model,text));
    m->append(*it);
    it->show();
    return it;
 }
 
 static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text)
-{  Gtk::MenuItem *it=manage(new class Gtk::MenuItem(text));
+{  Gtk::MenuItem *it=Gtk::manage(new class Gtk::MenuItem(text));
    m->append(*it);
    it->show();
    return it;
 }
 
-static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text,const SigC::Slot0<void> &callback)
+static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text,const sigc::slot<void> &callback)
 {  Gtk::MenuItem *it=add_mitem(m,text);
    it->signal_activate().connect(callback);
    return it;
+}
+
+static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text, Gtk::RadioMenuItem::Group &group, const sigc::slot<void> &callback)
+{  Gtk::RadioMenuItem *it=manage(new class Gtk::RadioMenuItem(group,text));
+   m->append(*it);
+   it->show();
+   it->signal_activate().connect(callback);
+   return it;
+}
+
+void SimpleTree_Basic::menu_ranking(int column)
+{ getStore()->setSortierspalte(column, true);
 }
 
 void SimpleTree_Basic::fillMenu()
 {  assert(menu==0); 
   menu=new Gtk::Menu();
   // Hauptmenü
-  add_mitem(menu,_("Zurücksetzen"),SigC::slot(*this,&SimpleTree_Basic::on_zuruecksetzen_clicked));
-  add_mitem(menu,_("Abbrechen"),SigC::slot(*this,&SimpleTree_Basic::on_abbrechen_clicked));
-  add_mitem(menu,_("Neuordnen"),SigC::slot(*this,&SimpleTree_Basic::on_neuordnen_clicked));
+  add_mitem(menu,_("Zurücksetzen"),sigc::mem_fun(*this,&SimpleTree_Basic::on_zuruecksetzen_clicked));
+  add_mitem(menu,_("Abbrechen"),sigc::mem_fun(*this,&SimpleTree_Basic::on_abbrechen_clicked));
+  add_mitem(menu,_("Neuordnen"),sigc::mem_fun(*this,&SimpleTree_Basic::on_neuordnen_clicked));
 
   Gtk::MenuItem *spalten=add_mitem(menu,_("Sichtbare Spalten"));
   Gtk::Menu *spalten_menu=manage(new Gtk::Menu);
@@ -398,10 +445,19 @@ void SimpleTree_Basic::fillMenu()
   add_mitem(optionen_menu,_("Zeilen zählen"),getStore()->OptionCount());
 
   optionen->set_submenu(*optionen_menu);
-  add_mitem(menu,_("Alles aufklappen"),SigC::slot(*this,&SimpleTree_Basic::Expand_recursively));
-  add_mitem(menu,_("Alles zuklappen"),SigC::slot(*this,&SimpleTree_Basic::Collapse));
+  add_mitem(menu,_("Alles aufklappen"),sigc::mem_fun(*this,&SimpleTree_Basic::Expand_recursively));
+  add_mitem(menu,_("Alles zuklappen"),sigc::mem_fun(*this,&SimpleTree_Basic::Collapse));
 #ifdef MPC_ST_EXCEL_EXPORT
-  add_mitem(menu,_("Excel-Datei schreiben"),SigC::slot(*this,&SimpleTree_Basic::write_excel_via_filerequester));
+  add_mitem(menu,_("Excel-Datei schreiben"),sigc::mem_fun(*this,&SimpleTree_Basic::write_excel_via_filerequester));
+#endif
+#ifdef MPC_ST_ADVANCED
+  Gtk::RadioMenuItem::Group group;
+  Gtk::MenuItem *ranking=add_mitem(menu,_("Rangfolge"));
+  Gtk::Menu *ranking_menu=manage(new Gtk::Menu);
+  ranking->set_submenu(*ranking_menu);
+  add_mitem(ranking_menu,_(" aus "),group,sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::menu_ranking),-1));
+  for (guint i=0;i<getStore()->MaxCol();++i)
+    add_mitem(ranking_menu,Properties().Title(i),group,sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::menu_ranking),i));
 #endif
   
   // separator
@@ -509,19 +565,19 @@ static void sig3piI(const Gtk::TreeModel::Path&p,const Gtk::TreeModel::iterator&
 }
 
 void SimpleTree_Basic::debug()
-{ getStore()->signal_please_detach().connect(SigC::bind(&sig0,"please_detach"));
-  getStore()->signal_please_attach().connect(SigC::bind(&sig0,"please_attach"));
-  getStore()->signal_spalten_geaendert().connect(SigC::bind(&sig0,"spalten_geaendert"));
-  getStore()->signal_column_changed().connect(SigC::bind(&sig1i,"column_changed"));
-  getModel().signal_line_appended().connect(SigC::bind(&sig1r,"line_appended"));
-  getModel().signal_line_to_remove().connect(SigC::bind(&sig1r,"line_to_remove"));
-  getModel().signal_please_detach().connect(SigC::bind(&sig0,"Model::please_detach"));
-  getModel().signal_please_attach().connect(SigC::bind(&sig0,"Model::please_attach"));
-  getStore()->signal_row_changed().connect(SigC::bind(&sig2pi,"row_changed"));
-  getStore()->signal_row_inserted().connect(SigC::bind(&sig2pi,"row_inserted"));
-  getStore()->signal_row_has_child_toggled().connect(SigC::bind(&sig2pi,"row_has_child_toggled"));
-  getStore()->signal_row_deleted().connect(SigC::bind(&sig1p,"row_deleted"));
-  getStore()->signal_rows_reordered().connect(SigC::bind(&sig3piI,"rows_reordered"));
+{ getStore()->signal_please_detach().connect(sigc::bind(&sig0,"please_detach"));
+  getStore()->signal_please_attach().connect(sigc::bind(&sig0,"please_attach"));
+  getStore()->signal_spalten_geaendert().connect(sigc::bind(&sig0,"spalten_geaendert"));
+  getStore()->signal_column_changed().connect(sigc::bind(&sig1i,"column_changed"));
+  getModel().signal_line_appended().connect(sigc::bind(&sig1r,"line_appended"));
+  getModel().signal_line_to_remove().connect(sigc::bind(&sig1r,"line_to_remove"));
+  getModel().signal_please_detach().connect(sigc::bind(&sig0,"Model::please_detach"));
+  getModel().signal_please_attach().connect(sigc::bind(&sig0,"Model::please_attach"));
+  getStore()->signal_row_changed().connect(sigc::bind(&sig2pi,"row_changed"));
+  getStore()->signal_row_inserted().connect(sigc::bind(&sig2pi,"row_inserted"));
+  getStore()->signal_row_has_child_toggled().connect(sigc::bind(&sig2pi,"row_has_child_toggled"));
+  getStore()->signal_row_deleted().connect(sigc::bind(&sig1p,"row_deleted"));
+  getStore()->signal_rows_reordered().connect(sigc::bind(&sig3piI,"rows_reordered"));
 }
 
 // deprecated proxies
@@ -537,7 +593,7 @@ bool SimpleTree_Basic::clicked_impl(SimpleTree_Basic *_this, const cH_RowDataBas
    return handled;
 }
 
-SigC::Signal3<void,const cH_RowDataBase &,int,bool&> 
+sigc::signal<void,const cH_RowDataBase &,int,bool&> 
 	  &SimpleTree_Basic::signal_clicked()
 { button_press_vfunc=&SimpleTree_Basic::clicked_impl;
   return clicked_sig;
@@ -645,7 +701,10 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
 }
 
 void SimpleTree::write_excel(std::string const& filename) const
-{ YExcel::BasicExcel e;
+{ 
+
+
+  YExcel::BasicExcel e;
   e.New(1);
   std::string name=getStore()->Properties().InstanceName();
   if (name.empty()) name=_("Tabelle");
@@ -661,12 +720,29 @@ void SimpleTree::write_excel(std::string const& filename) const
   }
   unsigned row=1;
   SimpleTree* non_const_this=const_cast<SimpleTree*>(this);
-  write_excel_sub(non_const_this,sheet,row,non_const_this->get_model()->children());
+  if(non_const_this->get_selection()->get_mode() != Gtk::SELECTION_MULTIPLE)
+   {Gtk::TreeModel::iterator iter = non_const_this->get_selection()->get_selected() ; 
+    write_excel_sub(non_const_this,sheet,row,iter->children());
+   }
+  else
+    write_excel_sub(non_const_this,sheet,row,non_const_this->get_model()->children());
+//  non_const_this->get_selection()->selected_foreach_iter(sigc::mem_fun(
+//                      *this,&write_excel_sub),non_const_this,&sheet,&row,non_const_this->get_model()->children());
+  
+//  konten_tree->get_selection()->selected_foreach_iter(sigc::bind(sigc::mem_fun(*this,
+//                   &fibumain::konto_print_one_node),&tf,&os));
+
+
+                   
   e.SaveAs(filename.c_str());
 }
 
 void SimpleTree::write_excel_via_filerequester() const
-{ std::string fname=getStore()->Properties().InstanceName();
+{
+  if(get_selection()->get_selected_rows().size()!=1)
+      return;
+    
+  std::string fname=getStore()->Properties().InstanceName();
   if (fname.empty()) fname=_("Tabelle");
   if (getenv("HOME")) fname=std::string(getenv("HOME"))+"/"+fname;
   fname+=".xls";

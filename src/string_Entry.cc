@@ -19,9 +19,6 @@
  */
 
 #include "string_Entry.hh"
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 void string_Entry::Connection::keypress()
 {  any_change=true;
@@ -52,12 +49,12 @@ void string_Entry::Connection::widget2model()
    any_change=false;
 }
 
-SigC::Connection string_Entry::Connection::connect()
-{  cm_con2[0]=widget->signal_focus_out_event().connect(SigC::slot(*this,&string_Entry::Connection::on_focus_out),true);
-   cm_con2[1]=widget->signal_focus_in_event().connect(SigC::slot(*this,&string_Entry::Connection::on_focus_in),true);
+sigc::connection string_Entry::Connection::connect()
+{  cm_con2[0]=widget->signal_focus_out_event().connect(sigc::mem_fun(*this,&string_Entry::Connection::on_focus_out),true);
+   cm_con2[1]=widget->signal_focus_in_event().connect(sigc::mem_fun(*this,&string_Entry::Connection::on_focus_in),true);
    // I'm not quite sure whether this is needed at all
-   cm_con2[2]=widget->signal_activate().connect(SigC::slot(*this,&string_Entry::Connection::on_activate),true);
-   return widget->signal_changed().connect(SigC::slot(*this,&string_Entry::Connection::keypress));
+   cm_con2[2]=widget->signal_activate().connect(sigc::mem_fun(*this,&string_Entry::Connection::on_activate),true);
+   return widget->signal_changed().connect(sigc::mem_fun(*this,&string_Entry::Connection::keypress));
 }
 
 void string_Entry::Connection::disconnect()

@@ -1,6 +1,7 @@
-// $Id: SimpleTreeModel.h,v 1.12 2004/12/04 10:53:34 christof Exp $
+// $Id: SimpleTreeModel.h,v 1.17 2006/08/03 11:27:12 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2002 Adolf Petig GmbH & Co. KG, written by Christof Petig
+ *  Copyright (C) 2008 Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,7 +33,7 @@ class SimpleTree_Basic;
 
 // this is only a container, properties of the data belong into STM_Properties
 
-class SimpleTreeModel : SigC::Object
+class SimpleTreeModel : sigc::trackable
 {public:
 	typedef std::vector<cH_RowDataBase> datavec_t;
 	
@@ -42,17 +43,17 @@ private:
 	
 	datavec_t datavec;
 
-	SigC::Signal1<void,cH_RowDataBase> line_appended;
-	SigC::Signal1<void,cH_RowDataBase> line_to_remove;
-//	SigC::Signal0<void> redraw_needed;
-	SigC::Signal0<void> please_detach;
-	SigC::Signal0<void> please_attach;
+	sigc::signal<void,cH_RowDataBase> line_appended;
+	sigc::signal<void,cH_RowDataBase> line_to_remove;
+//	sigc::signal<void> redraw_needed;
+	sigc::signal<void> please_detach;
+	sigc::signal<void> please_attach;
 	// a column was changed, change data, redraw?
-	SigC::Signal4<void,cH_RowDataBase,unsigned,const std::string &,bool &> value_changed;
+	sigc::signal<void,cH_RowDataBase,unsigned,const std::string &,bool &> value_changed;
 
 protected:
 	// sollte besser über RowDataBase::changeValue gehen, ist sauberer
-	SigC::Signal4<void,cH_RowDataBase,unsigned,std::string const&,bool &> 
+	sigc::signal<void,cH_RowDataBase,unsigned,std::string const&,bool &> 
 		&signal_value_changed()
 	{  return value_changed; }
 public:
@@ -79,18 +80,20 @@ public:
 	void remove_line(const cH_RowDataBase &row);
 	
 	void setDataVec(const datavec_t &d);
+	// slower variant which incrementally changes contents
+	void changeDataVec(const datavec_t &d, bool (*equal)(cH_RowDataBase const& a,cH_RowDataBase const& b));
 	const datavec_t &getDataVec() const
 	{  return datavec; }
 
-	SigC::Signal1<void,cH_RowDataBase> &signal_line_appended()
+	sigc::signal<void,cH_RowDataBase> &signal_line_appended()
 	{  return line_appended; }
-	SigC::Signal1<void,cH_RowDataBase> &signal_line_to_remove()
+	sigc::signal<void,cH_RowDataBase> &signal_line_to_remove()
 	{  return line_to_remove; }
 	// a big reorganization is about to occur
-	SigC::Signal0<void> &signal_please_detach()
+	sigc::signal<void> &signal_please_detach()
 	{  return please_detach; }
 	// reorganization finished, you can redisplay
-	SigC::Signal0<void> &signal_please_attach()
+	sigc::signal<void> &signal_please_attach()
 	{  return please_attach; }
 
 	void about_to_change(const cH_RowDataBase &row)

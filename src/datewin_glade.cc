@@ -28,7 +28,6 @@
 #endif
 #include <gtkmmconfig.h>
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#include <sigc++/compatibility.h>
 #include <sigc++/bind.h>
 #define GMM_GTKMM_22_24(a,b) b
 #else //gtkmm 2.2
@@ -143,12 +142,12 @@ datewin_glade::datewin_glade(
    arrow1->show();
    togglebutton_menu->show();
    datewin->show();
-   tag->signal_activate().connect(SigC::slot(*this, &datewin_glade::on_tag_activate), true);
-   monat->signal_activate().connect(SigC::slot(*this, &datewin_glade::on_monat_activate), true);
-   jahr->signal_activate().connect(SigC::slot(*this, &datewin_glade::datum_activate), true);
-   kw_spinbutton->signal_activate().connect(SigC::slot(*jahr_spinbutton, &Gtk::Widget::grab_focus), true);
-   jahr_spinbutton->signal_activate().connect(SigC::slot(*this, &datewin_glade::kw_activate), true);
-   togglebutton_menu->signal_toggled().connect(SigC::slot(*this, &datewin_glade::on_togglebutton_menu_toggled), true);
+   tag->signal_activate().connect(sigc::mem_fun(*this, &datewin_glade::on_tag_activate), true);
+   monat->signal_activate().connect(sigc::mem_fun(*this, &datewin_glade::on_monat_activate), true);
+   jahr->signal_activate().connect(sigc::mem_fun(*this, &datewin_glade::datum_activate), true);
+   kw_spinbutton->signal_activate().connect(sigc::mem_fun(*jahr_spinbutton, &Gtk::Widget::grab_focus), true);
+   jahr_spinbutton->signal_activate().connect(sigc::mem_fun(*this, &datewin_glade::kw_activate), true);
+   togglebutton_menu->signal_toggled().connect(sigc::mem_fun(*this, &datewin_glade::on_togglebutton_menu_toggled), true);
 }
 
 datewin_glade::~datewin_glade()

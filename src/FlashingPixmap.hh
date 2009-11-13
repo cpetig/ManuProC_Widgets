@@ -27,7 +27,7 @@ class FlashingPixmap : public Gtk::Image
 {
       Glib::RefPtr<Gdk::Pixbuf> defaultPix;
       Glib::RefPtr<Gdk::Pixbuf> flashPix;
-      SigC::Connection des;
+      sigc::connection des;
       bool stop,def;
 
       void switchPix();

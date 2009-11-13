@@ -2,7 +2,7 @@
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2001-2005 Adolf Petig GmbH & Co. KG
  *  written by Jacek Jakubowski and Christof Petig
- *  Copyright (C) 2006 Christof Petig
+ *  Copyright (C) 2006-2008 Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -55,6 +55,8 @@ public:
 
 	// these are from model
 	void setDataVec(const std::vector<cH_RowDataBase> &d) {  sts->getModel()=d; }
+	// slower variant which incrementally changes contents
+	void changeDataVec(const std::vector<cH_RowDataBase> &d, bool (*equal)(cH_RowDataBase const& a,cH_RowDataBase const& b)) {  sts->getModel().changeDataVec(d,equal); }
 	const Glib::RefPtr<SimpleTreeStore> &getStore() { return sts; }
 	const Glib::RefPtr<Gtk::TreeModel> getTreeModel() { return Glib::RefPtr<Gtk::TreeModel>(sts); }
 	SimpleTreeModel &getModel() { return sts->getModel(); }
@@ -99,11 +101,11 @@ private:
 	// a vector copies its items on adding, this is not a good idea with signals
 	std::list<std::pair<sigc::signal0<void>,Glib::ustring> > user_menuitems;
 
-	SigC::Signal0<void> _leaf_unselected;
-	SigC::Signal1<void,cH_RowDataBase> _leaf_selected;
-	SigC::Signal1<void,Handle<const TreeRow> > _node_selected;
-	SigC::Signal0<void> _reorder;
-	SigC::Signal3<void,const cH_RowDataBase &,int,bool&> clicked_sig;
+	sigc::signal<void> _leaf_unselected;
+	sigc::signal<void,cH_RowDataBase> _leaf_selected;
+	sigc::signal<void,Handle<const TreeRow> > _node_selected;
+	sigc::signal<void> _reorder;
+	sigc::signal<void,const cH_RowDataBase &,int,bool&> clicked_sig;
 
 protected:	
 	cH_RowDataBase menuContext;
@@ -128,22 +130,24 @@ private:
 			std::vector<Handle<const TreeRow> > *n);
         void on_column_edited(const Glib::ustring &path,
                   const Glib::ustring&new_text,unsigned idx);
+        void on_column_toggled(const Glib::ustring &path, unsigned idx); // boolean editing
 	static bool clicked_impl(SimpleTree_Basic *_this, const cH_RowDataBase &row, int col_idx);
+        void menu_ranking(int column);
 public:
 	SimpleTree_Basic(unsigned max_col);
 	SimpleTree_Basic(SimpleTreeModel_Properties &props);
 	~SimpleTree_Basic();
 	
-	SigC::Signal1<void,cH_RowDataBase> &signal_leaf_selected()
+	sigc::signal<void,cH_RowDataBase> &signal_leaf_selected()
 	{ return _leaf_selected; }
-	SigC::Signal0<void> &signal_leaf_unselected()
+	sigc::signal<void> &signal_leaf_unselected()
 	{ return _leaf_unselected; }
 	// argument had been "const TreeRow &"
-	SigC::Signal1<void,Handle<const TreeRow> > signal_node_selected()
+	sigc::signal<void,Handle<const TreeRow> > signal_node_selected()
 	{ return _node_selected; }
-	SigC::Signal0<void> &signal_reorder()
+	sigc::signal<void> &signal_reorder()
 	{ return _reorder; }
-	SigC::Signal3<void,const cH_RowDataBase&,int,bool&> &signal_clicked();
+	sigc::signal<void,const cH_RowDataBase&,int,bool&> &signal_clicked();
 	
 	void detach();
 	void attach();

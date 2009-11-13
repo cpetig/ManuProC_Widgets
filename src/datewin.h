@@ -34,7 +34,7 @@ class datewin : public datewin_glade
         std::string instance;
         bool kw_bevorzugen;
         datewin_popup *popup;
-        SigC::Connection switch_page_connection;
+        sigc::connection switch_page_connection;
 
 //        static PAGE defaultpage;
 
@@ -55,11 +55,11 @@ class datewin : public datewin_glade
 	void preferWeek(bool b=true);
 	
 private:	
-	SigC::Signal0<void> activate;
-	SigC::Signal0<void> changed;
+	sigc::signal<void> activate;
+	sigc::signal<void> changed;
 public:
-        SigC::Signal0<void> &signal_activate() { return activate; }
-        SigC::Signal0<void> &signal_changed() { return changed; }        
+        sigc::signal<void> &signal_activate() { return activate; }
+        sigc::signal<void> &signal_changed() { return changed; }        
 
 };
 

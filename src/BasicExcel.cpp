@@ -1,4 +1,5 @@
 #include "BasicExcel.hpp"
+#include <cstring>
 
 namespace YCompoundFiles
 {

@@ -25,9 +25,6 @@
 #include <Misc/dbconnect.h>
 #include <Misc/Event.h>
 #include <Misc/FetchIStream.h>
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 class MeinFenster : public Gtk::Window
 {  Gtk::Label label;
@@ -41,7 +38,7 @@ MeinFenster::MeinFenster()
 {  add(label);
    label.show();
    show();
-   ManuProC::Event::signal_event().connect(SigC::slot(*this,&MeinFenster::Callback));
+   ManuProC::Event::signal_event().connect(sigc::mem_fun(*this,&MeinFenster::Callback));
 }
 
 void MeinFenster::Callback(const std::string &a, const std::string &b, const std::string &c)

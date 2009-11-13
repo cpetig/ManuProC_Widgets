@@ -21,12 +21,12 @@
 #ifndef MANUPROC_WIDGETS_TOOLTIPVIEW_H
 #define MANUPROC_WIDGETS_TOOLTIPVIEW_H
 
-#include <Misc/Model.h>
+#include <BaseObjects/Model.h>
 #include <list>
 #include <gtkmm/tooltips.h>
 #include <sigc++/object.h>
 
-struct TooltipAssociation : SigC::Object
+struct TooltipAssociation : sigc::trackable
 {	Gtk::Widget *widget;
 	Gtk::Tooltips *tips;
 	TooltipAssociation() : widget(), tips() {}

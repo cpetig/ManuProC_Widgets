@@ -184,7 +184,7 @@ window1::window1() : st(SP_ANZ)
    st.set_NewNode(&SumNode::create);
    st.setDataVec(datavec);
    
-//   st.signal_leaf_selected().connect(SigC::slot(this,&window1::on_leaf_selected));
+//   st.signal_leaf_selected().connect(sigc::mem_fun(this,&window1::on_leaf_selected));
    st.selectMatchingLines(2);
 
 #if 1

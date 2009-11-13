@@ -19,9 +19,6 @@
  */
 
 #include "char_Pixmap.hh"
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 void char_Pixmap::Connection::model2widget()
 {  widget->set(Gdk::Pixbuf::create_from_xpm_data(model.get_value()));

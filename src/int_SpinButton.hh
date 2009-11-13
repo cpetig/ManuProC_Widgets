@@ -29,7 +29,7 @@ class int_SpinButton : public Gtk::SpinButton
 public:
 	class Connection : public ModelWidgetConnection<T,Gtk::SpinButton>
 	{	bool any_change;
-		SigC::Connection cm_con2[3];
+		sigc::connection cm_con2[3];
 
 		bool on_focus_out(GdkEventFocus *ev);
 		bool on_focus_in(GdkEventFocus *ev);
@@ -38,7 +38,7 @@ public:
 		
 		void model2widget();
 		void widget2model();
-		SigC::Connection connect();
+		sigc::connection connect();
 		void disconnect();
 	public:
 		Connection(widget_t *w=0) : any_change(false) 

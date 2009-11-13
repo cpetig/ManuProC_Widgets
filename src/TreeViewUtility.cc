@@ -1,6 +1,7 @@
 // $Id: TreeViewUtility.cc,v 1.23 2004/06/30 13:43:13 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2002-2004 Adolf Petig GmbH & Co. KG, written by Christof Petig
+ *  Copyright (C) 2008 Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,7 +22,6 @@
 #include <stdarg.h>
 #include <cassert>
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
 #  include <sigc++/bind.h>
 #endif
 
@@ -48,7 +48,7 @@ void TreeViewUtility::CListEmulator::attach_to(Gtk::TreeView &tv)
    for (unsigned i=0;i<cols.size();++i)
       view->append_column(titles.at(i),cols.at(i));
    con=view->signal_button_press_event().connect(
-       SigC::slot(*this,&TreeViewUtility::CListEmulator::button_press_handler),
+       sigc::mem_fun(*this,&TreeViewUtility::CListEmulator::button_press_handler),
            false);
 }
 
@@ -74,13 +74,13 @@ TreeViewUtility::CList::CList(const char *title1, ...)
 
 void TreeViewUtility::CListEmulator::set_titles(const std::vector<Glib::ustring> &_titles)
 {  unsigned old_size=titles.size(),new_size=_titles.size();
-   assert(new_size>=old_size); // nur vergrößern
+   assert(new_size>=old_size); // nur vergrï¿½ï¿½ern
    cols.resize(new_size);
    titles=_titles;
    for (unsigned i=old_size;i<new_size;++i)
       add(cols[i]);
    m_refStore=Gtk::ListStore::create(*this);
-   if (view) // eigentlich sollte das attach erst später passiert sein ...
+   if (view) // eigentlich sollte das attach erst spï¿½ter passiert sein ...
       attach_to(*view);
 }
 
@@ -100,7 +100,7 @@ int TreeViewUtility::CListEmulator::get_selected_row_num() const
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
    view->get_selection()->selected_foreach_path(sigc::bind(sigc::ptr_fun(&mark_line),&row));
 #else
-   view->get_selection()->selected_foreach(SigC::bind(SigC::slot(&mark_line),&row));
+   view->get_selection()->selected_foreach(sigc::bind(sigc::mem_fun(&mark_line),&row));
 #endif
    return row;
 }
@@ -112,7 +112,7 @@ bool TreeViewUtility::CListEmulator::selection_empty() const
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
    view->get_selection()->selected_foreach_iter(sigc::bind(sigc::ptr_fun(&increment),&num));
 #else
-   view->get_selection()->selected_foreach(SigC::bind(SigC::slot(&increment),&num));
+   view->get_selection()->selected_foreach(sigc::bind(sigc::mem_fun(&increment),&num));
 #endif   
    return !num;
 }
@@ -153,11 +153,11 @@ Gtk::TreeModel::iterator TreeViewUtility::CListEmulator::append(const std::vecto
 void TreeViewUtility::CListEmulator::add(Gtk::TreeModelColumnBase& column)
 {  Gtk::TreeModelColumnRecord::add(column);
    m_refStore=Gtk::ListStore::create(*this);
-   if (view) // eigentlich sollte das attach erst später passiert sein ...
+   if (view) // eigentlich sollte das attach erst spï¿½ter passiert sein ...
       attach_to(*view);
 }
 
-void TreeViewUtility::MakeColumnEditable(Gtk::TreeView *tv,unsigned _col,const SigC::Slot2<void,const Glib::ustring&,const Glib::ustring&> &slot)
+void TreeViewUtility::MakeColumnEditable(Gtk::TreeView *tv,unsigned _col,const sigc::slot<void,const Glib::ustring&,const Glib::ustring&> &slot)
 {  Gtk::TreeViewColumn* col=tv->get_column(_col);
    Gtk::CellRendererText* cr=dynamic_cast<Gtk::CellRendererText*>(col->get_first_cell_renderer());
    assert(cr);
@@ -185,3 +185,29 @@ bool TreeViewUtility::CListEmulator::button_press_handler(GdkEventButton *event)
    }
    return false;
 }
+
+int TreeViewUtility::CListEmulator::get_row_num(Gtk::TreeModel::iterator i) const
+{  Gtk::TreeModel::Path p = m_refStore->get_path(i);
+   if (p.empty()) return -1;
+   return p[0];
+}
+
+int TreeViewUtility::CListEmulator::get_row_num(Gtk::TreeSelection::ListHandle_Path::iterator i) const
+{  if ((*i).empty()) return -1;
+   return (*i)[0];
+}
+
+Glib::ustring TreeViewUtility::CListEmulator::cell_get_text(int row, int col) const
+{
+  Gtk::TreeModel::iterator iter=m_refStore->get_iter(Gtk::TreePath(1u,row));
+  if (!iter || col<0 || col>=cols.size()) return Glib::ustring();
+  return Glib::ustring((*iter)[cols[col]]);
+}
+
+Glib::ustring TreeViewUtility::CListEmulator::selection_get_text(int col) const
+{
+  Gtk::TreeModel::iterator iter=view->get_selection()->get_selected();
+  if (!iter || col<0 || col>=cols.size()) return Glib::ustring();
+  return Glib::ustring((*iter)[cols[col]]);
+}
+

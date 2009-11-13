@@ -94,7 +94,7 @@ class SimpleTreeModel_Properties_Proxy
 	bool we_own_props;
 
 	// The layout of the column has changed (rebuild column+menu)
-	SigC::Signal1<void,guint> column_changed;
+	sigc::signal<void,guint> column_changed;
 public:
 	SimpleTreeModel_Properties_Proxy(unsigned cols);
 	SimpleTreeModel_Properties_Proxy(SimpleTreeModel_Properties *p)
@@ -109,7 +109,7 @@ public:
 	const std::string getColTitle(guint idx) const
 	{ return Properties().Title(idx); }
 	// invisible_column means all columns have changed
-	SigC::Signal1<void,guint> &signal_column_changed()
+	sigc::signal<void,guint> &signal_column_changed()
 	{  return column_changed; }
 	bool is_editable(unsigned idx) const
 	{ return Properties().editable(idx); }
@@ -198,7 +198,11 @@ class SimpleTreeStore : virtual public Glib::Object, public Gtk::TreeModel,
 	typedef std::deque<guint> sequence_t;
 
 	static const UniqueValue::value_t trace_channel;
-	static const unsigned invisible_column=unsigned(-1);
+	static const unsigned invisible_column
+#ifndef _MSC_VER
+										=unsigned(-1)
+#endif
+													;
 protected:
 	// first value is ":order", second is ":visible"
         static std::pair<std::string,std::string> default_load(const std::string&program, const std::string&instance);
@@ -235,12 +239,12 @@ private:
 	void save_remembered() const;
 	void load_remembered();
 
-	SigC::Signal0<void> please_detach;
-	SigC::Signal0<void> please_attach;
-	SigC::Signal0<void> spalten_geaendert;
-	SigC::Signal1<void,gpointer> signal_save;
-	SigC::Signal1<void,gpointer> signal_redisplay_save;
-	SigC::Signal1<void,bvector_iterator> signal_visibly_changed;
+	sigc::signal<void> please_detach;
+	sigc::signal<void> please_attach;
+	sigc::signal<void> spalten_geaendert;
+	sigc::signal<void,gpointer> signal_save;
+	sigc::signal<void,gpointer> signal_redisplay_save;
+	sigc::signal<void,bvector_iterator> signal_visibly_changed;
 	void save_remembered1(gpointer) { save_remembered(); }
 	void on_visibly_changed(bvector_iterator it);
 	void value_change_impl(cH_RowDataBase row,unsigned idx,std::string const& newval, bool &has_changed);
@@ -348,11 +352,11 @@ public:
 	void fillSequence(sequence_t &seq,bool standard=false) const;
 	void fillSequence() { fillSequence(currseq,true); }
 
-	SigC::Signal0<void> &signal_spalten_geaendert()
+	sigc::signal<void> &signal_spalten_geaendert()
 	{  return spalten_geaendert; }
-	SigC::Signal0<void> &signal_please_detach()
+	sigc::signal<void> &signal_please_detach()
 	{  return please_detach; }
-	SigC::Signal0<void> &signal_please_attach()
+	sigc::signal<void> &signal_please_attach()
 	{  return please_attach; }
 	const std::string getColTitle(guint nr) const;
 	

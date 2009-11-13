@@ -102,9 +102,9 @@ TreeBase::TreeBase(guint cols, guint attr) :
 #ifndef MANUPROC_WITH_DATABASE
   color_bool=false;
 #endif
-  this->button_press_event.connect(SigC::slot(this,&TreeBase::MouseButton));
-  click_column.connect(SigC::slot(this,&TreeBase::on_click_column));
-  select_row.connect(SigC::slot(this, &TreeBase::on_row_select));
+  this->button_press_event.connect(sigc::mem_fun(this,&TreeBase::MouseButton));
+  click_column.connect(sigc::mem_fun(this,&TreeBase::on_click_column));
+  select_row.connect(sigc::mem_fun(this, &TreeBase::on_row_select));
   setSequence();
   vec_hide_cols.resize(Cols());
   for (std::vector<bool>::iterator i=vec_hide_cols.begin();i!=vec_hide_cols.end();++i)
@@ -392,7 +392,7 @@ void TreeBase::fillMenu()
       spalten_menu->append(*sp);
       if (vec_hide_cols[i]) sp->set_active(true);
       sp->show();
-      sp->activate.connect(SigC::bind(SigC::slot(this,&TreeBase::welche_Spalten),i,sp));
+      sp->activate.connect(sigc::bind(sigc::mem_fun(this,&TreeBase::welche_Spalten),i,sp));
     }
    menu->append(*optionen);
    optionen->set_submenu(*optionen_menu);
@@ -413,25 +413,25 @@ void TreeBase::fillMenu()
    expandieren->show();
    colorize->show();
    
-   neuordnen->activate.connect(SigC::slot(this,&TreeBase::on_neuordnen_clicked));
-   zuruecksetzen->activate.connect(SigC::slot(this,&TreeBase::on_zuruecksetzen_clicked));
-   abbrechen->activate.connect(SigC::slot(this,&TreeBase::on_abbrechen_clicked));
+   neuordnen->activate.connect(sigc::mem_fun(this,&TreeBase::on_neuordnen_clicked));
+   zuruecksetzen->activate.connect(sigc::mem_fun(this,&TreeBase::on_zuruecksetzen_clicked));
+   abbrechen->activate.connect(sigc::mem_fun(this,&TreeBase::on_abbrechen_clicked));
 
    titles_menu=titles;
    titles->set_active(titles_bool);
-   titles->activate.connect(SigC::bind(SigC::slot(this,&TreeBase::Titles),titles));
+   titles->activate.connect(sigc::bind(sigc::mem_fun(this,&TreeBase::Titles),titles));
 
    auffuellen->set_active(auffuellen_bool);
-   auffuellen->activate.connect(SigC::bind(SigC::slot(this,&TreeBase::Auffuellen),auffuellen));
+   auffuellen->activate.connect(sigc::bind(sigc::mem_fun(this,&TreeBase::Auffuellen),auffuellen));
 
    expandieren->set_active(expandieren_bool);
-   expandieren->activate.connect(SigC::bind(SigC::slot(this,&TreeBase::Expandieren),expandieren));
+   expandieren->activate.connect(sigc::bind(sigc::mem_fun(this,&TreeBase::Expandieren),expandieren));
 
    colorize->set_active(color_bool);
-   colorize->activate.connect(SigC::bind(SigC::slot(this,&TreeBase::on_Color),colorize));
+   colorize->activate.connect(sigc::bind(sigc::mem_fun(this,&TreeBase::on_Color),colorize));
 
-   exp_all->activate.connect(SigC::slot(this,&TreeBase::Expand_recursively));
-   col_all->activate.connect(SigC::slot(this,&TreeBase::Collapse_recursively));
+   exp_all->activate.connect(sigc::mem_fun(this,&TreeBase::Expand_recursively));
+   col_all->activate.connect(sigc::mem_fun(this,&TreeBase::Collapse_recursively));
 
    // Menu anzeigen
 //   neuordnen->show();

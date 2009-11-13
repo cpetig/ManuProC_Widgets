@@ -21,14 +21,11 @@
 #include <gtkmm/label.h>
 #include <gtkmm/arrow.h>
 #include <Misc/itos.h>
-#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
-#endif
 
 void MyScale::init()
 {
-   ltop    = manage(new class Gtk::Label("x%"));
-   lbottom = manage(new class Gtk::Label("x%"));
+   ltop    = Gtk::manage(new class Gtk::Label("x%"));
+   lbottom = Gtk::manage(new class Gtk::Label("x%"));
 
    ltop->set_alignment(0.5,0.5);
    ltop->set_padding(0,0);
@@ -39,23 +36,23 @@ void MyScale::init()
    lbottom->set_justify(Gtk::JUSTIFY_CENTER);
    lbottom->set_line_wrap(false);
 
-   Gtk::Arrow *arrowdown = manage(new class Gtk::Arrow(Gtk::ARROW_DOWN, Gtk::SHADOW_OUT));
-   Gtk::Arrow *arrowup = manage(new class Gtk::Arrow(Gtk::ARROW_UP, Gtk::SHADOW_OUT));
+   Gtk::Arrow *arrowdown = Gtk::manage(new class Gtk::Arrow(Gtk::ARROW_DOWN, Gtk::SHADOW_OUT));
+   Gtk::Arrow *arrowup = Gtk::manage(new class Gtk::Arrow(Gtk::ARROW_UP, Gtk::SHADOW_OUT));
    bup = manage(new class Gtk::Button());
    bup->set_flags(Gtk::CAN_FOCUS);
    bup->set_relief(Gtk::RELIEF_NONE);
    bup->add(*arrowup);
-   bup->signal_clicked().connect(SigC::slot(*this, &MyScale::on_bup_clicked));
+   bup->signal_clicked().connect(sigc::mem_fun(*this, &MyScale::on_bup_clicked));
    bdown = manage(new class Gtk::Button());
    bdown->set_flags(Gtk::CAN_FOCUS);
    bdown->set_relief(Gtk::RELIEF_NONE);
    bdown->add(*arrowdown);
-   bdown->signal_clicked().connect(SigC::slot(*this, &MyScale::on_bdown_clicked));
+   bdown->signal_clicked().connect(sigc::mem_fun(*this, &MyScale::on_bdown_clicked));
 
 
-   Gtk::Adjustment *adj= manage(new class Gtk::Adjustment(value, 0, 100, 1, 1, 0));
-   scale = manage(new class Gtk::VScale(*adj));  
-   scale->signal_button_release_event().connect(SigC::slot(*static_cast<class MyScale*>(this),&MyScale::on_scale_release_event));
+   Gtk::Adjustment *adj= Gtk::manage(new class Gtk::Adjustment(value, 0, 100, 1, 1, 0));
+   scale = Gtk::manage(new class Gtk::VScale(*adj));  
+   scale->signal_button_release_event().connect(sigc::mem_fun(*static_cast<class MyScale*>(this),&MyScale::on_scale_release_event));
    scale->set_digits(0);
    scale->set_draw_value(false);
    scale->set_flags(Gtk::CAN_FOCUS);

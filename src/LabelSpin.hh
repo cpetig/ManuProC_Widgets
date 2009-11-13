@@ -32,14 +32,14 @@ class LabelSpin : public Gtk::HBox
       void spin_activate();
       bool Focus_in_event(GdkEventFocus *ev);
       bool Focus_out_event(GdkEventFocus *ev);
-      SigC::Signal0<void> activate;
-      SigC::Signal0<void> FocusOutEvent;
+      sigc::signal<void> activate;
+      sigc::signal<void> FocusOutEvent;
 
    public:
       LabelSpin(int value=0,int lower=0,int upper=100); 
-      SigC::Signal0<void> &signal_activate()
+      sigc::signal<void> &signal_activate()
       {  return activate; }
-      SigC::Signal0<void> &signal_FocusOutEvent()
+      sigc::signal<void> &signal_FocusOutEvent()
       {  return FocusOutEvent; }
 
       void set_value(int v);

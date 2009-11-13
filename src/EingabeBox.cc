@@ -21,7 +21,6 @@
 #include <gtk/gtksignal.h>
 #include <cassert>
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
 #  include <sigc++/bind.h>
 #endif
 
@@ -66,15 +65,15 @@ void EingabeBox::grow(int cols)
       entries.push_back(e);
       // register our grab_focus
       if (newpos)
-	 cons.push_back(entries[newpos-1]->signal_activate().connect(SigC::slot(*e,&Gtk::Widget::grab_focus)));
+	 cons.push_back(entries[newpos-1]->signal_activate().connect(sigc::mem_fun(*e,&Gtk::Widget::grab_focus)));
       else
-         cons.push_back(grab_focus_tried.connect(SigC::slot(*e,&Gtk::Widget::grab_focus)));
+         cons.push_back(grab_focus_tried.connect(sigc::mem_fun(*e,&Gtk::Widget::grab_focus)));
    }
    // register our activate
    if (newpos)
-      last_con=entries[newpos-1]->signal_activate().connect(SigC::slot(*this,&EingabeBox::activate));
+      last_con=entries[newpos-1]->signal_activate().connect(sigc::mem_fun(*this,&EingabeBox::activate));
    else
-      last_con=grab_focus_tried.connect(SigC::slot(*this,&EingabeBox::activate));
+      last_con=grab_focus_tried.connect(sigc::mem_fun(*this,&EingabeBox::activate));
    visible_size=cols;
    assert(labels.size()==cols);
    check();
@@ -90,7 +89,7 @@ EingabeBox::EingabeBox(unsigned cols,unsigned per_row)
 
  int j=0;
  for(t_entries::iterator i=entries.begin();i!=entries.end();++i)
-   (*i)->signal_activate().connect(SigC::bind(_activate_entry.slot(),j++));
+   (*i)->signal_activate().connect(sigc::bind(_activate_entry.make_slot(),j++));
 }
 
 
@@ -109,7 +108,7 @@ EingabeBox::~EingabeBox()
 }
 
 const std::string EingabeBox::get_label(int col) const
-{  if (col<0 || col>=labels.size()) return "";
+{  if (col<0 || col>=labels.size()) return std::string();
    return labels[col]->get_text(); 
 }
 
@@ -117,7 +116,7 @@ void EingabeBox::set_label(int col,const std::string &s)
 {  grow(col+1); labels[col]->set_text(s); }
 
 const std::string EingabeBox::get_value(int col) const
-{  if (col<0 || col>=entries.size()) return "";
+{  if (col<0 || col>=entries.size()) return std::string();
    return entries[col]->get_text(); 
 }
 
@@ -141,14 +140,14 @@ void EingabeBox::set_size(int cols)
       {  cons[visible_size].disconnect();
          if (visible_size)
 	      cons[visible_size]=entries[visible_size-1]->signal_activate()
-	      	.connect(SigC::slot(*entries[visible_size],&Gtk::Widget::grab_focus));
+	      	.connect(sigc::mem_fun(*entries[visible_size],&Gtk::Widget::grab_focus));
          else // visible_size==0
-            cons[0]=grab_focus_tried.connect(SigC::slot(*entries[0],&Gtk::Widget::grab_focus));
+            cons[0]=grab_focus_tried.connect(sigc::mem_fun(*entries[0],&Gtk::Widget::grab_focus));
          // short cut ?
          if (cols_to_show<entries.size())
          {  cons[cols_to_show].disconnect();
             cons[cols_to_show]=entries[cols_to_show-1]->signal_activate()
-            	.connect(SigC::slot(*this,&EingabeBox::activate));
+            	.connect(sigc::mem_fun(*this,&EingabeBox::activate));
          }		
          for (int c=visible_size;c<cols_to_show;c++)
          {  labels[c]->show(); entries[c]->show();
@@ -161,9 +160,9 @@ void EingabeBox::set_size(int cols)
    {  // short cut
       cons[cols].disconnect();
       if (cols) 
-         cons[cols]=entries[cols-1]->signal_activate().connect(SigC::slot(*this,&EingabeBox::activate));
+         cons[cols]=entries[cols-1]->signal_activate().connect(sigc::mem_fun(*this,&EingabeBox::activate));
       else
-         cons[cols]=grab_focus_tried.connect(SigC::slot(*this,&EingabeBox::activate));
+         cons[cols]=grab_focus_tried.connect(sigc::mem_fun(*this,&EingabeBox::activate));
       for (int c=cols;c<visible_size;c++)
       {  labels[c]->hide(); entries[c]->hide();
       }
@@ -182,6 +181,6 @@ void EingabeBox::activate_entry(int nr)
 
 void EingabeBox::reset()
 {  for (t_entries::iterator i=entries.begin();i!=entries.end();++i)
-      (*i)->set_text("");
+      (*i)->set_text(Glib::ustring());
 }
 

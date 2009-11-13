@@ -31,7 +31,7 @@ template <int digits>
 public:
 	class Connection : public ModelWidgetConnection<T,Gtk::SpinButton>
 	{	bool any_change;
-		SigC::Connection cm_con2[3];
+		sigc::connection cm_con2[3];
 		typedef Gtk::SpinButton widget_t;
 		typedef ModelWidgetConnection<T,Gtk::SpinButton> this_t;
 
@@ -58,12 +58,12 @@ public:
 		   this->model=this->widget->get_value();
 		   any_change=false;
 		}
-		SigC::Connection connect()
-		{  cm_con2[0]=this->widget->signal_focus_out_event().connect(SigC::slot(*this,&fixp_SpinButton::Connection::on_focus_out),true);
-		   cm_con2[1]=this->widget->signal_focus_in_event().connect(SigC::slot(*this,&fixp_SpinButton::Connection::on_focus_in),true);
+		sigc::connection connect()
+		{  cm_con2[0]=this->widget->signal_focus_out_event().connect(sigc::mem_fun(*this,&fixp_SpinButton::Connection::on_focus_out),true);
+		   cm_con2[1]=this->widget->signal_focus_in_event().connect(sigc::mem_fun(*this,&fixp_SpinButton::Connection::on_focus_in),true);
 		   // I'm not quite sure whether this is needed at all
-		   cm_con2[2]=this->widget->signal_activate().connect(SigC::slot(*this,&fixp_SpinButton::Connection::on_activate),true);
-		   return this->widget->signal_changed().connect(SigC::slot(*this,&fixp_SpinButton::Connection::keypress));
+		   cm_con2[2]=this->widget->signal_activate().connect(sigc::mem_fun(*this,&fixp_SpinButton::Connection::on_activate),true);
+		   return this->widget->signal_changed().connect(sigc::mem_fun(*this,&fixp_SpinButton::Connection::keypress));
 		}
 		void disconnect()
 		{  cm_con2[0].disconnect();

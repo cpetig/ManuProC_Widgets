@@ -28,8 +28,8 @@
 namespace Gtk
 {  class Widget;
 
-   SigC::Connection AssociateVisibility(Widget *w,const Model_ref<bool> &model, bool invert=false);
-   SigC::Connection AssociateSensitivity(Widget *w,const Model_ref<bool> &model, bool invert=false);
+   sigc::connection AssociateVisibility(Widget *w,const Model_ref<bool> &model, bool invert=false);
+   sigc::connection AssociateSensitivity(Widget *w,const Model_ref<bool> &model, bool invert=false);
 }
 
 #endif

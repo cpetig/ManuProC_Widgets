@@ -1,6 +1,7 @@
-// $Id: IntStringBox.hh,v 1.2 2005/11/22 13:00:22 christof Exp $
+// $Id: IntStringBox.hh,v 1.5 2006/08/03 11:27:11 christof Exp $
 /*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 2001 Adolf Petig GmbH & Co. KG, written by Malte Thoma
+ *  Copyright (C) 2009 Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -44,20 +45,23 @@ class IntStringBox : public IntStringBox_gui
    bool eingeschraenkt:1;
    bool string_2_info_only:1;
    bool translate:1;
+   bool restricted_int_search:1;
 
-   bool try_to_get_id();
+
+   bool try_to_get_id(bool &multiple);
 
 protected:
-   std::string _tabelle_,_string1_,_string2_,_int_;
+   std::string _tabelle_,_alias_,_string1_,_string2_,_int_;
    int _none_id_;
+   bool prefix_only:1;
 
 public:
 	IntStringBox(ManuProcEntity<>::ID __none_id=ManuProcEntity<>::none_id);
 
-   void setLabel(const std::string &nr,const std::string &name,const std::string& namez="");
+   void setLabel(const std::string &nr,const std::string &name,const std::string& namez=std::string());
 
 	ManuProcEntity<>::ID get_value() const { return id; }
-	void set_value(ManuProcEntity<>::ID i,const std::string &s,const std::string &sz="") ;
+	void set_value(ManuProcEntity<>::ID i,const std::string &s,const std::string &sz=std::string()) ;
 	virtual void set_value(int i)=0 ;
    void hide_int(bool b);
    void show_string2(bool b);
@@ -72,14 +76,15 @@ public:
    void Einschraenken(bool an);
    void Einschraenkung(const std::string &e, bool an=true);
    void Join(const std::string j);
+   void PrefixOnly(bool p);
    
    void FocusToString1();
 	
 private:
-	SigC::Signal0<void> activate;
-	SigC::Signal0<void> reset_signal;
+	sigc::signal<void> activate;
+	sigc::signal<void> reset_signal;
 public:
-	SigC::Signal0<void> &signal_activate() { return activate; }
-	SigC::Signal0<void> &signal_reset_signal() { return reset_signal; }
+	sigc::signal<void> &signal_activate() { return activate; }
+	sigc::signal<void> &signal_reset_signal() { return reset_signal; }
 };
 #endif

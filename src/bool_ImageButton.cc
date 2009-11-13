@@ -31,9 +31,9 @@ void bool_ImageButton::Connection::model2widget()
    if (tips) tips->set_tip(*eventbox, model.Value()?tip_on:tip_off);
 }
 
-SigC::Connection bool_ImageButton::Connection::connect()
-{  if (eventbox) toggleconn=eventbox->signal_button_press_event().connect(SigC::slot(*this,&bool_ImageButton::Connection::toggle));
-   return SigC::Connection();
+sigc::connection bool_ImageButton::Connection::connect()
+{  if (eventbox) toggleconn=eventbox->signal_button_press_event().connect(sigc::mem_fun(*this,&bool_ImageButton::Connection::toggle));
+   return sigc::connection();
 }
 
 void bool_ImageButton::Connection::disconnect()

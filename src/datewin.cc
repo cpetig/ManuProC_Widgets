@@ -20,7 +20,7 @@
 #include "datewin.h"
 #include <Misc/itos.h>
 #include <Misc/Global_Settings.h>
-#include <unistd.h>
+//#include <unistd.h>
 #include <iostream>
 #include <cassert>
 #include <gtk/gtksignal.h>
@@ -35,7 +35,6 @@ void datewin::preferWeek(bool b)
 
 //#include <glib-object.h>
 //#include <gtk/gtknotebook.h>
-#include <sigc++/compatibility.h>
 
 datewin::~datewin()
 {
@@ -55,15 +54,15 @@ std::cerr << "- " << num << '\n';
 datewin::datewin() : // const std::string &inst) : block(false), 
 	expandyear(true),kw_bevorzugen(), popup()
 {  set_value(ManuProC::Datum::today());
-   jahr->signal_activate().connect(activate.slot());
+//   jahr->signal_activate().connect(activate.make_slot());
    gtk_signal_connect_after(GTK_OBJECT(gobj()), "grab_focus",
     		GTK_SIGNAL_FUNC (&try_grab_focus),(gpointer)this);
-   tag->signal_changed().connect(changed.slot());
-   monat->signal_changed().connect(changed.slot());
-   jahr->signal_changed().connect(changed.slot());
-   kw_spinbutton->signal_changed().connect(changed.slot());
-   jahr_spinbutton->signal_changed().connect(changed.slot());
-   switch_page_connection=notebook->signal_switch_page().connect(SigC::slot(*this, &datewin::on_datewin_change_current_page), true);
+   tag->signal_changed().connect(changed.make_slot());
+   monat->signal_changed().connect(changed.make_slot());
+   jahr->signal_changed().connect(changed.make_slot());
+   kw_spinbutton->signal_changed().connect(changed.make_slot());
+   jahr_spinbutton->signal_changed().connect(changed.make_slot());
+   switch_page_connection=notebook->signal_switch_page().connect(sigc::mem_fun(*this, &datewin::on_datewin_change_current_page), true);
 }
 
 ManuProC::Datum datewin::get_value() const throw()
