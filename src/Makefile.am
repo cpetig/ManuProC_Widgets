@@ -1,14 +1,23 @@
 # $Id: Makefile.am,v 1.35 2004/07/15 08:10:00 christof Exp $
 AM_CXXFLAGS= @COMMONGTK2_INCLUDES@ @COMMONXX_INCLUDES@ -DlibManuProC_Widgets_COMPILATION
+AM_CFLAGS= @GTKMM2_INCLUDES@ -DlibManuProC_Widgets_COMPILATION
 
 if WINDOWS
 WIN_LDFLAGS=-no-undefined -export-symbols libManuProC_Widgets.def
-DLL_LDADD=libManuProC_Widgets_res.lo @COMMONGTK2_LIBS@ @SIGC_LIBS@ @ECPG_LIBS@
+DLL_LDADD=libManuProC_Widgets_res.lo @GTKMM2_LIBS@ @SIGC_LIBS@ @ECPG_LIBS@
 DLL_DEF=libManuProC_Widgets.def
+ADDONS_FILES=Gtk_OStream_label.cc \
+		 Gtk_OStream_optionmenu.cc Gtk_OStream_stream.cc \
+		 SearchCombo.cc TeX.cc Gtk_OStream.cc \
+		 gtksearchcombo.c Gtk_OStream_TreeView.cc \
+		 DoubleButton.cc doublebutton.c WinFileReq.cc \
+		 ChoiceButton.cc gtkhacks.cc Gtk2TeX.cc \
+		 expander_hook.c 
 else
 WIN_LDFLAGS=
 DLL_LDADD=@SIGC_LIBS@ @ECPG_LIBS@
 DLL_DEF=
+ADDONS_FILES=
 endif
 
 %.cc: %.pgcc ; @ECPG@ -o $*.cc $<
@@ -49,9 +58,11 @@ libManuProC_Widgets_la_SOURCES=EingabeBox.cc \
 		IntStringBox_gui.cc IntStringBox.cc IntStringBox_glade.cc \
 		IntStringPopup_glade.cc datewin.cc datewin_glade.cc \
 		datewin_popup.cc datewin_popup_glade.cc BasicExcel.cpp \
-		$(DLL_DEF)
+		$(DLL_DEF) $(ADDONS_FILES)
 
 BUILT_SOURCES=datewin.hh logwin.hh
+
+AM_LDFLAGS=@LDFLAGS@ @ECPG_LDFLAGS@ $(WIN_LDFLAGS)
 
 # alias links
 datewin.hh: datewin.h
@@ -60,3 +71,7 @@ logwin.hh: logwin.h
 	ln -sf logwin.h logwin.hh
 
 CLEANFILES= *~ $(BUILT_SOURCES)
+
+$(ADDONS_FILES): ../../GtkmmAddons/src
+	ln -sf ../../GtkmmAddons/src/$@ .
+	
