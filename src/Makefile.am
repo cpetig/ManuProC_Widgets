@@ -3,8 +3,8 @@ AM_CXXFLAGS= @COMMONGTK2_INCLUDES@ @COMMONXX_INCLUDES@ -DlibManuProC_Widgets_COM
 AM_CFLAGS= @GTKMM2_INCLUDES@ -DlibManuProC_Widgets_COMPILATION
 
 if WINDOWS
-WIN_LDFLAGS=-no-undefined -export-symbols libManuProC_Widgets.def
-DLL_LDADD=libManuProC_Widgets_res.lo @GTKMM2_LIBS@ @SIGC_LIBS@ @ECPG_LIBS@
+WIN_LDFLAGS=-no-undefined -export-symbols libManuProC_Widgets.def @COMMONXX_LDFLAGS@
+DLL_LDADD=libManuProC_Widgets_res.lo @GTKMM2_LIBS@ @COMMONXX_LIBS@ @SIGC_LIBS@ @ECPG_LIBS@ -lcomdlg32
 DLL_DEF=libManuProC_Widgets.def
 ADDONS_FILES=Gtk_OStream_label.cc \
 		 Gtk_OStream_optionmenu.cc Gtk_OStream_stream.cc \
@@ -72,6 +72,6 @@ logwin.hh: logwin.h
 
 CLEANFILES= *~ $(BUILT_SOURCES)
 
-$(ADDONS_FILES): ../../GtkmmAddons/src
+$(ADDONS_FILES):
 	ln -sf ../../GtkmmAddons/src/$@ .
 	
