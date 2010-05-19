@@ -1,2 +1,11 @@
 EXPORTS
+	_ZN15SimpleTreeModel10setDataVecERKSt6vectorI14cH_RowDataBaseSaIS1_EE
+	_ZN15SimpleTreeModel5clearEv
+	_ZN16SimpleTree_Basic12setAlignmentERKSt6vectorIfSaIfEE
+	_ZN16SimpleTree_Basic6attachEv
+	_ZN16SimpleTree_Basic6detachEv
+	_ZN16SimpleTree_Basic9setTitlesERKSt6vectorISsSaISsEE
 	_ZN16SimpleTree_BasicC1Ej
+	_ZN16SimpleTree_BasicC2Ej
+	_ZTT10SimpleTree
+	_ZTV10SimpleTree
