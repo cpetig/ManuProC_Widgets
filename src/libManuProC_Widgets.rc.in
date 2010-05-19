@@ -1,0 +1,30 @@
+#include <winver.h>
+
+VS_VERSION_INFO VERSIONINFO
+  FILEVERSION @MPC_WDG_MAJOR_VERSION@,@MPC_WDG_MINOR_VERSION@,@MPC_WDG_MICRO_VERSION@,BUILDNUMBER
+  PRODUCTVERSION @MPC_WDG_MAJOR_VERSION@,@MPC_WDG_MINOR_VERSION@,@MPC_WDG_MICRO_VERSION@,0
+  FILEFLAGSMASK 0
+  FILEFLAGS 0
+  FILEOS VOS__WINDOWS32
+  FILETYPE VFT_DLL
+  FILESUBTYPE VFT2_UNKNOWN
+  BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+      BLOCK "040904B0"
+      BEGIN
+	VALUE "CompanyName", "ManuProC.berlios.de"
+	VALUE "FileDescription", "ManuProC_Widgets"
+	VALUE "FileVersion", "@PACKAGE_VERSION@.BUILDNUMBER"
+	VALUE "InternalName", ""
+	VALUE "LegalCopyright", "Copyright 1999-2010 ManuProC team"
+	VALUE "OriginalFilename", "ManuProC_Base@MPC_WDG_MAJOR_VERSION@_@MPC_WDG_MINOR_VERSION@.dll"
+	VALUE "ProductName", "ManuProC"
+	VALUE "ProductVersion", "@PACKAGE_VERSION@"
+      END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+      VALUE "Translation", 0x409, 1200
+    END
+  END

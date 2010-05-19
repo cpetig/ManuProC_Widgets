@@ -1,8 +1,17 @@
 # $Id: configure.in,v 1.15 2004/04/29 16:30:02 christof Exp $
 
-AC_INIT(src/SimpleTreeModel.h)
+AC_PREREQ(2.50)
+AC_INIT(ManuProC_Widgets,0.8.0, [manuproc-developer-de@berlios.de])
+AC_CONFIG_AUX_DIR(.)
 
-AM_INIT_AUTOMAKE(ManuProC_Widgets, 0.8.0)
+MPC_WDG_MAJOR_VERSION=`echo $PACKAGE_VERSION | sed -e 's/^\(.*\)\..*\..*$/\1/'`
+MPC_WDG_MINOR_VERSION=`echo $PACKAGE_VERSION | sed -e 's/^.*\.\(.*\)\..*$/\1/'`
+MPC_WDG_MICRO_VERSION=`echo $PACKAGE_VERSION | sed -e 's/^.*\..*\.\(.*\)$/\1/'`
+AC_SUBST(MPC_WDG_MAJOR_VERSION)
+AC_SUBST(MPC_WDG_MINOR_VERSION)
+AC_SUBST(MPC_WDG_MICRO_VERSION)
+
+AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS(config.h)
 
 AC_PREFIX_DEFAULT(/usr/local)
@@ -27,6 +36,12 @@ AC_SUBST(KOMPONENTEN_INCLUDES)
 AC_SUBST(KOMPONENTEN_LDFLAGS)
 AC_SUBST(KOMPONENTEN_LIBS)
 
+if echo __MINGW32__ | $CPP - - | fgrep -q __MINGW32__
+then mingw=false
+else mingw=true 
+fi
+AM_CONDITIONAL(WINDOWS, test x$mingw = xtrue)
+
 AC_OUTPUT(Makefile src/Makefile examples/Makefile \
    examples/dwhouse/Makefile examples/tree_simplest/Makefile \
-   examples/MVC/Makefile examples/newtree/Makefile)
+   examples/MVC/Makefile examples/newtree/Makefile src/libManuProC_Widgets.rc )
