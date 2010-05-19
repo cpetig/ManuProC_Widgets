@@ -747,7 +747,9 @@ void SimpleTree::write_excel_via_filerequester() const
   if (fname.empty()) fname=_("Tabelle");
   if (getenv("HOME")) fname=std::string(getenv("HOME"))+"/"+fname;
   fname+=".xls";
+  Gtk::Window const*toplevel=dynamic_cast<Gtk::Window const*>(get_toplevel());
   WinFileReq::create(sigc::mem_fun(*this,&SimpleTree::write_excel),fname,
-      "Excel Tabellen (*.xls)\0*.xls\0","xls","Tabelle speichern",false);
+      _("Excel Tabellen (*.xls)\0*.xls\0"),"xls",_("Tabelle speichern"),false,
+      const_cast<Gtk::Window*>(toplevel));
 }
 #endif
