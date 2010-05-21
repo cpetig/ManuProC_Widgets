@@ -88,7 +88,10 @@ void SimpleTree_Basic::init()
 }
 
 SimpleTree_Basic::SimpleTree_Basic(unsigned maxcol)
-	: SimpleTreeStore_Proxy(maxcol), button_press_vfunc(), menu()
+	: 
+	  Glib::ObjectBase( typeid(SimpleTree_Basic) ), //register a custom GType.
+	  Glib::Object(), //The custom GType is actually registered here.
+	  SimpleTreeStore_Proxy(maxcol), button_press_vfunc(), menu()
 { init();
 }
 
