@@ -45,7 +45,7 @@
 #endif
 
 void SimpleTree_Basic::detach()
-{  set_model(Glib::RefPtr<Gtk::TreeModel>());
+{  unset_model();
 }
 
 static void aufklappen(SimpleTree_Basic *tv,Gtk::TreeModel::Path path,
@@ -88,10 +88,7 @@ void SimpleTree_Basic::init()
 }
 
 SimpleTree_Basic::SimpleTree_Basic(unsigned maxcol)
-	: 
-	  Glib::ObjectBase( typeid(SimpleTree_Basic) ), //register a custom GType.
-	  Glib::Object(), //The custom GType is actually registered here.
-	  SimpleTreeStore_Proxy(maxcol), button_press_vfunc(), menu()
+	: SimpleTreeStore_Proxy(maxcol), button_press_vfunc(), menu()
 { init();
 }
 
