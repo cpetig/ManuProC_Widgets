@@ -36,7 +36,7 @@ int getuid()
   if (!GetUserNameExA(NameSamCompatible,buf,&sz))
   { if (!GetUserNameA(buf,&sz)) return 0;
   }
-  std::string md5sum= md5string(std::string(buf,buf+sz));
+  std::string md5sum= md5(std::string(buf,buf+sz));
   return *(int*)md5sum.data();
 }
 
