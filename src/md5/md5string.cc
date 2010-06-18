@@ -3,8 +3,8 @@
 extern "C" {
 #include "global.h"
 #include "md5.h"
-#include "../md5string.h"
 }
+#include "../md5string.h"
 
 std::string md5(std::string const& in)
 {
