@@ -21,7 +21,7 @@
 #include <SimpleTreeStore.h>
 #include <Misc/Global_Settings.h>
 #if defined __MINGW32__ || defined WIN32
-# define getuid() 0
+# include "getuid.h"
 #else
 # include <unistd.h> // getuid
 #endif

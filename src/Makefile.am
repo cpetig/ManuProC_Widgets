@@ -58,6 +58,7 @@ libManuProC_Widgets_la_SOURCES=EingabeBox.cc \
 		IntStringBox_gui.cc IntStringBox.cc IntStringBox_glade.cc \
 		IntStringPopup_glade.cc datewin.cc datewin_glade.cc \
 		datewin_popup.cc datewin_popup_glade.cc BasicExcel.cpp \
+		md5/md5.c md5/md5string.cc getuid.cc \
 		$(DLL_DEF) $(ADDONS_FILES)
 
 BUILT_SOURCES=datewin.hh logwin.hh
