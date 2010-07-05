@@ -423,11 +423,11 @@ void SimpleTree_Basic::fillMenu()
 {  assert(menu==0); 
   menu=new Gtk::Menu();
   // Hauptmenü
-  add_mitem(menu,_("Zurücksetzen"),sigc::mem_fun(*this,&SimpleTree_Basic::on_zuruecksetzen_clicked));
-  add_mitem(menu,_("Abbrechen"),sigc::mem_fun(*this,&SimpleTree_Basic::on_abbrechen_clicked));
-  add_mitem(menu,_("Neuordnen"),sigc::mem_fun(*this,&SimpleTree_Basic::on_neuordnen_clicked));
+  add_mitem(menu,_("Reset order"),sigc::mem_fun(*this,&SimpleTree_Basic::on_zuruecksetzen_clicked));
+  add_mitem(menu,_("Cancel"),sigc::mem_fun(*this,&SimpleTree_Basic::on_abbrechen_clicked));
+  add_mitem(menu,_("Apply new order"),sigc::mem_fun(*this,&SimpleTree_Basic::on_neuordnen_clicked));
 
-  Gtk::MenuItem *spalten=add_mitem(menu,_("Sichtbare Spalten"));
+  Gtk::MenuItem *spalten=add_mitem(menu,_("Visble columns"));
   Gtk::Menu *spalten_menu=manage(new Gtk::Menu);
   spalten->set_submenu(*spalten_menu);
   Gtk::TearoffMenuItem *tomi=manage(new Gtk::TearoffMenuItem());
@@ -436,27 +436,27 @@ void SimpleTree_Basic::fillMenu()
    for (guint i=0;i<getStore()->MaxCol();++i)
       add_mitem(spalten_menu,Properties().Title(i),getStore()->ShowColumn(i));
 
-  Gtk::MenuItem *optionen=add_mitem(menu,_("Optionen"));
+  Gtk::MenuItem *optionen=add_mitem(menu,_("Options"));
   Gtk::Menu *optionen_menu=manage(new Gtk::Menu);
 //  add_mitem(optionen_menu,_("Spaltenüberschriften anzeigen"))->set_sensitive(false); // Model
-  add_mitem(optionen_menu,_("Auffüllen mit Standardreihenfolge\n"
-	  	"(statt der aktuellen)"),getStore()->OptionAuffullen());
-  add_mitem(optionen_menu,_("Ausgewählte Spalten aufklappen"),getStore()->OptionExpandieren());
-  add_mitem(optionen_menu,_("Tiefe farblich markieren"),getStore()->OptionColor());
-  add_mitem(optionen_menu,_("Zeilen zählen"),getStore()->OptionCount());
+  add_mitem(optionen_menu,_("Fill with standard order\n"
+	  	"(instead of current)"),getStore()->OptionAuffullen());
+  add_mitem(optionen_menu,_("Unfold selected columns"),getStore()->OptionExpandieren());
+  add_mitem(optionen_menu,_("Colorize by depth"),getStore()->OptionColor());
+  add_mitem(optionen_menu,_("Display children count"),getStore()->OptionCount());
 
   optionen->set_submenu(*optionen_menu);
-  add_mitem(menu,_("Alles aufklappen"),sigc::mem_fun(*this,&SimpleTree_Basic::Expand_recursively));
-  add_mitem(menu,_("Alles zuklappen"),sigc::mem_fun(*this,&SimpleTree_Basic::Collapse));
+  add_mitem(menu,_("Unfold all"),sigc::mem_fun(*this,&SimpleTree_Basic::Expand_recursively));
+  add_mitem(menu,_("Fold all"),sigc::mem_fun(*this,&SimpleTree_Basic::Collapse));
 #ifdef MPC_ST_EXCEL_EXPORT
-  add_mitem(menu,_("Excel-Datei schreiben"),sigc::mem_fun(*this,&SimpleTree_Basic::write_excel_via_filerequester));
+  add_mitem(menu,_("Export to .XLS"),sigc::mem_fun(*this,&SimpleTree_Basic::write_excel_via_filerequester));
 #endif
 #ifdef MPC_ST_ADVANCED
   Gtk::RadioMenuItem::Group group;
-  Gtk::MenuItem *ranking=add_mitem(menu,_("Rangfolge"));
+  Gtk::MenuItem *ranking=add_mitem(menu,_("Ranking"));
   Gtk::Menu *ranking_menu=manage(new Gtk::Menu);
   ranking->set_submenu(*ranking_menu);
-  add_mitem(ranking_menu,_(" aus "),group,sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::menu_ranking),-1));
+  add_mitem(ranking_menu,_(" off "),group,sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::menu_ranking),-1));
   for (guint i=0;i<getStore()->MaxCol();++i)
     add_mitem(ranking_menu,Properties().Title(i),group,sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::menu_ranking),i));
 #endif
@@ -708,7 +708,7 @@ void SimpleTree::write_excel(std::string const& filename) const
   YExcel::BasicExcel e;
   e.New(1);
   std::string name=getStore()->Properties().InstanceName();
-  if (name.empty()) name=_("Tabelle");
+  if (name.empty()) name=_("Table");
   e.RenameWorksheet(size_t(0),make_wstring(name).c_str());
   YExcel::BasicExcelWorksheet* sheet = e.GetWorksheet(size_t(0));
   assert(sheet);
@@ -744,12 +744,12 @@ void SimpleTree::write_excel_via_filerequester() const
       return;
     
   std::string fname=getStore()->Properties().InstanceName();
-  if (fname.empty()) fname=_("Tabelle");
+  if (fname.empty()) fname=_("Table");
   if (getenv("HOME")) fname=std::string(getenv("HOME"))+"/"+fname;
   fname+=".xls";
   Gtk::Window const*toplevel=dynamic_cast<Gtk::Window const*>(get_toplevel());
   WinFileReq::create(sigc::mem_fun(*this,&SimpleTree::write_excel),fname,
-      _("Excel Tabellen (*.xls)\0*.xls\0"),"xls",_("Tabelle speichern"),false,
+      _("Excel tables (*.xls)\0*.xls\0"),"xls",_("Export table"),false,
       const_cast<Gtk::Window*>(toplevel));
 }
 #endif
