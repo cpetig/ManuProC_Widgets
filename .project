@@ -3,6 +3,8 @@
 	<name>ManuProC_Widgets</name>
 	<comment></comment>
 	<projects>
+		<project>GtkmmAddons</project>
+		<project>ManuProC_Base</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
