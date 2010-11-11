@@ -1,7 +1,7 @@
 SUBDIRS=newtree tree_simplest dwhouse MVC
 
 EXTRA_PROGRAMS = Event TreeViewUtil TreeSelection test_sts test_logwin \
-	test_clist datewintest EvenMoreSimpleUsage
+	test_clist datewintest EvenMoreSimpleUsage BasicExcel xlsview
 
 AM_CXXFLAGS=@KOMPONENTEN_INCLUDES@ 
 #-Wl,--enable-runtime-pseudo-reloc
@@ -22,5 +22,9 @@ datewintest_SOURCES=datewintest.cc
 datewintest_LDADD = @KOMPONENTEN_LIBS@
 EvenMoreSimpleUsage_SOURCES=EvenMoreSimpleUsage.cc
 EvenMoreSimpleUsage_LDADD= @KOMPONENTEN_LIBS@
+BasicExcel_SOURCES=BasicExcel.cc
+BasicExcel_LDADD=@KOMPONENTEN_LIBS@
+xlsview_SOURCES=xlsview.cc
+xlsview_LDADD=@KOMPONENTEN_LIBS@
 
 AM_LDFLAGS=@KOMPONENTEN_LDFLAGS@

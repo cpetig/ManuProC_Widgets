@@ -89,12 +89,12 @@ public:
 
 // Misc functions
 	size_t GetBlockSize() const {return blockSize_;}
-	void SetBlockSize(size_t size) 
+	void SetBlockSize(size_t size)
 	{
 		blockSize_ = size;
 		indexEnd_ = fileSize_/blockSize_ + (fileSize_ % blockSize_ ? 1 : 0);
 	}
-	
+
 protected:
 	vector<char> filename_;
 	ios_base::openmode mode_;
@@ -240,9 +240,9 @@ class CompoundFile
 {
 public:
 	enum {DUPLICATE_PROPERTY=-6,
-		  NAME_TOO_LONG=-5, FILE_NOT_FOUND=-4, 
-		  DIRECTORY_NOT_EMPTY=-3, DIRECTORY_NOT_FOUND=-2, 
-		  INVALID_PATH=-1, 
+		  NAME_TOO_LONG=-5, FILE_NOT_FOUND=-4,
+		  DIRECTORY_NOT_EMPTY=-3, DIRECTORY_NOT_FOUND=-2,
+		  INVALID_PATH=-1,
 		  SUCCESS=1};
 
 	CompoundFile();
@@ -338,7 +338,7 @@ protected:
 
 	private:
 		void Initialize();
-	};	
+	};
 	Header header_;
 
 	// BAT related functions and data members
@@ -353,16 +353,16 @@ protected:
 	void LinkBlocks(size_t from, size_t to, bool isBig);
 	void FreeBlocks(vector<size_t>& indices, bool isBig);
 	vector<int> blocksIndices_;
-	vector<int> sblocksIndices_;	
+	vector<int> sblocksIndices_;
 
 	// Properties related functions and data members
 	class Property
 	{
 	public:
-		Property();		
+		Property();
 		void Write(char* block);
 		void Read(char* block);
-		friend bool operator==(const CompoundFile::Property& lhs, const CompoundFile::Property& rhs) 
+		friend bool operator==(const CompoundFile::Property& lhs, const CompoundFile::Property& rhs)
 		{
 			return (!wcscmp(lhs.name_, rhs.name_));
 		}
@@ -538,7 +538,7 @@ public:
 	Record();
 	virtual ~Record();
 	virtual size_t Read(const char* data);
-	virtual size_t Write(char* data);	
+	virtual size_t Write(char* data);
 	virtual size_t DataSize();
 	virtual size_t RecordSize();
 	short code_;
@@ -552,7 +552,7 @@ struct BOF : public Record
 {
 	BOF();
 	virtual size_t Read(const char* data);
-	virtual size_t Write(char* data);	
+	virtual size_t Write(char* data);
 	short version_;
 	short type_;
 	short buildIdentifier_;
@@ -576,7 +576,7 @@ struct SmallString
 	const SmallString& operator=(const wchar_t* str);
 	void Reset();
 	size_t Read(const char* data);
-	size_t Write(char* data);	
+	size_t Write(char* data);
 	size_t DataSize();
 	size_t RecordSize();
 	size_t StringSize();
@@ -596,7 +596,7 @@ struct LargeString
 	void Reset();
 	size_t Read(const char* data);
 	size_t ContinueRead(const char* data, size_t size);
-	size_t Write(char* data);	
+	size_t Write(char* data);
 	size_t DataSize();
 	size_t RecordSize();
 	size_t StringSize();
@@ -623,7 +623,7 @@ public:
 	{
 		Window1();
 		virtual size_t Read(const char* data);
-		virtual size_t Write(char* data);	
+		virtual size_t Write(char* data);
 		short horizontalPos_;
 		short verticalPos_;
 		short width_;
@@ -644,7 +644,7 @@ public:
 	{
 		Font();
 		virtual size_t Read(const char* data);
-		virtual size_t Write(char* data);	
+		virtual size_t Write(char* data);
 		virtual size_t DataSize();
 		virtual size_t RecordSize();
 		short height_;
@@ -663,7 +663,7 @@ public:
 	{
 		XF();
 		virtual size_t Read(const char* data);
-		virtual size_t Write(char* data);	
+		virtual size_t Write(char* data);
 		short fontRecordIndex_;
 		short formatRecordIndex_;
 		short protectionType_;
@@ -679,13 +679,13 @@ public:
 	{
 		Style();
 		virtual size_t Read(const char* data);
-		virtual size_t Write(char* data);	
+		virtual size_t Write(char* data);
 		virtual size_t DataSize();
 		virtual size_t RecordSize();
 		short XFRecordIndex_;
 		char identifier_;
 		char level_;
-		LargeString name_;		
+		LargeString name_;
 	};
 	struct Palette;
 	struct UseSelfs;
@@ -693,13 +693,13 @@ public:
 	{
 		BoundSheet();
 		virtual size_t Read(const char* data);
-		virtual size_t Write(char* data);	
+		virtual size_t Write(char* data);
 		virtual size_t DataSize();
 		virtual size_t RecordSize();
 		int BOFpos_;
 		char visibility_;
 		char type_;
-		SmallString name_;		
+		SmallString name_;
 	};
 	struct Country;
 	struct LinkTable;
@@ -707,12 +707,12 @@ public:
 	{
 		SharedStringTable();
 		virtual size_t Read(const char* data);
-		virtual size_t Write(char* data);	
+		virtual size_t Write(char* data);
 		virtual size_t DataSize();
 		virtual size_t RecordSize();
 		int stringsTotal_;
 		int uniqueStringsTotal_;
-		vector<LargeString> strings_;	
+		vector<LargeString> strings_;
 	};
 	struct ExtSST : public Record
 	{
@@ -753,7 +753,7 @@ public:
 	{
 		Index();
 		virtual size_t Read(const char* data);
-		virtual size_t Write(char* data);	
+		virtual size_t Write(char* data);
 		virtual size_t DataSize();
 		virtual size_t RecordSize();
 		int unused1_;
@@ -761,7 +761,7 @@ public:
 		size_t firstUnusedRowIndex_;
 		int unused2_;
 		vector<size_t> DBCellPos_;
-		
+
 	};
 	struct CalculationSettings
 	{
@@ -770,7 +770,7 @@ public:
 		struct RefMode;
 		struct Delta;
 		struct Iteration;
-		struct SafeRecalc;		
+		struct SafeRecalc;
 	};
 	struct PrintHeaders;
 	struct PrintGridlines;
@@ -799,12 +799,12 @@ public:
 	{
 		Dimensions();
 		virtual size_t Read(const char* data);
-		virtual size_t Write(char* data);	
+		virtual size_t Write(char* data);
 		size_t firstUsedRowIndex_;
 		size_t lastUsedRowIndexPlusOne_;
 		short firstUsedColIndex_;
 		short lastUsedColIndexPlusOne_;
-		short unused_;		
+		short unused_;
 	};
 	struct CellTable
 	{
@@ -814,7 +814,7 @@ public:
 			{
 				Row();
 				virtual size_t Read(const char* data);
-				virtual size_t Write(char* data);	
+				virtual size_t Write(char* data);
 				short rowIndex_;
 				short firstCellColIndex_;
 				short lastCellColIndexPlusOne_;
@@ -829,37 +829,37 @@ public:
 				{
 					Blank();
 					virtual size_t Read(const char* data);
-					virtual size_t Write(char* data);	
+					virtual size_t Write(char* data);
 					short rowIndex_;
 					short colIndex_;
-					short XFRecordIndex_;					
+					short XFRecordIndex_;
 				};
 				struct BoolErr : public Record
 				{
 					BoolErr();
 					virtual size_t Read(const char* data);
-					virtual size_t Write(char* data);	
+					virtual size_t Write(char* data);
 					short rowIndex_;
 					short colIndex_;
 					short XFRecordIndex_;
 					char value_;
-					char error_;	
+					char error_;
 				};
 				struct LabelSST : public Record
 				{
 					LabelSST();
 					virtual size_t Read(const char* data);
-					virtual size_t Write(char* data);	
+					virtual size_t Write(char* data);
 					short rowIndex_;
 					short colIndex_;
 					short XFRecordIndex_;
-					size_t SSTRecordIndex_;	
+					size_t SSTRecordIndex_;
 				};
 				struct MulBlank : public Record
 				{
 					MulBlank();
 					virtual size_t Read(const char* data);
-					virtual size_t Write(char* data);	
+					virtual size_t Write(char* data);
 					virtual size_t DataSize();
 					virtual size_t RecordSize();
 					short rowIndex_;
@@ -891,14 +891,14 @@ public:
 				{
 					Number();
 					virtual size_t Read(const char* data);
-					virtual size_t Write(char* data);	
+					virtual size_t Write(char* data);
 					short rowIndex_;
 					short colIndex_;
 					short XFRecordIndex_;
 					double value_;
 
 				private:
-					union 
+					union
 					{
 						long long intvalue_;
 						double doublevalue_;
@@ -908,11 +908,11 @@ public:
 				{
 					RK();
 					virtual size_t Read(const char* data);
-					virtual size_t Write(char* data);	
+					virtual size_t Write(char* data);
 					short rowIndex_;
 					short colIndex_;
 					short XFRecordIndex_;
-					int value_;	
+					int value_;
 				};
 
 				struct Formula : public Record
@@ -921,7 +921,7 @@ public:
 					{
 						Array();
 						virtual size_t Read(const char* data);
-						virtual size_t Write(char* data);	
+						virtual size_t Write(char* data);
 						virtual size_t DataSize();
 						virtual size_t RecordSize();
 						short firstRowIndex_;
@@ -936,7 +936,7 @@ public:
 					{
 						ShrFmla();
 						virtual size_t Read(const char* data);
-						virtual size_t Write(char* data);	
+						virtual size_t Write(char* data);
 						virtual size_t DataSize();
 						virtual size_t RecordSize();
 						short firstRowIndex_;
@@ -950,7 +950,7 @@ public:
 					{
 						ShrFmla1();
 						virtual size_t Read(const char* data);
-						virtual size_t Write(char* data);	
+						virtual size_t Write(char* data);
 						virtual size_t DataSize();
 						virtual size_t RecordSize();
 						short firstRowIndex_;
@@ -964,7 +964,7 @@ public:
 					{
 						Table();
 						virtual size_t Read(const char* data);
-						virtual size_t Write(char* data);	
+						virtual size_t Write(char* data);
 						short firstRowIndex_;
 						short lastRowIndex_;
 						char firstColIndex_;
@@ -979,7 +979,7 @@ public:
 					{
 						String();
 						virtual size_t Read(const char* data);
-						virtual size_t Write(char* data);	
+						virtual size_t Write(char* data);
 						virtual size_t DataSize();
 						virtual size_t RecordSize();
 						vector<wchar_t> string_;
@@ -987,7 +987,7 @@ public:
 
 					Formula();
 					virtual size_t Read(const char* data);
-					virtual size_t Write(char* data);	
+					virtual size_t Write(char* data);
 					virtual size_t DataSize();
 					virtual size_t RecordSize();
 					short rowIndex_;
@@ -1018,7 +1018,7 @@ public:
 				short LastColIndex();
 				short type_;
 				bool normalType_;
-				
+
 				Blank blank_;
 				BoolErr boolerr_;
 				LabelSST labelsst_;
@@ -1032,34 +1032,34 @@ public:
 			{
 				DBCell();
 				virtual size_t Read(const char* data);
-				virtual size_t Write(char* data);	
+				virtual size_t Write(char* data);
 				virtual size_t DataSize();
 				virtual size_t RecordSize();
 				int firstRowOffset_;
 				vector<short> offsets_;
-			};			
-			
+			};
+
 			size_t Read(const char* data);
 			size_t Write(char* data);
 			size_t DataSize();
 			size_t RecordSize();
-		
+
 			vector<Row> rows_;
 			vector<CellBlock> cellBlocks_;
 			DBCell dbcell_;
-		};	
+		};
 		size_t Read(const char* data);
 		size_t Write(char* data);
 		size_t DataSize();
 		size_t RecordSize();
-	
-		vector<RowBlock> rowBlocks_;		
+
+		vector<RowBlock> rowBlocks_;
 	};
 	struct Window2 : public Record
 	{
 		Window2();
 		virtual size_t Read(const char* data);
-		virtual size_t Write(char* data);	
+		virtual size_t Write(char* data);
 		short options_;
 		short firstVisibleRowIndex_;
 		short firstVisibleColIndex_;
@@ -1067,7 +1067,7 @@ public:
 		short unused1_;
 		short magnificationFactorPageBreakPreview_;
 		short magnificationFactorNormalView_;
-		int unused2_;		
+		int unused2_;
 	};
 	struct SCL;
 	struct Pane;
@@ -1093,7 +1093,7 @@ public:
 	YEOF eof_;
 };
 
-bool IsRKValueAnInteger(int rkValue);		///< Returns true if the supplied rk value contains an integer. 
+bool IsRKValueAnInteger(int rkValue);		///< Returns true if the supplied rk value contains an integer.
 bool IsRKValueADouble(int rkValue);			///< Returns true if the supplied rk value contains a double.
 double GetDoubleFromRKValue(int rkValue);	///< Convert a rk value to a double.
 int GetIntegerFromRKValue(int rkValue);		///< Convert a rk value to an integer.
@@ -1128,7 +1128,7 @@ public: // Worksheet functions.
 	BasicExcelWorksheet* GetWorksheet(size_t sheetIndex);	///< Get a pointer to an Excel worksheet at the given index. Index starts from 0. Returns 0 if index is invalid.
 	BasicExcelWorksheet* GetWorksheet(const char* name);	///< Get a pointer to an Excel worksheet that has given ANSI name. Returns 0 if there is no Excel worksheet with the given name.
 	BasicExcelWorksheet* GetWorksheet(const wchar_t* name);	///< Get a pointer to an Excel worksheet that has given Unicode name. Returns 0 if there is no Excel worksheet with the given name.
-	
+
 	BasicExcelWorksheet* AddWorksheet(int sheetIndex=-1);	///< Add a new Excel worksheet to the given index. Name given to worksheet is SheetX, where X is a number which starts from 1. Index starts from 0. Worksheet is added to the last position if sheetIndex == -1. Returns a pointer to the worksheet if successful, 0 if otherwise.
 	BasicExcelWorksheet* AddWorksheet(const char* name, int sheetIndex=-1);	///< Add a new Excel worksheet with given ANSI name to the given index. Index starts from 0. Worksheet is added to the last position if sheetIndex == -1. Returns a pointer to the worksheet if successful, 0 if otherwise.
 	BasicExcelWorksheet* AddWorksheet(const wchar_t* name, int sheetIndex=-1);	///< Add a new Excel worksheet with given Unicode name to the given index. Index starts from 0. Worksheet is added to the last position if sheetIndex == -1. Returns a pointer to the worksheet if successful, 0 if otherwise.
@@ -1157,7 +1157,7 @@ private: // Functions to read and write raw Excel format.
 
 	enum {WORKBOOK_GLOBALS=0x0005, VISUAL_BASIC_MODULE=0x0006,
 		  WORKSHEET=0x0010, CHART=0x0020};
-	
+
 private: // Internal functions
 	void UpdateYExcelWorksheet();	///< Update yesheets_ using information from worksheets_.
 	void UpdateWorksheets();		///< Update worksheets_ using information from yesheets_.
@@ -1210,7 +1210,8 @@ public:
 
 public:
 	enum {UNDEFINED, INT, DOUBLE, STRING, WSTRING};
-	int Type() const;		///< Get type of value stored in current Excel cell. Returns one of the above enums. 
+	enum style_t {ST_NONE, ST_YELLOW_BG, ST_BOLD, ST_DBL_ULINE }; // predefined styles
+	int Type() const;		///< Get type of value stored in current Excel cell. Returns one of the above enums.
 
 	bool Get(int& val) const;		///< Get an integer value. Returns false if cell does not contain an integer or a double.
 	bool Get(double& val) const;	///< Get a double value. Returns false if cell does not contain a double or an integer.
@@ -1229,11 +1230,13 @@ public:
 	void Set(double val);			///< Set content of current Excel cell to a double.
 	void Set(const char* str);		///< Set content of current Excel cell to an ANSI string.
 	void Set(const wchar_t* str);	///< Set content of current Excel cell to an Unicode string.
-	
+
 	void SetInteger(int val);			///< Set content of current Excel cell to an integer.
 	void SetDouble(double val);			///< Set content of current Excel cell to a double.
 	void SetString(const char* str);	///< Set content of current Excel cell to an ANSI string.
 	void SetWString(const wchar_t* str);///< Set content of current Excel cell to an Unicode string.
+
+	void SetStyle(style_t s);	///< set style of cell
 
 	void EraseContents();	///< Erase the content of current Excel cell. Set type to UNDEFINED.
 
@@ -1243,6 +1246,7 @@ private:
 	double dval_;			///< Double value stored in current Excel cell.
 	vector<char> str_;		///< ANSI string stored in current Excel cell. Include null character.
 	vector<wchar_t> wstr_;	///< Unicode string stored in current Excel cell. Include null character.
+	style_t style_;			///< style used for cell
 };
 
 } // Namespace end
