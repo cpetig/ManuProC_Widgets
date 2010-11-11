@@ -1236,7 +1236,8 @@ public:
 	void SetString(const char* str);	///< Set content of current Excel cell to an ANSI string.
 	void SetWString(const wchar_t* str);///< Set content of current Excel cell to an Unicode string.
 
-	void SetStyle(style_t s);	///< set style of cell
+	void SetStyle(style_t s);	///< Set style of cell
+	style_t GetStyle() const;	///< Get style of cell
 
 	void EraseContents();	///< Erase the content of current Excel cell. Set type to UNDEFINED.
 

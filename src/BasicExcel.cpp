@@ -5236,6 +5236,7 @@ void BasicExcel::UpdateWorksheets()
 								pCell->rk_.rowIndex_ = r;
 								pCell->rk_.colIndex_ = c;
 								pCell->rk_.value_ = GetRKValueFromInteger(cell->GetInteger());
+								pCell->rk_.XFRecordIndex_ = short(cell->GetStyle());
 							}
 							break;
 						}
@@ -5280,6 +5281,7 @@ void BasicExcel::UpdateWorksheets()
 									pCell->rk_.rowIndex_ = r;
 									pCell->rk_.colIndex_ = c;
 									pCell->rk_.value_ = GetRKValueFromDouble(cell->GetDouble());
+									pCell->rk_.XFRecordIndex_ = short(cell->GetStyle());
 								}
 								else
 								{
@@ -5287,6 +5289,7 @@ void BasicExcel::UpdateWorksheets()
 									pCell->number_.rowIndex_ = r;
 									pCell->number_.colIndex_ = c;
 									pCell->number_.value_ = cell->GetDouble();
+									pCell->number_.XFRecordIndex_ = short(cell->GetStyle());
 								}
 							}
 							break;
@@ -5313,7 +5316,7 @@ void BasicExcel::UpdateWorksheets()
 							if (stringMapIt != stringMap.end()) strIndex = stringMapIt->second;
 							else strIndex = maxUniqueStrings;
 
-							pCell->labelsst_.XFRecordIndex_= (c&1)+((r<<1)&2);
+							pCell->labelsst_.XFRecordIndex_= short(cell->GetStyle());
 							if (strIndex < maxUniqueStrings)
 							{
 								// String is present in Shared string table.
@@ -5353,6 +5356,7 @@ void BasicExcel::UpdateWorksheets()
 							if (wstringMapIt != wstringMap.end()) strIndex = wstringMapIt->second;
 							else strIndex = maxUniqueStrings;
 
+							pCell->labelsst_.XFRecordIndex_= short(cell->GetStyle());
 							if (strIndex < maxUniqueStrings)
 							{
 								// String is present in Shared string table.
@@ -5881,6 +5885,10 @@ void BasicExcelCell::EraseContents()
 void BasicExcelCell::SetStyle(style_t s)
 {
 	style_ = s;
+}
+BasicExcelCell::style_t BasicExcelCell::GetStyle() const
+{
+	return style_;
 }
 
 ///< Print cell to output stream.
