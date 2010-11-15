@@ -1,0 +1,6 @@
+# List of source files which contain translatable strings.
+./src/datewin_glade.cc
+./src/datewin_popup_glade.cc
+./src/IntStringBox.cc
+./src/IntStringBox_glade.cc
+./src/SimpleTree.cc
