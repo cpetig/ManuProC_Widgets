@@ -23,7 +23,9 @@ else
 fi
 echo `autoconf$AC_POSTFIX --version | head -1` found
 
-if which automake-1.10 >/dev/null
+if which automake-1.11 >/dev/null 2>&1
+then AM_POSTFIX=-1.11
+elif which automake-1.10 >/dev/null
 then AM_POSTFIX=-1.10
 elif which automake-1.9 >/dev/null
 then AM_POSTFIX=-1.9
@@ -45,10 +47,17 @@ echo This script runs automake/-conf, configure and make...
 echo You did remember necessary arguments for configure, right?
 echo
 
-libtoolize --force --copy
 if test -f /usr/share/aclocal/petig.m4
 then aclocal$AM_POSTFIX
 else aclocal$AM_POSTFIX -I macros
+fi
+libtoolize --force --copy
+gettextize -f
+if test ! -e po/Makevars
+then cp po/Makevars.template po/Makevars
+fi
+if test ! -e po/LINGUAS
+then touch po/LINGUAS
 fi
 autoheader$AC_POSTFIX
 automake$AM_POSTFIX --add-missing --copy --gnu

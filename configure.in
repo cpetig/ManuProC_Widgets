@@ -18,6 +18,36 @@ AC_PREFIX_DEFAULT(/usr/local)
 
 AC_PROG_CXX
 AM_PROG_LIBTOOL
+
+dnl *************************************************
+dnl gettext support
+dnl *************************************************
+
+GETTEXT_PACKAGE=labor
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",
+		[the gettext domain])
+
+dnl Add the languages which your application supports here.
+if test x$mingw = xtrue ; then
+  AM_GLIB_GNU_GETTEXT([external])
+else
+  AM_GNU_GETTEXT_VERSION([0.17])
+  AM_GNU_GETTEXT([external])
+fi
+
+dnl Set PACKAGE_LOCALE_DIR in config.h.
+if test -z "${DATADIRNAME}"
+then DATADIRNAME=share
+fi
+if test "x${prefix}" = "xNONE"; then
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/${DATADIRNAME}/locale",
+		[the location of locale files])
+else
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/${DATADIRNAME}/locale",
+		[the location of locale files])
+fi
+
 AC_LANG_CPLUSPLUS
 
 AC_SUBST(CFLAGS)
@@ -42,6 +72,6 @@ else mingw=true
 fi
 AM_CONDITIONAL(WINDOWS, test x$mingw = xtrue)
 
-AC_OUTPUT(Makefile src/Makefile examples/Makefile \
+AC_OUTPUT(Makefile src/Makefile examples/Makefile  po/Makefile.in\
    examples/dwhouse/Makefile examples/tree_simplest/Makefile \
    examples/MVC/Makefile examples/newtree/Makefile src/libManuProC_Widgets.rc )
