@@ -1,0 +1,133 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Christof Petig
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: manuproc_widgets 0.8.0\n"
+"Report-Msgid-Bugs-To: manuproc-developer-de@berlios.de\n"
+"POT-Creation-Date: 2010-11-15 11:08+0100\n"
+"PO-Revision-Date: 2010-11-15 11:17+0100\n"
+"Last-Translator: Christof Petig <petig@stahlwille.de>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/datewin_glade.cc:60
+#: src/datewin_glade.cc:64
+msgid "."
+msgstr "."
+
+#: src/datewin_glade.cc:73
+msgid "'"
+msgstr "'"
+
+#: src/datewin_glade.cc:79
+#: src/datewin_popup_glade.cc:68
+#: src/datewin_popup_glade.cc:96
+#: src/IntStringBox_glade.cc:60
+msgid "Empty"
+msgstr "Leer"
+
+#: src/datewin_popup_glade.cc:62
+#: src/datewin_popup_glade.cc:80
+msgid "Date"
+msgstr "Datum"
+
+#: src/datewin_popup_glade.cc:65
+#: src/datewin_popup_glade.cc:88
+msgid "Week"
+msgstr "Woche"
+
+#: src/datewin_popup_glade.cc:125
+msgid "Date properties"
+msgstr "Datumseigenschaften"
+
+#: src/IntStringBox_glade.cc:54
+msgid "Int"
+msgstr "Int"
+
+#: src/IntStringBox_glade.cc:55
+msgid "Name1"
+msgstr "Name1"
+
+#: src/IntStringBox_glade.cc:56
+msgid "Name2"
+msgstr "Name2"
+
+#: src/SimpleTree.cc:426
+msgid "Reset order"
+msgstr "Zurücksetzen"
+
+#: src/SimpleTree.cc:427
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: src/SimpleTree.cc:428
+msgid "Apply new order"
+msgstr "Neuordnen"
+
+#: src/SimpleTree.cc:430
+msgid "Visble columns"
+msgstr "Sichtbare Spalten"
+
+#: src/SimpleTree.cc:439
+msgid "Options"
+msgstr "Optionen"
+
+#: src/SimpleTree.cc:442
+msgid ""
+"Fill with standard order\n"
+"(instead of current)"
+msgstr ""
+"Auffüllen mit Standardreihenfolge\n"
+"(statt der aktuellen)"
+
+#: src/SimpleTree.cc:444
+msgid "Unfold selected columns"
+msgstr "Ausgewählte Spalten aufklappen"
+
+#: src/SimpleTree.cc:445
+msgid "Colorize by depth"
+msgstr "Tiefe farblich markieren"
+
+#: src/SimpleTree.cc:446
+msgid "Display children count"
+msgstr "Zeilen zählen"
+
+#: src/SimpleTree.cc:449
+msgid "Unfold all"
+msgstr "Alles aufklappen"
+
+#: src/SimpleTree.cc:450
+msgid "Fold all"
+msgstr "Alles zuklappen"
+
+#: src/SimpleTree.cc:452
+msgid "Export to .XLS"
+msgstr "Excel-Datei schreiben"
+
+#: src/SimpleTree.cc:456
+msgid "Ranking"
+msgstr "Rangfolge"
+
+#: src/SimpleTree.cc:459
+msgid " off "
+msgstr " aus "
+
+#: src/SimpleTree.cc:711
+#: src/SimpleTree.cc:747
+msgid "Table"
+msgstr "Tabelle"
+
+#: src/SimpleTree.cc:752
+msgid "Excel tables (*.xls)"
+msgstr "Excel Tabellen (*.xls)"
+
+#: src/SimpleTree.cc:752
+msgid "Export table"
+msgstr "Tabelle speichern"
+
