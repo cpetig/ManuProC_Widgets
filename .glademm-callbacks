@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<glademm-callbacks>
+  <class name="TreeBase" parent="GtkTreeView">
+    <callback name="leaf_selected" args="cH_RowDataBase leaf"/>
+    <callback name="leaf_unselected"/>
+    <callback name="node_selected" args="Handle&lt;const TreeRow&gt; node"/>
+  </class>
+  <class name="SimpleTree" parent="TreeBase" include="SimpleTree.hh"/>
+  <class name="SearchCombo">
+    <callback name="search" args="gboolean *cont,GtkSCContext context" proxy="true"/>
+  </class>
+  <class name="SearchCombo3">
+    <callback name="search" args="gboolean *cont,GtkSCContext context" proxy="false"/>
+  </class>
+  <class name="SearchComboContent&lt;int&gt;" parent="SearchCombo"/>
+  <class name="SearchComboContent&lt;unsigned&gt;" parent="SearchCombo"/>
+  <class name="SearchComboContent&lt;float&gt;" parent="SearchCombo"/>
+  <class name="SearchComboContent&lt;std::string&gt;" parent="SearchCombo"/>
+  <class name="SearchComboContent3&lt;int&gt;" parent="SearchCombo3"/>
+  <class name="SearchComboContent3&lt;std::string&gt;" parent="SearchCombo3"/>
+</glademm-callbacks>

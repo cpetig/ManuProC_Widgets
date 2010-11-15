@@ -1,6 +1,27 @@
+2010-11-15  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (ACLOCAL_AMFLAGS): New variable.
+	(EXTRA_DIST): Add ./config.rpath, m4/ChangeLog.
+	* configure.in (AC_OUTPUT): Add po/Makefile.in.
+
 Don Nov 15 16:15:30 CET 2001
 	selectMatchingLines programmiert.
 
 Fri, 23 Feb 2001 17:45:34 +0100
 	initial split into Basic parts (to get used elsewhere)
 	and advanced Manuproc features
+
+2010/11/15 10:20:07 CET
+	update files from .glade file
+
+2010/11/15 10:25:21 CET
+	update files from .glade file
+
+2010/11/15 10:27:22 CET
+	update files from .glade file
+
+2010/11/15 10:41:30 CET
+	update files from .glade file
+
+2010/11/15 10:41:44 CET
+	update files from .glade file
