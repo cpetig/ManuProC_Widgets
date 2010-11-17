@@ -17,7 +17,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#define getuid() getuid_ManuProC()
+
 #ifdef __cplusplus
 extern "C"
 #endif
  int getuid();
+
+extern void setuid_ManuProC(int id);
