@@ -5,21 +5,25 @@
 #include<Misc/SQLerror.h>
 #include <Misc/compiler_ports.h>
 #include <Misc/itos.h>
-#include <Lager/FertigWarenLager.h>
-#include <ArtikelBox.hh>
+//#include <Lager/FertigWarenLager.h>
+//#include <ArtikelBox.hh>
 
-#ifdef MABELLA_EXTENSIONS
+#if defined(MABELLA_EXTENSIONS) || defined(PETIG_EXTENSIONS)
 #include <Lager/FertigWarenLager.h>
+#include "ArtikelBox.hh"
 #endif
 
-#include "ArtikelBox.hh"
 
 struct MyMessage : Gtk::MessageDialog
 {
   std::string stringify(const SQLerror &e)
   { char tmp[100]; 
     std::string _msg;
+#ifdef MPC_SQLITE
+    snprintf(tmp,sizeof tmp,"DB-Error Code:%d\n",e.Code());
+#else
     snprintf(tmp,sizeof tmp,"DB-Error Code:%d %s\n",e.Code(),e.State().c_str());
+#endif
     _msg=tmp;
     snprintf(tmp,sizeof tmp,"DB-Error Message:%s\n",e.Message().c_str());  
     _msg+=tmp;
@@ -49,6 +53,7 @@ struct MyMessage : Gtk::MessageDialog
    property_window_position().set_value(Gtk::WIN_POS_CENTER);
   }
   
+#ifdef MABELLA_EXTENSIONS
   MyMessage(const LagerError &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
       : Gtk::MessageDialog(e.Text()+" ArtID:"+itos(e.ArtID()),false,mt)
   { }
@@ -56,6 +61,7 @@ struct MyMessage : Gtk::MessageDialog
   MyMessage(const ArtikelBoxErr &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
       : Gtk::MessageDialog(e.ErrMsg(),false,mt)
   { }  
+#endif
   
   template <class T>
    static int show_and_wait(T const& s, Gtk::Window *parent, Gtk::MessageType mt)
