@@ -22,8 +22,8 @@
 #ifndef MANUPROC_WIDGETS_MVC_INT_RB_H
 #define MANUPROC_WIDGETS_MVC_INT_RB_H
 
-#include <gtk--/radiobutton.h>
-#include <gtk--/box.h>
+#include <gtkmm/radiobutton.h>
+#include <gtkmm/box.h>
 #include <BaseObjects/Model.h>
 #include <vector>
 

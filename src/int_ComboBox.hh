@@ -33,8 +33,8 @@ public:
 		{  Glib::RefPtr<Gdk::Pixbuf> pixbuf;
 		   std::string name;
 		};
-		struct Columns;
-		Columns columns;
+		//struct Columns;
+		//Columns columns;
 		widget_t *combo;
 		sigc::connection toggleconn;
 
@@ -45,14 +45,14 @@ public:
 		
 	public:
 		Connection(const Model_ref<T> &m) : this_t(m), combo() { }
-		Connection(Widget *w) : combo(dynamic_cast<Gtk::ComboBox*>(w) { }
+		Connection(Widget *w) : combo(dynamic_cast<Gtk::ComboBox*>(w)) { }
 		void set_widget(widget_t *w, Widget *_combo=0);
 		void add_entry(int value, Glib::RefPtr<Gdk::Pixbuf> const& pixbuf, 
 				std::string const& name);
 	};
 	
 private:	
-	sigc::connection conn;
+	Connection conn;
 	
 public:
 	int_ComboBox(const Model_ref<T> &model);
