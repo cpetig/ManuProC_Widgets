@@ -1,6 +1,6 @@
 /* $Id: treebase_data.h,v 1.9 2003/10/07 06:49:57 christof Exp $ */
 /*  libKomponenten: GUI components for ManuProC's libcommon++
- *  Copyright (C) 2009-2010 Christof Petig
+ *  Copyright (C) 2009-2011 Christof Petig
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
@@ -38,6 +38,8 @@
 #include <Misc/EntryValue_easy.h>
 #include <Misc/create_parse.h>
 #include <RowDataBase.h>
+//#include <SimpleTree.hh>
+class SimpleTree;
 
 template <typename A, typename B=EntryValue_easy::nil, typename C=EntryValue_easy::nil, 
           typename D=EntryValue_easy::nil, typename E=EntryValue_easy::nil, 
@@ -52,6 +54,7 @@ class RowDataBase_easy : public RowDataBase
  F f;
  G g;
 public:
+ typedef RowDataBase_easy<A,B,C,D,E,F,G> this_type;
 
  RowDataBase_easy(A const &_a, B const &_b=B(), C const &_c=C(), D const &_d=D(), E const&_e=E(), F const &_f=F(), G const &_g=G())
   : a(_a), b(_b), c(_c), d(_d), e(_e), f(_f), g(_g)
@@ -72,6 +75,33 @@ public:
  E const& get_4() const { return e; }
  F const& get_5() const { return f; }
  G const& get_6() const { return g; }
+
+ void set_0(A const& x) { a=x; }
+ void set_1(B const& x) { b=x; }
+ void set_2(C const& x) { c=x; }
+ void set_3(D const& x) { d=x; }
+ void set_4(E const& x) { e=x; }
+ void set_5(F const& x) { f=x; }
+ void set_6(G const& x) { g=x; }
+
+ template <typename X>
+  void update_and_select(SimpleTree *tree, void (this_type::*set)(X const&), X const& val)
+	{
+		// quite a complicated way to cause an update to the list
+		cH_RowDataBase h(this);
+		tree->getModel().about_to_change(h); // causes unselection
+		(this->*set)(val);
+		tree->getModel().has_changed(h);
+		tree->select(h);
+	}
+
+ void update_and_select_0(SimpleTree *tree, A const& x) { update_and_select(tree, &this_type::set_0, x); }
+ void update_and_select_1(SimpleTree *tree, B const& x) { update_and_select(tree, &this_type::set_1, x); }
+ void update_and_select_2(SimpleTree *tree, C const& x) { update_and_select(tree, &this_type::set_2, x); }
+ void update_and_select_3(SimpleTree *tree, D const& x) { update_and_select(tree, &this_type::set_3, x); }
+ void update_and_select_4(SimpleTree *tree, E const& x) { update_and_select(tree, &this_type::set_4, x); }
+ void update_and_select_5(SimpleTree *tree, F const& x) { update_and_select(tree, &this_type::set_5, x); }
+ void update_and_select_6(SimpleTree *tree, G const& x) { update_and_select(tree, &this_type::set_6, x); }
 
  virtual cH_EntryValue Value(guint _seqnr, gpointer gp) const
  {
