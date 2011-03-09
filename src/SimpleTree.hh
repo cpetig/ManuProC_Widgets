@@ -291,6 +291,8 @@ public:
  void ScrollToSelection();
  // 0 is top, 1 is bottom, -1 is dont_care
  void scroll_to(const cH_RowDataBase &data,gfloat where=-1);
+ // select specific line
+ void select(cH_RowDataBase const& data);
  
  cH_RowDataBase getMenuContext(bool prefer_selection=true) const;
 

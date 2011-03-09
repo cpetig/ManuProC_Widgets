@@ -528,6 +528,12 @@ void SimpleTree::scroll_to(const cH_RowDataBase &data, gfloat where)
   }
 }
 
+void SimpleTree::select(cH_RowDataBase const& data)
+{
+	Gtk::TreeModel::Path path=getStore()->getPath(data);
+	get_selection()->select(path);
+}
+
 void SimpleTree_Basic::setAlignment(const std::vector<gfloat> &A)
 {  sts->setAlignment(A);
 }
@@ -748,8 +754,9 @@ void SimpleTree::write_excel_via_filerequester() const
   if (getenv("HOME")) fname=std::string(getenv("HOME"))+"/"+fname;
   fname+=".xls";
   Gtk::Window const*toplevel=dynamic_cast<Gtk::Window const*>(get_toplevel());
+  std::string patsep(1,char(0));
   WinFileReq::create(sigc::mem_fun(*this,&SimpleTree::write_excel),fname,
-      _("Excel tables (*.xls)\0*.xls\0"),"xls",_("Export table"),false,
+      _("Excel tables (*.xls)")+patsep+_("*.xls")+patsep,"xls",_("Export table"),false,
       const_cast<Gtk::Window*>(toplevel));
 }
 #endif
