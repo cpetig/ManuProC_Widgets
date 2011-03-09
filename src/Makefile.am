@@ -1,10 +1,10 @@
 # $Id: Makefile.am,v 1.35 2004/07/15 08:10:00 christof Exp $
-AM_CXXFLAGS= @COMMONGTK2_INCLUDES@ @COMMONXX_INCLUDES@ -DlibManuProC_Widgets_COMPILATION
+AM_CXXFLAGS= @COMMONGTK2_INCLUDES@ @MPC_BASE_INCLUDES@ -DlibManuProC_Widgets_COMPILATION
 AM_CFLAGS= @GTKMM2_INCLUDES@ -DlibManuProC_Widgets_COMPILATION -I../../GtkmmAddons/searchcombo/src
 
 if WINDOWS
-WIN_LDFLAGS=-no-undefined -export-symbols libManuProC_Widgets.def @COMMONXX_LDFLAGS@
-DLL_LDADD=libManuProC_Widgets_res.lo @GTKMM2_LIBS@ @COMMONXX_LIBS@ @SIGC_LIBS@ @ECPG_LIBS@ -lcomdlg32
+WIN_LDFLAGS=-no-undefined -export-symbols libManuProC_Widgets.def @MPC_BASE_LDFLAGS@
+DLL_LDADD=libManuProC_Widgets_res.lo @GTKMM2_LIBS@ @MPC_BASE_LIBS@ @SIGC_LIBS@ @ECPG_LIBS@ -lcomdlg32
 DLL_DEF=libManuProC_Widgets.def
 ADDONS_FILES=Gtk_OStream_label.cc \
 		 Gtk_OStream_optionmenu.cc Gtk_OStream_stream.cc \
