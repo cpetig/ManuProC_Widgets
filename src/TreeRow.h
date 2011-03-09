@@ -27,13 +27,22 @@
 #include<vector>
 #include "RowDataBase.h"
 
+class SimpleTreeStoreNode;
+
 class TreeRow : public HandleContent
-{public:
+{
+protected:
+	// old API, still overloadable but gives less information
+	virtual void cumulate(const cH_RowDataBase &rd) {}
+public:
 	virtual ~TreeRow() {}
-	
+
 	virtual cH_EntryValue Value(guint _seqnr,gpointer _g) const = 0;
 
-	virtual void cumulate(const cH_RowDataBase &rd) = 0;
+	// actually deep and childrens_deep is the most interesting information of the second arg
+	virtual void cumulate(const cH_RowDataBase &rd, SimpleTreeStoreNode const& nd)
+	// fallback to old API by default
+	{ cumulate(rd); }
 	virtual void deduct(const cH_RowDataBase &rd) = 0;
 };
 

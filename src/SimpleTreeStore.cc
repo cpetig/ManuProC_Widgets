@@ -48,8 +48,8 @@ struct SimpleTreeModel_Properties_Proxy::Standard : public SimpleTreeModel_Prope
 	std::vector<gfloat> alignment;
 	std::vector<bool> v_resizeable;
 
-  Standard(guint cols) : columns(cols), titles(cols), 
-      column_editable(cols), column_type(cols), node_creation(), 
+  Standard(guint cols) : columns(cols), titles(cols),
+      column_editable(cols), column_type(cols), node_creation(),
       gp(), alignment(cols), v_resizeable(cols,true) {}
   virtual unsigned Columns() const { return columns; }
   virtual gpointer ValueData() const { return gp; }
@@ -58,21 +58,21 @@ struct SimpleTreeModel_Properties_Proxy::Standard : public SimpleTreeModel_Prope
   virtual bool editable(guint _seqnr) const { return column_editable[_seqnr]; }
   virtual Handle<TreeRow> create_node(const Handle<const TreeRow> &suminit) const
   { if (node_creation) return (*node_creation)(suminit);
-    else return Handle<TreeRow>(); 
+    else return Handle<TreeRow>();
   }
   virtual column_type_t get_column_type(unsigned idx) const
   { return column_type.at(idx); }
   virtual std::string ProgramName() const { return mem_prog; }
   virtual std::string InstanceName() const { return mem_inst; }
   virtual bool resizeable(guint _seqnr) const { return v_resizeable.at(_seqnr); }
-  
+
 	__deprecated void setTitles(const std::vector<std::string> &T)
 	{ titles=T;
 	}
 	__deprecated void setTitleAt(unsigned idx,const std::string &s)
 	{ titles.at(idx)=s; }
 	__deprecated void set_editable(unsigned idx,bool v=true)
-	{ column_editable.at(idx)=v; 
+	{ column_editable.at(idx)=v;
 	}
 	__deprecated void set_column_type(unsigned idx, column_type_t t)
 	{ column_type.at(idx)=t; }
@@ -162,7 +162,7 @@ SimpleTreeModel_Properties_Proxy::SimpleTreeModel_Properties_Proxy(unsigned x)
 void SimpleTreeModel_Properties_Proxy::setProperties(SimpleTreeModel_Properties &p, bool we_own)
 { assert(p.Columns()==props->Columns());
   // the number of TreeModelColumns can not easily be changed
-  if (we_own_props) 
+  if (we_own_props)
     delete props;
   props=&p;
   we_own_props=we_own;
@@ -234,7 +234,7 @@ void SimpleTreeStore::save_remembered() const
       last=*i;
    }
    for (;i!=currseq.rend();++i) value.first=itos(*i)+','+value.first;
-   
+
    // additional flags from derived widgets?
 
    default_save(ProgramName(), InstanceName(), value);
@@ -249,11 +249,11 @@ void SimpleTreeStore::load_remembered()
    color_bool=value.second.find('C')==std::string::npos;
    auffuellen_bool=value.second.find('a')!=std::string::npos;
    display_count=value.second.find('o')!=std::string::npos;
-   
+
    block_save=true;
    // ShowColumn will signal views (and update the menu)
    std::string::size_type k0=value.second.find(','),k1=std::string::npos;
-   if (k0!=std::string::npos) 
+   if (k0!=std::string::npos)
    {  guint sichtbar=strtoul(value.second.substr(0,k0).c_str(),0,10),bit=1;
       for (guint j=0;j<MaxCol();++j,bit<<=1)
          ShowColumn(j)=!bit ? Properties().visible_default(j) : !(sichtbar&bit);
@@ -301,7 +301,7 @@ void SimpleTreeStore::on_visibly_changed(bvector_iterator it)
 #if 0 // old behaviour
       fillSequence();
 #else
-    for(guint i=0; i<MaxCol(); ++i) 
+    for(guint i=0; i<MaxCol(); ++i)
       if (ColumnVisible(i) && std::find(currseq.begin(),currseq.end(),i)==currseq.end())
       {  for (sequence_t::iterator j=currseq.begin();j!=currseq.end();++j)
          {  if (*j>i)
@@ -356,28 +356,28 @@ void SimpleTreeStore::init()
 }
 
 SimpleTreeStore::SimpleTreeStore(int max_col)
-	: 
+	:
 	  Glib::ObjectBase( typeid(SimpleTreeStore) ), //register a custom GType.
 	  Glib::Object(), //The custom GType is actually registered here.
           SimpleTreeModel_Properties_Proxy(max_col),
           columns(max_col), max_column(max_col),
 	  showdeep(), auffuellen_bool(), expandieren_bool(true), block_save(),
 	  color_bool(true), display_count(),
-	  sortierspalte(invisible_column), // invert_sortierspalte(), 
+	  sortierspalte(invisible_column), // invert_sortierspalte(),
 	  stamp(reinterpret_cast<long>(this)),
 	  m_columns(max_col)
 { init();
 }
 
 SimpleTreeStore::SimpleTreeStore(SimpleTreeModel_Properties &props)
-	: 
+	:
 	  Glib::ObjectBase( typeid(SimpleTreeStore) ), //register a custom GType.
 	  Glib::Object(), //The custom GType is actually registered here.
           SimpleTreeModel_Properties_Proxy(&props),
           columns(props.Columns()), max_column(props.Columns()),
 	  showdeep(), auffuellen_bool(), expandieren_bool(true), block_save(),
 	  color_bool(true), display_count(),
-	  sortierspalte(invisible_column), // invert_sortierspalte(), 
+	  sortierspalte(invisible_column), // invert_sortierspalte(),
 	  stamp(reinterpret_cast<long>(this)),
 	  m_columns(props.Columns())
 { init();
@@ -390,7 +390,7 @@ SimpleTreeStore::SimpleTreeStore(SimpleTreeModel_Properties &props)
 
 SimpleTreeStore::ModelColumns::ModelColumns(int _cols)
 {  // GType t=cH_entry_value_get_type();
-   
+
    MC_ADD(row);
    MC_ADD(deep);
    MC_ADD(childrens_deep);
@@ -421,13 +421,13 @@ const std::string SimpleTreeStore::getColTitle(guint nr) const
 
 void SimpleTreeStore::defaultSequence()
 {  currseq.clear();
-   for(guint i=0; i<MaxCol(); ++i) 
+   for(guint i=0; i<MaxCol(); ++i)
       if (ColumnVisible(i)) currseq.push_back(i);
 }
 
 void SimpleTreeStore::fillSequence(sequence_t &seq,bool standard) const
 {  if (auffuellen_bool || standard)
-   {for(guint i=0; i<MaxCol(); ++i) 
+   {for(guint i=0; i<MaxCol(); ++i)
       if (ColumnVisible(i) && std::find(seq.begin(),seq.end(),i)==seq.end())
          seq.push_back(i);
    }
@@ -480,7 +480,7 @@ void SimpleTreeStore::redisplay()
  for(; i!=j; ++i)
     insertLine(root,*i,currseq.begin(),0,false);
  if (sortierspalte!=invisible_column)
- {  sequence_t::const_iterator si=std::find(currseq.begin(),currseq.end(),sortierspalte); 
+ {  sequence_t::const_iterator si=std::find(currseq.begin(),currseq.end(),sortierspalte);
     resort(root,si-currseq.begin());
     root.fix_pointer();
 //    test();
@@ -516,24 +516,24 @@ void SimpleTreeStore::insertLine(Node &parent,
  guint seqnr=*seqit;
  cH_EntryValue ev=v->Value(seqnr,ValueData());
  if (invert_order[seqnr]) ev=cH_EntryValueInvert(ev);
- 
+
 // node/leaf mit Wert<=ev suchen
 // optimization: we expect to need upper_bound if this is the last attribute
  if (seqit==seqlast) // !MehrAlsEinKind(selseq))
- {  std::pair<iterator,iterator> range 
+ {  std::pair<iterator,iterator> range
  		= parent.children.equal_range(ev);
     current_iter=range.first;	// lower_bound
     upper_b=range.second;	// upper_bound
  }
  else
     current_iter=parent.children.lower_bound(ev);
- 				
+
  if(current_iter!=apiend) // dann einfuegen
    {STSN_CHECK_MAGIC(&current_iter->second);
     STSN_CHECK_MAGIC(current_iter->second.parent);
     //----------------- gleicher Wert ------------------
     if ((ev) == current_iter->first)
-     { 
+     {
       if (seqit!=seqlast)
       // MehrAlsEinKind(selseq)) // ???? wenn Blatt noch nicht erreicht ???
       				// SimpleTree2: Summen stehen mit drin ...
@@ -541,28 +541,28 @@ void SimpleTreeStore::insertLine(Node &parent,
       {  cH_RowDataBase v2=current_iter->second.leafdata;
          guint child_s_deep=deep;
 
-	do 
+	do
 	{seqit++;
 	 ++child_s_deep;
-	 
+
 	 // darum muss sich eine andere Node kümmern
          if (child_s_deep==current_iter->second.childrens_deep)
          {weiter_unten_einhaengen:
             Handle<TreeRow> htr=current_iter->second.row;
-            if (htr) 
-            {  htr->cumulate(v);
+            if (htr)
+            {  htr->cumulate(v, current_iter->second);
                if (live) row_changed(getPath(current_iter),getIter(current_iter));
             }
             // goto ist schneller als (end?)rekursion ?
             insertLine(current_iter->second,v,seqit,child_s_deep,live);
             return;
          }
-         
-        } while (seqit!=seqlast // MehrAlsEinKind(selseq) 
+
+        } while (seqit!=seqlast // MehrAlsEinKind(selseq)
 			&& v->Value(*seqit,ValueData())
 				==v2->Value(*seqit,ValueData()));
-         
-	 // mitten in current_iter einfügen 
+
+	 // mitten in current_iter einfügen
 	 // (current_iter wandert nach unten rechts)
          // (man könnte dies auch aufbrechen nennen)
  	 current_iter= MoveTree (current_iter,deep,child_s_deep,*seqit,live);
@@ -577,13 +577,13 @@ void SimpleTreeStore::insertLine(Node &parent,
       }
      }
    }
-   // --------------- kleinerer Wert (davor Einfügen) ----------   
+   // --------------- kleinerer Wert (davor Einfügen) ----------
    //----------------- oder am Ende der Liste: anhängen ---------------------
    iterator newnode=parent.children.insert(current_iter,std::make_pair(ev,Node(deep,&parent,v)));
    STSN_CHECK_MAGIC(&newnode->second);
    STSN_CHECK_MAGIC(newnode->second.parent);
    if (live) row_inserted(getPath(newnode),getIter(newnode));
-}                                
+}
 
 // deep    childs_deep   childrens_deep
 //  (vorher)
@@ -604,15 +604,15 @@ SimpleTreeStore::iterator SimpleTreeStore::MoveTree(iterator current_iter,
    STSN_CHECK_MAGIC(&newnode);
    STSN_CHECK_MAGIC(newnode.parent);
 
-//   if (node_creation) 
+//   if (node_creation)
    {  Handle<const TreeRow> arg=oldnode.row; // to convert between Handle and Handle<const>
 	  Handle<TreeRow> htr= create_node(arg);
       newnode.row=htr;
-      // leaves have no row (so initial sum is always 0), 
+      // leaves have no row (so initial sum is always 0),
       // so we need to cumulate their data
 	  // VC7 needs the explicit cast
       if (!oldnode.childrens_deep && bool(htr)) // leaf
-         htr->cumulate(oldnode.leafdata);
+         htr->cumulate(oldnode.leafdata,newnode);
    }
 
    // ein Kind an newnode anfügen (newchild)
@@ -641,10 +641,10 @@ SimpleTreeStore::iterator SimpleTreeStore::MoveTree(iterator current_iter,
       STSN_CHECK_MAGIC(newchild.parent);
    }
    // row_has_child_toggled(newnode), row_changed(newnode)
-   
+
 //   ManuProC::Trace(trace_channel,std::string(),&oldnode,&newnode,&newchild);
 //   oldnode.fix_pointer();
-   if (live) 
+   if (live)
    { row_has_child_toggled(getPath(current_iter),getIter(current_iter));
 //     row_changed(getPath(current_iter),getIter(current_iter));
      iterator child=current_iter->second.children.begin();
@@ -684,7 +684,7 @@ void SimpleTreeStore::on_line_removed(cH_RowDataBase r)
    ++stamp;
    std::list<iterator> l=find_row(r,true);
    assert(sortierspalte==invisible_column);
-   if (l.begin()==l.end()) 
+   if (l.begin()==l.end())
    { std::cerr << "SimpleTreeStore::on_line_removed: trying again unoptimized\n";
      l=find_row(r,false);
    }
@@ -692,7 +692,7 @@ void SimpleTreeStore::on_line_removed(cH_RowDataBase r)
    {  ManuProC::Trace(trace_channel,__FUNCTION__,"depth=",l.size());
       Path p=getPath(l.front());
       std::list<iterator>::const_iterator parent_iter=++l.begin();
-      if (parent_iter==l.end()) 
+      if (parent_iter==l.end())
       // nur 1 iterator, das zu löschende Element ist dann Kind von root
       { root.children.erase(l.front());
         row_deleted(p);
@@ -745,13 +745,13 @@ bool SimpleTreeStore::find_row(Node &parent, const cH_RowDataBase &r,bool optimi
       ManuProC::Trace(trace_channel,std::string(),NV("depth",parent.childrens_deep),
                 NV("val",val->getStrVal()));
       std::pair<iterator,iterator> p=parent.children.equal_range(val);
-      if (p.first==p.second) 
+      if (p.first==p.second)
       { ManuProC::Trace(trace_channel,std::string(),"empty equal_range");
         return false;
       }
       if (!p.first->second.childrens_deep) // nodes
       {  ManuProC::Trace(trace_channel,std::string(),"leaves");
-         for (iterator i=p.first;i!=p.second;++i) 
+         for (iterator i=p.first;i!=p.second;++i)
          {  STSN_CHECK_MAGIC(&i->second);
             STSN_CHECK_MAGIC(i->second.parent);
             if (&*i->second.leafdata==&*r)
@@ -760,7 +760,7 @@ bool SimpleTreeStore::find_row(Node &parent, const cH_RowDataBase &r,bool optimi
             }
          }
       }
-      else 
+      else
       {  ManuProC::Trace(trace_channel,std::string(),"nodes");
          if (find_row(p.first->second,r,optimize,result))
          {  result.push_back(p.first);
@@ -770,7 +770,7 @@ bool SimpleTreeStore::find_row(Node &parent, const cH_RowDataBase &r,bool optimi
       ManuProC::Trace(trace_channel,std::string(),"not found");
       return false;
    }
-   
+
    for (iterator i= parent.children.begin(); i!=parent.children.end(); ++i)
    {  STSN_CHECK_MAGIC(&i->second);
       STSN_CHECK_MAGIC(i->second.parent);
@@ -781,7 +781,7 @@ bool SimpleTreeStore::find_row(Node &parent, const cH_RowDataBase &r,bool optimi
             return true;
          }
       }
-      else 
+      else
       {  ManuProC::Trace(trace_channel,std::string(),"recurse");
          if (find_row(i->second,r,optimize,result))
          {  result.push_back(i);
@@ -822,7 +822,7 @@ void SimpleTreeStore::set_tree_column_visibility(unsigned index,bool visible)
 
 Gtk::TreeModelFlags SimpleTreeStore::get_flags_vfunc() const
 {  return Gtk::TreeModelFlags(0);
-  //Gtk::TREE_MODEL_ITERS_PERSIST; // Gtk::TreeModelFlags(0); 
+  //Gtk::TREE_MODEL_ITERS_PERSIST; // Gtk::TreeModelFlags(0);
 }
 int SimpleTreeStore::get_n_columns_vfunc() const
 {  return unsigned(s_text_start)+max_column; }
@@ -908,7 +908,7 @@ void SimpleTreeStore::iterinit(vfunc_iter_t iter,const iterator &schema) const
 #define VALUE_STRING(val) \
 	VALUE_SET(string,(val).c_str())
 
-void SimpleTreeStore::get_value_vfunc(const TreeModel::iterator& iter, 
+void SimpleTreeStore::get_value_vfunc(const TreeModel::iterator& iter,
 		int column, Glib::ValueBase& value) const
 {  if (!iter_valid(iter )) return;
    Node &nd=iterconv(iter )->second;
@@ -949,7 +949,7 @@ void SimpleTreeStore::get_value_vfunc(const TreeModel::iterator& iter,
                   VALUE_STRING(s);
             }
             else if (nd.childrens_deep) // node
-            {  if (unsigned(colno)>nd.childrens_deep || unsigned(colno)<nd.deep) 
+            {  if (unsigned(colno)>nd.childrens_deep || unsigned(colno)<nd.deep)
                   return;
                if (colno!=int(nd.childrens_deep))
                   VALUE_STRING(nd.leafdata->Value(idx,ValueData())->getStrVal());
@@ -1022,20 +1022,20 @@ bool SimpleTreeStore::iter_nth_child_vfunc(vfunc_constiter_t parent, int n, vfun
       res=p->second.children.begin();
       end=p->second.children.end();
    }
-   
+
    if (res==end) return false;
-   for (;n>0;--n) 
+   for (;n>0;--n)
    {  ++res;
       if (res==end) return false;
    }
-   iterinit(iter,res); 
+   iterinit(iter,res);
    return true;
 }
 
 bool SimpleTreeStore::iter_nth_root_child_vfunc(int n, vfunc_iter_t iter) const
 {  ManuProC::Trace _t(trace_channel, __FUNCTION__,n);
    iterclear(iter);
-   
+
    const_iterator res=root.children.begin(),
 		   end=root.children.end();
    if (res==end) return false;
@@ -1047,7 +1047,7 @@ bool SimpleTreeStore::iter_nth_root_child_vfunc(int n, vfunc_iter_t iter) const
    }
    STSN_CHECK_MAGIC(&res->second);
    STSN_CHECK_MAGIC(res->second.parent);
-   iterinit(iter,res); 
+   iterinit(iter,res);
    return true;
 }
 
@@ -1058,7 +1058,7 @@ bool SimpleTreeStore::iter_parent_vfunc(vfunc_constiter_t child, vfunc_iter_t it
    iterator c=iterconv(child);
    STSN_CHECK_MAGIC(&c->second);
    STSN_CHECK_MAGIC(c->second.parent);
-   if (!c->second.parent || c->second.parent==&root) return false;  
+   if (!c->second.parent || c->second.parent==&root) return false;
    iterator p=iterbyNode(*c->second.parent);
    if (p==c->second.parent->parent->children.end()) return false;
    iterinit(iter,p);
@@ -1067,21 +1067,21 @@ bool SimpleTreeStore::iter_parent_vfunc(vfunc_constiter_t child, vfunc_iter_t it
 
 Gtk::TreeModel::Path SimpleTreeStore::get_path_vfunc(const Gtk::TreeModel::iterator& iter) const
 { ManuProC::Trace _t(trace_channel, __FUNCTION__,iter->gobj()->user_data);
-  if (!iter_valid(iter )) 
+  if (!iter_valid(iter ))
      return Path();
   return getPath(iterconv(iter ));
 }
 
 bool SimpleTreeStore::get_iter_vfunc(const Path& path, vfunc_iter_t iter) const
 {  ManuProC::Trace _t(trace_channel, __FUNCTION__,path.to_string());
-   
-   const_iterator 
+
+   const_iterator
    		res=root.children.begin(),  end=root.children.end();
-   
+
    iterclear(iter);
    for (Path::const_iterator piter=path.begin();piter!=path.end();)
    {  if (res==end) return false;
-      for (unsigned i=*piter;i>0;--i) 
+      for (unsigned i=*piter;i>0;--i)
       {  STSN_CHECK_MAGIC(&res->second);
          STSN_CHECK_MAGIC(res->second.parent);
          ++res;
@@ -1116,7 +1116,7 @@ SimpleTreeStore::iterator SimpleTreeStore::iterbyNode(Node &nd) const
    std::pair<iterator,iterator> p;
    if (sortierspalte==invisible_column) p=nd.parent->children.equal_range(val);
    else p=make_pair(nd.parent->children.begin(),nd.parent->children.end());
-   for (iterator i=p.first;i!=p.second;++i) 
+   for (iterator i=p.first;i!=p.second;++i)
    {  STSN_CHECK_MAGIC(&i->second);
       STSN_CHECK_MAGIC(i->second.parent);
       ManuProC::Trace(trace_channel,"i",&i->second);
@@ -1164,7 +1164,7 @@ Gtk::TreeModel::iterator SimpleTreeStore::getIter(iterator it) const
 }
 
 Gtk::TreeModel::const_iterator SimpleTreeStore::getIter(const_iterator it) const
-{  
+{
    TreeModel::iterator res;
    iterinit(res,it);
    return res;
@@ -1211,7 +1211,7 @@ unsigned SimpleTreeStore::Node2nth_child(const Node &nd) const
 }
 
 void SimpleTreeStore::setSortierspalte(unsigned s,bool i)
-{  if (sortierspalte!=s 
+{  if (sortierspalte!=s
       || (sortierspalte!=invisible_column && i!=invert_order.at(sortierspalte)))
    {  please_detach();
       ++stamp;
