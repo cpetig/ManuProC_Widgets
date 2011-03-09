@@ -38,8 +38,7 @@
 #include <Misc/EntryValue_easy.h>
 #include <Misc/create_parse.h>
 #include <RowDataBase.h>
-//#include <SimpleTree.hh>
-class SimpleTree;
+#include <SimpleTree.hh>
 
 template <typename A, typename B=EntryValue_easy::nil, typename C=EntryValue_easy::nil, 
           typename D=EntryValue_easy::nil, typename E=EntryValue_easy::nil, 
