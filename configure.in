@@ -23,7 +23,7 @@ dnl *************************************************
 dnl gettext support
 dnl *************************************************
 
-GETTEXT_PACKAGE=labor
+GETTEXT_PACKAGE=ManuProC_Widgets
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",
 		[the gettext domain])
