@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: manuproc_widgets 0.8.0\n"
 "Report-Msgid-Bugs-To: manuproc-developer-de@berlios.de\n"
 "POT-Creation-Date: 2011-03-10 11:38+0100\n"
-"PO-Revision-Date: 2010-11-15 11:17+0100\n"
-"Last-Translator: Christof Petig <petig@stahlwille.de>\n"
+"PO-Revision-Date: 2011-03-10 18:13+0100\n"
+"Last-Translator: Jacek Jakubowski, TuxSolutions <jacek@tuxsolutions.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr "'"
 #: src/datewin_glade.cc:79 src/datewin_popup_glade.cc:68
 #: src/datewin_popup_glade.cc:96 src/IntStringBox_glade.cc:60
 msgid "Empty"
-msgstr "Leer"
+msgstr "Leeren"
 
 #: src/datewin_popup_glade.cc:62 src/datewin_popup_glade.cc:80
 msgid "Date"
