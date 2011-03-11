@@ -53,6 +53,7 @@ struct MyMessage : Gtk::MessageDialog
   MyMessage(Gtk::Window& parent, Glib::ustring const& s,Gtk::MessageType mt=Gtk::MESSAGE_INFO, bool markup=false, Gtk::ButtonsType buttons = Gtk::BUTTONS_OK, bool modal=true)
       : Gtk::MessageDialog(parent,s,markup,mt,buttons,modal)
   {
+    if (modal) set_transient_for(parent);
 //   property_window_position().set_value(Gtk::WIN_POS_CENTER);
   }
 
