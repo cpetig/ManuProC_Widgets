@@ -1,3 +1,4 @@
+#pragma once
 
 #include<gtkmm/messagedialog.h>
 #include<Misc/Datum.h>
