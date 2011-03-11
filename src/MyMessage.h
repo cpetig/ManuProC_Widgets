@@ -8,7 +8,7 @@
 //#include <Lager/FertigWarenLager.h>
 //#include <ArtikelBox.hh>
 
-#if defined(MABELLA_EXTENSIONS) || defined(PETIG_EXTENSIONS)
+#if defined(MABELLA_EXTENSIONS)
 #include <Lager/FertigWarenLager.h>
 #include "ArtikelBox.hh"
 #endif
@@ -17,7 +17,7 @@
 struct MyMessage : Gtk::MessageDialog
 {
   std::string stringify(const SQLerror &e)
-  { char tmp[100]; 
+  { char tmp[100];
     std::string _msg;
 #ifdef MPC_SQLITE
     snprintf(tmp,sizeof tmp,"DB-Error Code:%d\n",e.Code());
@@ -25,44 +25,44 @@ struct MyMessage : Gtk::MessageDialog
     snprintf(tmp,sizeof tmp,"DB-Error Code:%d %s\n",e.Code(),e.State().c_str());
 #endif
     _msg=tmp;
-    snprintf(tmp,sizeof tmp,"DB-Error Message:%s\n",e.Message().c_str());  
+    snprintf(tmp,sizeof tmp,"DB-Error Message:%s\n",e.Message().c_str());
     _msg+=tmp;
-    snprintf(tmp,sizeof tmp,"Context:%s\n",e.Context().c_str());  
+    snprintf(tmp,sizeof tmp,"Context:%s\n",e.Context().c_str());
     _msg+=tmp;
     return _msg;
   }
   std::string stringify(const ManuProC::Datumsfehler &e)
   { std::stringstream ostr;
-    ostr << e;  
+    ostr << e;
     return ostr.str();
   }
 
   MyMessage() : Gtk::MessageDialog("") {}
 
-  MyMessage(const SQLerror &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR) 
+  MyMessage(const SQLerror &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
       : Gtk::MessageDialog(stringify(e),false,mt)
   { }
- 
+
   MyMessage(const ManuProC::Datumsfehler &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
       : Gtk::MessageDialog(stringify(e),false,mt)
   { }
- 
+
   MyMessage(Glib::ustring const& s,Gtk::MessageType mt=Gtk::MESSAGE_INFO)
       : Gtk::MessageDialog(s,false,mt)
-  { 
+  {
    property_window_position().set_value(Gtk::WIN_POS_CENTER);
   }
-  
+
 #ifdef MABELLA_EXTENSIONS
   MyMessage(const LagerError &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
       : Gtk::MessageDialog(e.Text()+" ArtID:"+itos(e.ArtID()),false,mt)
   { }
-  
+
   MyMessage(const ArtikelBoxErr &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
       : Gtk::MessageDialog(e.ErrMsg(),false,mt)
-  { }  
+  { }
 #endif
-  
+
   template <class T>
    static int show_and_wait(T const& s, Gtk::Window *parent, Gtk::MessageType mt)
   { MyMessage m(s,mt);
@@ -83,11 +83,11 @@ struct MyMessage : Gtk::MessageDialog
     else show_and_wait(s);
   }
 
- __deprecated void set_Message(const std::string msg) 
-   { set_message(msg,true); 
+ __deprecated void set_Message(const std::string msg)
+   { set_message(msg,true);
    }
- void set(const std::string msg) 
-   { set_message(msg,true); 
+ void set(const std::string msg)
+   { set_message(msg,true);
    }
  void set(const ManuProC::Datumsfehler &e)
    { set_message(stringify(e),true);
