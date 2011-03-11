@@ -43,18 +43,6 @@ struct MyMessage : Gtk::MessageDialog
 
   MyMessage() : Gtk::MessageDialog("") {}
 
-  MyMessage(const SQLerror &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
-      : Gtk::MessageDialog(stringify(e),false,mt)
-  { }
-
-  MyMessage(const SQLerror &e, Gtk::Window& parent, Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
-      : Gtk::MessageDialog(parent,Glib::ustring(stringify(e)),false,mt,Gtk::BUTTONS_OK,true)
-  { }
-
-  MyMessage(const ManuProC::Datumsfehler &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
-      : Gtk::MessageDialog(stringify(e),false,mt)
-  { }
-
   MyMessage(Glib::ustring const& s,Gtk::MessageType mt=Gtk::MESSAGE_INFO)
       : Gtk::MessageDialog(s,false,mt)
   {
@@ -67,14 +55,23 @@ struct MyMessage : Gtk::MessageDialog
 //   property_window_position().set_value(Gtk::WIN_POS_CENTER);
   }
 
-#ifdef MABELLA_EXTENSIONS
-  MyMessage(const LagerError &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
-      : Gtk::MessageDialog(e.Text()+" ArtID:"+itos(e.ArtID()),false,mt)
+  template <class T>
+    MyMessage(T const &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
+      : Gtk::MessageDialog(stringify(e),false,mt)
+  { }
+  template <class T>
+    MyMessage(T const &e, Gtk::Window& parent, Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
+      : Gtk::MessageDialog(parent,stringify(e),false,mt,Gtk::BUTTONS_OK,true)
   { }
 
-  MyMessage(const ArtikelBoxErr &e,Gtk::MessageType mt=Gtk::MESSAGE_ERROR)
-      : Gtk::MessageDialog(e.ErrMsg(),false,mt)
-  { }
+
+#ifdef MABELLA_EXTENSIONS
+  // this can now also be provided outside this class
+  static Glib::ustring stringify(LagerError const&e)
+  { return e.Text()+" ArtID:"+itos(e.ArtID()); }
+
+  static Glib::ustring stringify(ArtikelBoxErr const&e)
+  { return e.ErrMsg(); }
 #endif
 
   template <class T>
@@ -86,15 +83,15 @@ struct MyMessage : Gtk::MessageDialog
   }
   template <class T>
    static int show_and_wait(T const& s)
-  { MyMessage m(stringify(s));
+  { MyMessage m(s);
     m.show();
     return m.run();
   }
   //
   template <class T>
    static int show_and_wait(T const& s, Gtk::Container *toplevel)
-  { if (toplevel) return show_and_wait(stringify(s),dynamic_cast<Gtk::Window*>(toplevel));
-    else return show_and_wait(stringify(s));
+  { if (toplevel) return show_and_wait(s,*dynamic_cast<Gtk::Window*>(toplevel));
+    else return show_and_wait(s);
   }
 
  __deprecated void set_Message(const std::string msg)
