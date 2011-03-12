@@ -396,6 +396,7 @@ public:
 	
 	unsigned visible_size() { return currseq.size(); }
 	void setSortierspalte(unsigned idx=invisible_column, bool invert=false);
+	unsigned getSortCol() const { return sortierspalte; }
 	bool getInvert() const { return sortierspalte==invisible_column?false:invert_order.at(sortierspalte); }
 };
 
