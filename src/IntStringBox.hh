@@ -26,7 +26,7 @@
 #include <BaseObjects/ManuProcEntity.h>
 
 class IntStringBox : public IntStringBox_gui
-{	
+{
   friend class IntStringBox_gui;
         void int_activate();
         void int_search(gboolean *_continue, GtkSCContext newsearch);
@@ -54,6 +54,11 @@ protected:
    std::string _tabelle_,_alias_,_string1_,_string2_,_int_;
    int _none_id_;
    bool prefix_only:1;
+   std::string string_to_add; //!< unfortunately selecting add voids the content, so we save it here
+   //! overload and return true if adding is possible
+   virtual bool can_add() const { return false; }
+   //! add a new entry to the data, return new id
+   virtual ManuProcEntity<>::ID add(std::string const&, std::string const&) { return ManuProcEntity<>::none_id; }
 
 public:
 	IntStringBox(ManuProcEntity<>::ID __none_id=ManuProcEntity<>::none_id);
@@ -77,9 +82,9 @@ public:
    void Einschraenkung(const std::string &e, bool an=true);
    void Join(const std::string j);
    void PrefixOnly(bool p);
-   
+
    void FocusToString1();
-	
+
 private:
 	sigc::signal<void> activate;
 	sigc::signal<void> reset_signal;

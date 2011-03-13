@@ -1,5 +1,5 @@
 // $Id: IntStringBox.cc,v 1.5 2006/08/03 11:27:11 christof Exp $
-/*  libKomponenten: GUI components for ManuProC's libcommon++ 
+/*  libKomponenten: GUI components for ManuProC's libcommon++
  *  Copyright (C) 1998-2006 Adolf Petig GmbH & Co. KG, written by Malte Thoma
  *  Copyright (C) 2009-2010 Christof Petig
  *
@@ -25,31 +25,34 @@
 #include <gtk/gtktable.h> // for changing expand
 #include <gtkmm/table.h>
 #include <Misc/Query.h>
+#include <Misc/i18n.h>
+
+#define ADDING_PATTERN (_("++ add to list ++"))
 
 void IntStringBox::hide_int(bool b)
 {
  if(b)
-  { label_int->hide(); 
+  { label_int->hide();
     sc_int->hide();
   }
- else 
-  { label_int->show(); 
+ else
+  { label_int->show();
     sc_int->show();
   }
 }
 
 
 
-void IntStringBox::show_string2(bool b) 
-{ 
+void IntStringBox::show_string2(bool b)
+{
  if(b)
    {
-    label_string2->show(); 
+    label_string2->show();
     sc2_string->show();
    }
  else
    {
-    label_string2->hide(); 
+    label_string2->hide();
     sc2_string->hide();
    }
 }
@@ -75,9 +78,20 @@ void IntStringBox::int_activate()
 
 void IntStringBox::string1_activate()
 {
+  if (!string_to_add.empty() && can_add() && sc1_string->get_text()==ADDING_PATTERN)
+  {
+    sc1_string->set_text(string_to_add);
+    id=add(sc1_string->get_text(),sc2_string->get_text());
+    if (id!=ManuProcEntity<>::none_id)
+    {
+      sc_int->set_text(itos(id));
+      activate();
+      return;
+    }
+  }
   bool multiple=false;
   bool unique=try_to_get_id(multiple);
-  if(!unique && sc2_string->is_visible())  
+  if(!unique && sc2_string->is_visible())
    {  sc2_string->set_always_fill(true);
       sc2_string->reset();
       sc2_string->grab_focus();
@@ -86,6 +100,17 @@ void IntStringBox::string1_activate()
 
 void IntStringBox::string2_activate()
 {
+  if (!string_to_add.empty() && can_add() && sc2_string->get_text()==ADDING_PATTERN)
+  {
+    sc2_string->set_text(string_to_add);
+    id=add(sc1_string->get_text(),sc2_string->get_text());
+    if (id!=ManuProcEntity<>::none_id)
+    {
+      sc_int->set_text(itos(id));
+      activate();
+      return;
+    }
+  }
   bool multiple=false;
   bool unique=try_to_get_id(multiple);
   if (multiple)
@@ -95,7 +120,7 @@ void IntStringBox::string2_activate()
     sc_int->reset();
     sc_int->grab_focus();
   }
-  else if(!unique)  
+  else if(!unique)
    {  sc1_string->set_always_fill(true);
       sc1_string->reset();
       sc1_string->grab_focus();
@@ -110,8 +135,8 @@ gint IntStringBox::try_grab_focus(GtkWidget *w,gpointer gp)
    return true;
 }
 
-IntStringBox::IntStringBox(ManuProcEntity<>::ID __none_id) 
-: id(__none_id),tr(std::string(),false), tr2(std::string(),false), 
+IntStringBox::IntStringBox(ManuProcEntity<>::ID __none_id)
+: id(__none_id),tr(std::string(),false), tr2(std::string(),false),
 tr3(std::string(),false),
   eingeschraenkt(),
   string_2_info_only(),
@@ -124,7 +149,7 @@ tr3(std::string(),false),
                  GTK_SIGNAL_FUNC (&try_grab_focus),(gpointer)this);
 }
 
-void IntStringBox::set_value(ManuProcEntity<>::ID i,const std::string &s, 
+void IntStringBox::set_value(ManuProcEntity<>::ID i,const std::string &s,
 				const std::string& sz)
 {
    restricted_int_search=false;
@@ -135,7 +160,7 @@ void IntStringBox::set_value(ManuProcEntity<>::ID i,const std::string &s,
 }
 
 void IntStringBox::reset()
-{  
+{
    restricted_int_search=false;
    prefix_only=true;
    sc_int->reset();
@@ -180,18 +205,18 @@ void IntStringBox::Join(const std::string j)
 {
  joinstring=j;
 }
-  
+
 
 void IntStringBox::setExpandStr2(bool expand)
 {
  sc2_string->set_autoexpand(expand);
- sc2_string->set_enable_tab(true);  
+ sc2_string->set_enable_tab(true);
 }
- 
+
 void IntStringBox::setExpandStr1(bool expand)
 {
  sc1_string->set_autoexpand(expand);
- sc1_string->set_enable_tab(true);  
+ sc1_string->set_enable_tab(true);
 }
 
 void IntStringBox::FocusToString1()
@@ -209,7 +234,7 @@ bool IntStringBox::try_to_get_id(bool & multiple)
 	(_alias_.empty() ? _tabelle_ : _alias_)+"."+_int_;
   if(string_2_info_only) squery +=", "+_string2_ ;
   squery +=" from "+_tabelle_+" "+_alias_+" "+joinstring+" where lower("+_string1_+")=lower(?)";
-  if(check_str2) 
+  if(check_str2)
       squery   +=" and lower("+_string2_+")=lower(?)";
 
   if(eingeschraenkt)
@@ -219,7 +244,7 @@ bool IntStringBox::try_to_get_id(bool & multiple)
 
   q << sc1_string->get_text();
 
-  if(check_str2) 
+  if(check_str2)
 	q << sc2_string->get_text();
 
   if (!q.LinesAffected()) return false;
@@ -228,9 +253,9 @@ bool IntStringBox::try_to_get_id(bool & multiple)
   // This only works for a single line !
   Query::Row is = q >> id;
   sc_int->set_text(itos(id));
-  if(string_2_info_only) 
+  if(string_2_info_only)
     {std::string s;
-     is >> s; 
+     is >> s;
      sc2_string->set_text(s);
     }
 
@@ -244,13 +269,13 @@ void IntStringBox::int_search(gboolean *_continue, GtkSCContext newsearch)
 {
 
    try
-   {  
+   {
     static Transaction tr(std::string(),false);
 
       std::string squery;
 
       switch(newsearch)
-      {  
+      {
          case GTK_SEARCH_OPEN:
 	   {tr.open();
 	    Query::Args args;
@@ -300,7 +325,7 @@ void IntStringBox::int_search(gboolean *_continue, GtkSCContext newsearch)
 void IntStringBox::string2_search(gboolean *_continue, GtkSCContext newsearch)
 {
    try
-   {  
+   {
     static Transaction tr(std::string(),false);
 
      std::string squery;
@@ -317,7 +342,7 @@ void IntStringBox::string2_search(gboolean *_continue, GtkSCContext newsearch)
 		" "+_alias_+" "+
 		joinstring+" where "
                +_string2_+" ilike ? " ;
-             if(!_string1_.empty()) 
+             if(!_string1_.empty())
 		{if(!equal_op)
 		   squery += "and "+_string1_+" ilike ? ";
 		 else
@@ -339,12 +364,12 @@ void IntStringBox::string2_search(gboolean *_continue, GtkSCContext newsearch)
            else
              suchtext=(prefix_only ? std::string() : std::string("%")) + suchtext +'%';
 	   q << suchtext;
-	     
+
            if(!_string1_.empty())
 	     {if(equal_op)
 		q << sc1_string->get_text();
 	      else
-		q << (sc1_string->get_text()+'%');	
+		q << (sc1_string->get_text()+'%');
 	     }
 
       	    // fall through
@@ -355,6 +380,7 @@ void IntStringBox::string2_search(gboolean *_continue, GtkSCContext newsearch)
  	    (Query("fetch from str2_search")).FetchOne() >> name;
       	    sc2_string->add_item(name);
       	    *_continue=true;
+      	    string_to_add.clear();
       	    break;
 	   }
       	 case GTK_SEARCH_CLOSE:
@@ -367,7 +393,14 @@ void IntStringBox::string2_search(gboolean *_continue, GtkSCContext newsearch)
       }
    }
    catch (SQLerror &e)
-   {  std::cerr << e << '\n';
+   {
+     if (e.Code()==100 && can_add())
+     {
+	  string_to_add=sc1_string->get_text();
+	  sc1_string->add_item(ADDING_PATTERN);
+     }
+     else
+       std::cerr << e << '\n';
    }
 }
 
@@ -375,7 +408,7 @@ void IntStringBox::string2_search(gboolean *_continue, GtkSCContext newsearch)
 void IntStringBox::string1_search(gboolean *_continue, GtkSCContext newsearch)
 {
    try
-   {  
+   {
     static Transaction tr(std::string(),false);
 
      std::string squery;
@@ -391,7 +424,7 @@ void IntStringBox::string1_search(gboolean *_continue, GtkSCContext newsearch)
 		_tabelle_+" "+_alias_+" "+
 		joinstring+" where "
                +_string1_+" ilike ? " ;
-             if(!_string2_.empty()) 
+             if(!_string2_.empty())
 		{if(!equal_op)
 		   squery += "and "+_string2_+" ilike ? ";
 		 else
@@ -413,12 +446,12 @@ void IntStringBox::string1_search(gboolean *_continue, GtkSCContext newsearch)
            else
              suchtext=((prefix_only ? std::string() : std::string("%")) + suchtext +'%');
 	   q << suchtext;
-	     
+
            if(!_string2_.empty())
 	     {if(equal_op)
 		q << sc2_string->get_text();
 	      else
-		q << (sc2_string->get_text()+'%');	
+		q << (sc2_string->get_text()+'%');
 	     }
 
       	    // fall through
@@ -429,6 +462,7 @@ void IntStringBox::string1_search(gboolean *_continue, GtkSCContext newsearch)
  	    (Query("fetch from str1_search")).FetchOne() >> name;
       	    sc1_string->add_item(name);
       	    *_continue=true;
+      	    string_to_add.clear();
       	    break;
 	   }
       	 case GTK_SEARCH_CLOSE:
@@ -441,7 +475,14 @@ void IntStringBox::string1_search(gboolean *_continue, GtkSCContext newsearch)
       }
    }
    catch (SQLerror &e)
-   {  std::cerr << e << '\n';
+   {
+      if (e.Code()==100 && can_add())
+      {
+	string_to_add= sc1_string->get_text();
+	sc1_string->add_item(ADDING_PATTERN);
+      }
+      else
+       std::cerr << e << '\n';
    }
 }
 
