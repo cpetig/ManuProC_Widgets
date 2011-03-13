@@ -394,10 +394,10 @@ void IntStringBox::string2_search(gboolean *_continue, GtkSCContext newsearch)
    }
    catch (SQLerror &e)
    {
-     if (e.Code()==100 && can_add())
+     if (e.Code()==100 && can_add() && sc2_string->empty())
      {
-	  string_to_add=sc1_string->get_text();
-	  sc1_string->add_item(ADDING_PATTERN);
+	  string_to_add=sc2_string->get_text();
+	  sc2_string->add_item(ADDING_PATTERN);
      }
      else
        std::cerr << e << '\n';
@@ -476,7 +476,7 @@ void IntStringBox::string1_search(gboolean *_continue, GtkSCContext newsearch)
    }
    catch (SQLerror &e)
    {
-      if (e.Code()==100 && can_add())
+      if (e.Code()==100 && can_add() && sc1_string->empty())
       {
 	string_to_add= sc1_string->get_text();
 	sc1_string->add_item(ADDING_PATTERN);
