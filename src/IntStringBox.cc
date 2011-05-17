@@ -201,9 +201,10 @@ void IntStringBox::PrefixOnly(bool p)
  prefix_only=p;
 }
 
-void IntStringBox::Join(const std::string j)
+void IntStringBox::Join(const std::string j, bool reset)
 {
- joinstring=j;
+ if(joinstring.empty() || reset) joinstring=j;
+ else joinstring+=j;
 }
 
 

@@ -80,7 +80,7 @@ public:
 
    void Einschraenken(bool an);
    void Einschraenkung(const std::string &e, bool an=true);
-   void Join(const std::string j);
+   void Join(const std::string j,bool=false);
    void PrefixOnly(bool p);
 
    void FocusToString1();

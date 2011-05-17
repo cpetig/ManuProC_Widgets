@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manuproc_widgets 0.8.0\n"
 "Report-Msgid-Bugs-To: manuproc-developer-de@berlios.de\n"
-"POT-Creation-Date: 2011-03-10 11:38+0100\n"
+"POT-Creation-Date: 2011-03-14 16:14+0100\n"
 "PO-Revision-Date: 2010-11-15 13:54+0100\n"
 "Last-Translator: Christof Petig <petig@stahlwille.de>\n"
 "Language-Team: Danish\n"
@@ -39,6 +39,10 @@ msgstr ""
 
 #: src/datewin_popup_glade.cc:125
 msgid "Date properties"
+msgstr ""
+
+#: src/IntStringBox.cc:30
+msgid "++ add to list ++"
 msgstr ""
 
 #: src/IntStringBox_glade.cc:54
