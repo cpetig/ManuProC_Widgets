@@ -103,7 +103,7 @@ void datewin::set_value (const ManuProC::Datum &d) throw()
 	//      if (pg==p_Woche && d.Tag()!=ManuProC::Datum(d.KW()).Tag()) pg=p_Datum;
 	notebook->set_current_page(pg);
       }
-      catch (Datumsfehler::jahrfalsch &e) // manche Jahre sind ungültig für die KW Berechnung
+      catch (ManuProC::Datumsfehler::jahrfalsch &e) // manche Jahre sind ungültig für die KW Berechnung
       {
 	jahr_spinbutton->set_value(d.Jahr());
 	kw_spinbutton->set_value(1);
