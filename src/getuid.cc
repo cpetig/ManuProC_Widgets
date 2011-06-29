@@ -31,6 +31,7 @@ static int uid_override=-1;
 # include <windows.h>
 # include <security.h>
 # include <iphlpapi.h>
+# undef GetUserName
 
 std::string ManuProC::GetUserName()
 {
