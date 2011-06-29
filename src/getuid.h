@@ -30,6 +30,7 @@ namespace ManuProC
 {
   std::string GetUserName();
   std::string GetRealName();
+  bool IsAdministrator();
 }
 #endif
 
