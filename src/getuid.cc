@@ -93,6 +93,7 @@ int getuid_ManuProC()
 # include <stdlib.h>
 # include <stdio.h>
 # include <getuid.h>
+# undef getuid
 
 int getuid_ManuProC()
 {
