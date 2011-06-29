@@ -17,8 +17,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "getuid.h"
+#include "./getuid.h"
 #undef getuid
+#include <WinFileReq.hh>
 
 static int uid_override=-1;
 
@@ -29,25 +30,45 @@ static int uid_override=-1;
 # define SECURITY_WIN32
 # include <windows.h>
 # include <security.h>
+# include <iphlpapi.h>
+
+std::string ManuProC::GetUserName()
+{
+  wchar_t buf[10240];
+  DWORD sz=sizeof(buf)/sizeof(*buf);
+
+  if (!GetUserNameExW(NameSamCompatible,buf,&sz))
+  { if (!GetUserNameW(buf,&sz)) return 0;
+  }
+  return WinFileReq::un_wstring(std::wstring(buf,buf+sz));
+}
+
+std::string ManuProC::GetRealName()
+{
+  wchar_t buf[10240];
+  DWORD sz=sizeof(buf)/sizeof(*buf);
+
+  if (!GetUserNameExW(NameDisplay,buf,&sz))
+    return std::string();
+  while (sz>0 && !buf[sz-1]) --sz; // XP counts zeros as part of string ...
+  return WinFileReq::un_wstring(std::wstring(buf,buf+sz));
+}
 
 // on Windows return the first 4 bytes of the md5 sum of "domain\user"
-
 int getuid_ManuProC()
 {
   if (uid_override!=-1) return uid_override;
-  char buf[10240];
-  DWORD sz=sizeof(buf);
-
-  if (!GetUserNameExA(NameSamCompatible,buf,&sz))
-  { if (!GetUserNameA(buf,&sz)) return 0;
-  }
-  std::string md5sum= md5(std::string(buf,buf+sz));
+  std::string md5sum= md5(ManuProC::GetUserName());
   uid_override= *(int*)md5sum.data();
   return uid_override;
 }
 
 #else // linux
 # include <unistd.h>
+# include <pwd.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <getuid.h>
 
 int getuid_ManuProC()
 {
@@ -55,9 +76,43 @@ int getuid_ManuProC()
   uid_override= getuid();
   return uid_override;
 }
+
+std::string ManuProC::GetUserName()
+{
+  size_t bufsize= sysconf(_SC_GETPW_R_SIZE_MAX);
+  if (bufsize==-1) bufsize= 16384;
+  char *buf= (char*)malloc(bufsize);
+  if (!buf) return "malloc failed";
+  struct passwd pwd;
+  struct passwd *result= 0;
+  int s= getpwuid_r(getuid(), &pwd, buf, bufsize, &result);
+  std::string sresult;
+  if (!result) sresult="not found";
+  else sresult= pwd.pw_name;
+  free(buf);
+  return sresult;
+}
+
+std::string ManuProC::GetRealName()
+{
+  size_t bufsize= sysconf(_SC_GETPW_R_SIZE_MAX);
+  if (bufsize==-1) bufsize= 16384;
+  char *buf= (char*)malloc(bufsize);
+  if (!buf) return "malloc failed";
+  struct passwd pwd;
+  struct passwd *result= 0;
+  int s= getpwuid_r(getuid(), &pwd, buf, bufsize, &result);
+  std::string sresult;
+  if (!result) sresult="not found";
+  else sresult= pwd.pw_gecos;
+  free(buf);
+  while (!sresult.empty() && sresult[sresult.size()-1]==',') sresult=sresult.substr(0,sresult.size()-1);
+  return sresult;
+}
 #endif
 
 void setuid_ManuProC(int id)
 {
   uid_override= id;
 }
+
