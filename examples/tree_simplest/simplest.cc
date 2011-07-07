@@ -51,6 +51,6 @@ simplest::simplest()
    treebase->setDataVec(datavec);
 
    treebase->signal_leaf_selected().connect(sigc::mem_fun(*this,&simplest::on_leaf_selected));
-   treebase->set_enable_search(true);
+//   treebase->set_enable_search(true);
 }
 
