@@ -27,11 +27,11 @@
 #endif
 
 void simplest::on_Beenden_activate()
-{   
+{
 }
 
 void simplest::on_leaf_selected(cH_RowDataBase d)
-{  std::cout << d->Value(0,0)->getStrVal() << ',' << d->Value(1,0)->getStrVal() 
+{  std::cout << d->Value(0,0)->getStrVal() << ',' << d->Value(1,0)->getStrVal()
 	<< ',' << d->Value(2,0)->getStrVal() <<'\n';
 }
 
@@ -49,7 +49,8 @@ simplest::simplest()
    datavec.push_back(cH_RowDataStrings("10","B","<none>","3"));
    datavec.push_back(cH_RowDataStrings("10","B","<none>","3"));
    treebase->setDataVec(datavec);
-   
+
    treebase->signal_leaf_selected().connect(SigC::slot(*this,&simplest::on_leaf_selected));
+   treebase->set_enable_search(true);
 }
 
