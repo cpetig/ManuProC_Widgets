@@ -1278,8 +1278,8 @@ bool SimpleTreeStore::default_filter(SimpleTreeStore const* th, cH_RowDataBase c
   if (th->vec_filter_match.empty())
     return true;
   unsigned idx=0;
-  for (std::vector<bool>::const_iterator i=th->vec_filter_match.begin(); i!=th->vec_filter_match.end(); ++i,++idx)
-    if (*i && row->Value(idx,th->ValueData())->getStrVal().substr(0,text.size())==text)
+  for (sequence_t::const_iterator i=th->vec_filter_match.begin(); i!=th->vec_filter_match.end(); ++i,++idx)
+    if (row->Value(*i,th->ValueData())->getStrVal().substr(0,text.size())==text)
       return true;
   return false;
 }

@@ -34,11 +34,11 @@ public:
 	typedef SimpleTreeStore::sequence_t sequence_t;
 	typedef SimpleTreeStore::const_iterator const_iterator;
 
-	SimpleTreeStore_Proxy(unsigned int max_cols) : 
-		sts(SimpleTreeStore::create(max_cols)) 
+	SimpleTreeStore_Proxy(unsigned int max_cols) :
+		sts(SimpleTreeStore::create(max_cols))
 	{}
-	SimpleTreeStore_Proxy(SimpleTreeModel_Properties &props) : 
-		sts(SimpleTreeStore::create(props)) 
+	SimpleTreeStore_Proxy(SimpleTreeModel_Properties &props) :
+		sts(SimpleTreeStore::create(props))
 	{}
 
 #ifdef ST_DEPRECATED
@@ -63,7 +63,7 @@ public:
 	const Glib::RefPtr<const SimpleTreeStore> getStore() const { return Glib::RefPtr<const SimpleTreeStore>(sts); }
 	const std::string getColTitle(guint nr) const { return sts->getColTitle(nr); }
 
-        // we_own -> SimpleTree deletes object	
+        // we_own -> SimpleTree deletes object
 	void setProperties(SimpleTreeModel_Properties &props, bool we_own=false)
 	{ sts->setProperties(props,we_own); }
 
@@ -74,14 +74,14 @@ public:
 	bool ColumnVisible(unsigned index) const
 	{  return sts->ColumnVisible(index); }
 	void clear() { sts->clear(); }
-	unsigned ColumnFromIndex(unsigned i) const 
+	unsigned ColumnFromIndex(unsigned i) const
 	{  return sts->ColumnFromIndex(i); }
 	unsigned IndexFromColumn(unsigned c) const
 	{  return sts->IndexFromColumn(c); }
 	const SimpleTreeStore::sequence_t &get_seq() const {return sts->get_seq();}
-	
+
 	void set_column_visibility(unsigned index,bool on) { sts->set_tree_column_visibility(index,on); }
-	
+
 	SIMPLE_TREE_WARN void redisplay(cH_RowDataBase row, unsigned index) {  sts->redisplay_old(row,index); }
 	// the fast variant
 	void redisplay(Gtk::TreeModel::iterator iter, unsigned index) {  sts->redisplay_old(iter,index); }
@@ -89,7 +89,7 @@ public:
 };
 
 namespace Gtk { class Menu; }
-// I took the more esoteric features out to SimpleTree, 
+// I took the more esoteric features out to SimpleTree,
 // so they do not confuse the beginner
 class SimpleTree_Basic : public Gtk::TreeView, public SimpleTreeStore_Proxy
 {public:
@@ -107,11 +107,11 @@ private:
 	sigc::signal<void> _reorder;
 	sigc::signal<void,const cH_RowDataBase &,int,bool&> clicked_sig;
 
-protected:	
+protected:
 	cH_RowDataBase menuContext;
 
 private:
-        void init();	
+        void init();
 	void on_column_changed(guint nr);
 	void on_selection_changed();
 	void on_redisplay();
@@ -137,7 +137,7 @@ public:
 	SimpleTree_Basic(unsigned max_col);
 	SimpleTree_Basic(SimpleTreeModel_Properties &props);
 	~SimpleTree_Basic();
-	
+
 	sigc::signal<void,cH_RowDataBase> &signal_leaf_selected()
 	{ return _leaf_selected; }
 	sigc::signal<void> &signal_leaf_unselected()
@@ -148,21 +148,21 @@ public:
 	sigc::signal<void> &signal_reorder()
 	{ return _reorder; }
 	sigc::signal<void,const cH_RowDataBase&,int,bool&> &signal_clicked();
-	
+
 	void detach();
 	void attach();
-	void setDataVec(const std::vector<cH_RowDataBase> &d) 
+	void setDataVec(const std::vector<cH_RowDataBase> &d)
 	{  detach(); SimpleTreeStore_Proxy::setDataVec(d); attach(); }
 
 	void Expand_recursively();
 	void Collapse();
 	SIMPLE_TREE_WARN void setTitles(const std::vector<std::string> &T);
 	SIMPLE_TREE_WARN void setAlignment(const std::vector<gfloat> &A);
-	SIMPLE_TREE_WARN void setResizeable(const std::vector<bool> &R);	
-	SIMPLE_TREE_WARN void setResizeable(const bool b);		
-	
+	SIMPLE_TREE_WARN void setResizeable(const std::vector<bool> &R);
+	SIMPLE_TREE_WARN void setResizeable(const bool b);
+
 	void debug();
-	
+
 	sigc::signal0<void> &addMenuItem(Glib::ustring const& text);
 };
 
@@ -185,10 +185,10 @@ public:
 	__deprecated_ctor SimpleTree(guint maxcol, const std::vector<std::string>& T)
 	: SimpleTree_Basic(maxcol)
 	{  setTitles(T);
-	}	
+	}
 private:
  // strictly this belongs into SimpleTreeStore
- template <class T> 
+ template <class T>
   void ForEachLeaf2(const_iterator b,const_iterator e, T &t) const
  {  for (const_iterator i=b;i!=e;++i)
     {  if (!i->second.childrens_deep) t(i->second.leafdata);
@@ -196,8 +196,8 @@ private:
           ForEachLeaf2(i->second.children.begin(),i->second.children.end(),t);
     }
  }
- 
- template <class T> void selectMatchingLines2(const_iterator b, 
+
+ template <class T> void selectMatchingLines2(const_iterator b,
  			const_iterator e, const T &t,
  			bool only_one_line)
  {  for (const_iterator i=b;i!=e;++i)
@@ -214,8 +214,10 @@ private:
           selectMatchingLines2(i->second.children.begin(),i->second.children.end(),t,only_one_line);
     }
  }
- void getSelectedRowDataBase_vec_cb(const Gtk::TreeModel::iterator&it, 
+ void getSelectedRowDataBase_vec_cb(const Gtk::TreeModel::iterator&it,
 		std::vector<cH_RowDataBase> *res,bool include_nodes=false);
+ bool filter_key_handler(GdkEventKey* k);
+ sigc::connection key_connection;
 
 public:
  struct SelectionError : public std::exception
@@ -257,24 +259,24 @@ public:
 
 #if 1 // deprecated
  template <class T,class CT> T getSelectedRowDataBase_as2() const
-// this could be optimzed to avoid the dynamic_cast within 
+// this could be optimzed to avoid the dynamic_cast within
 // cH_RowDataBase::operator*, but it does not hurt that much
  {  return T(dynamic_cast<CT*>(&*getSelectedRowDataBase()));
  }
 #endif
  template <class T> T getSelectedRowDataBase_as() const
- {  return getSelectedRowDataBase_as2<T,typename T::ContentType>(); 
-// {  return T::cast_dynamic(getSelectedRowDataBase()); 
+ {  return getSelectedRowDataBase_as2<T,typename T::ContentType>();
+// {  return T::cast_dynamic(getSelectedRowDataBase());
  }
  template <class T> T getCursorRowDataBase_as() const
- {  return T::cast_dynamic(getCursorRowDataBase()); 
+ {  return T::cast_dynamic(getCursorRowDataBase());
  }
- Handle<const TreeRow> getSelectedNode() const 
+ Handle<const TreeRow> getSelectedNode() const
  	throw(noNodeSelected,multipleNodesSelected,notNodeSelected);
  template <typename T> Handle<const T> getSelectedNode_as() const
- {  return Handle<const T>::cast_dynamic(getSelectedNode()); 
+ {  return Handle<const T>::cast_dynamic(getSelectedNode());
  }
- 
+
  template <class T> void selectMatchingLines(const T &t)
  {  get_selection()->unselect_all();
     selectMatchingLines2(begin(),end(),t,false);
@@ -285,25 +287,27 @@ public:
  }
  template <class T> void ForEachLeaf(T &t) const
  {  ForEachLeaf2(begin(),end(),t); }
- 
- // very basic method for scrolling to a specific line - tell me if you 
+
+ // very basic method for scrolling to a specific line - tell me if you
  // need more - CP
  void ScrollToSelection();
  // 0 is top, 1 is bottom, -1 is dont_care
  void scroll_to(const cH_RowDataBase &data,gfloat where=-1);
  // select specific line
  void select(cH_RowDataBase const& data);
- 
+
  cH_RowDataBase getMenuContext(bool prefer_selection=true) const;
 
- // selected nodes select the matching leaves 
+ // selected nodes select the matching leaves
  void nodes_select_leaves();
  void select_leaves(Gtk::TreeModel::Path const& p);
- 
+
 #ifdef MPC_ST_EXCEL_EXPORT
  void write_excel(std::string const& filename) const;
  void write_excel_via_filerequester() const;
 #endif
+
+ void set_filter_match(sequence_t const& cols);
 };
 
 #endif

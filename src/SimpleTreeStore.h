@@ -241,7 +241,7 @@ private:
 	SimpleTreeModel *unfiltered_model;
 	bool unfiltered_model_ours;
 	std::string current_filter;
-	std::vector<bool> vec_filter_match;
+	sequence_t vec_filter_match;
 	typedef bool (*filter_func_t)(SimpleTreeStore const*, cH_RowDataBase const& row, std::string const& text);
 	filter_func_t filter_func;
 	static bool default_filter(SimpleTreeStore const*, cH_RowDataBase const& row, std::string const& text);
@@ -411,8 +411,8 @@ public:
 
 	// filtering
 	void set_filter(std::string const& current_filter);
-	void set_filter_match(std::vector<bool> const& v) { vec_filter_match=v; }
-	std::vector<bool>const& get_filter_match() const { return vec_filter_match; }
+	void set_filter_match(sequence_t const& v) { vec_filter_match=v; }
+	sequence_t const& get_filter_match() const { return vec_filter_match; }
 	void set_filterfunc(filter_func_t f) { filter_func=f; }
 };
 

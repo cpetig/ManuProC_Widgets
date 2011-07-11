@@ -77,7 +77,7 @@ void SimpleTree_Basic::init()
 {  on_spalten_geaendert();
 
    get_selection()->signal_changed().connect(sigc::mem_fun(*this,&SimpleTree_Basic::on_selection_changed));
-   // stammt eigentlich aus Prefs_proxy   
+   // stammt eigentlich aus Prefs_proxy
    getStore()->signal_column_changed().connect(sigc::mem_fun(*this,&SimpleTree_Basic::on_column_changed));
    // Store
    getStore()->signal_please_detach().connect(sigc::mem_fun(*this,&SimpleTree_Basic::detach));
@@ -177,14 +177,14 @@ void SimpleTree_Basic::on_spalten_geaendert()
       if (Properties().get_sizing(idx)==Gtk::TREE_VIEW_COLUMN_FIXED)
         pColumn->set_fixed_width(Properties().get_fixed_width(idx));
       pColumn->set_resizable(Properties().resizeable(idx));
-      
+
       append_column(*pColumn);
 #else
       append_column(getColTitle(i),sts->m_columns.cols[i]);
-#endif      
+#endif
    }
 // (gtk_tree_view_set_headers_clickable): assertion `tree_view->priv->model != NULL'
-   set_headers_clickable(); 
+   set_headers_clickable();
 }
 
 void SimpleTree_Basic::on_title_clicked(unsigned nr)
@@ -194,13 +194,13 @@ void SimpleTree_Basic::on_title_clicked(unsigned nr)
    {  clicked_seq.push_back(idx);
       // if alles voll -> umsortieren
       if (clicked_seq.size()==VisibleColumns()) on_neuordnen_clicked();
-      else 
+      else
 	{
 	 std::string tmptit=std::string("(")+itos(clicked_seq.size())+")";
 	 if(get_column(nr+FIRST_COLUMN)->get_title().size()>=3)
 	   tmptit+=get_column(nr+FIRST_COLUMN)->get_title().substr(3);
 	 get_column(nr+FIRST_COLUMN)->set_title(tmptit);
-	
+
 	}
    }
    else if (i==--clicked_seq.end())
@@ -214,10 +214,10 @@ void SimpleTree_Basic::on_title_clicked(unsigned nr)
 }
 
 void SimpleTree_Basic::on_abbrechen_clicked()
-{  
+{
       clicked_seq.clear();
       // Titel wiederherstellen
-      for (unsigned i=0;i<VisibleColumns();++i) 
+      for (unsigned i=0;i<VisibleColumns();++i)
          get_column(i+FIRST_COLUMN)->set_title(getColTitle(i));
 }
 
@@ -230,9 +230,9 @@ void SimpleTree_Basic::on_zuruecksetzen_clicked()
 void SimpleTree_Basic::on_neuordnen_clicked()
 {  if (!clicked_seq.empty()) getStore()->ShowDeep()=clicked_seq.size()-1;
    getStore()->fillSequence(clicked_seq);
-   std::vector<cH_RowDataBase> 
+   std::vector<cH_RowDataBase>
        selection=dynamic_cast<SimpleTree*>(this)->getSelectedRowDataBase_vec();
-   if (selection.empty()) 
+   if (selection.empty())
        selection=dynamic_cast<SimpleTree*>(this)->getSelectedRowDataBase_vec(true);
    getStore()->setSequence(clicked_seq);
    for (std::vector<cH_RowDataBase>::const_iterator i=selection.begin();
@@ -249,7 +249,7 @@ void SimpleTree_Basic::on_neuordnen_clicked()
 }
 
 void SimpleTree_Basic::on_column_changed(guint nr)
-{  delete menu; 
+{  delete menu;
    menu=0;
    fillMenu();
    on_spalten_geaendert();
@@ -327,13 +327,13 @@ cH_RowDataBase SimpleTree::getCursorRowDataBase() const
 }
 
 
-Handle<const TreeRow> SimpleTree::getSelectedNode() const 
+Handle<const TreeRow> SimpleTree::getSelectedNode() const
  	throw(noNodeSelected,multipleNodesSelected,notNodeSelected)
 {
   Gtk::TreeModel::iterator sel=const_cast<SimpleTree*>(this)
 		->get_selection()->get_selected();
    if (sel)
-   { const Gtk::TreeRow &row=*sel;  
+   { const Gtk::TreeRow &row=*sel;
      if (row[getStore()->m_columns.childrens_deep])
        return Handle<const TreeRow>(static_cast<Handle<TreeRow> >(row[getStore()->m_columns.row]));
      else
@@ -354,7 +354,7 @@ void SimpleTree_Basic::Collapse()
 
 // expand_row(path,false)/collapse_row(path)
 
-void SimpleTree::getSelectedRowDataBase_vec_cb(const Gtk::TreeModel::iterator&it, 
+void SimpleTree::getSelectedRowDataBase_vec_cb(const Gtk::TreeModel::iterator&it,
 		std::vector<cH_RowDataBase> *res, bool include_nodes)
 { Gtk::TreeRow row=*it;
   if (!row[getStore()->m_columns.childrens_deep])
@@ -374,13 +374,13 @@ std::vector<cH_RowDataBase> SimpleTree::getSelectedRowDataBase_vec(bool include_
    non_const_this->get_selection()->selected_foreach(sigc::bind(
    		sigc::mem_fun(*non_const_this,
       		&SimpleTree::getSelectedRowDataBase_vec_cb),&result,include_nodes));
-#endif      		
+#endif
    return result;
 }
 
 
 static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text,const Model_ref<bvector_item> &model)
-{  bvector_item_CheckMenuItem *it = 
+{  bvector_item_CheckMenuItem *it =
    Gtk::manage(new bvector_item_CheckMenuItem(model,text));
    m->append(*it);
    it->show();
@@ -420,7 +420,7 @@ void SimpleTree_Basic::menu_ranking(int column)
 }
 
 void SimpleTree_Basic::fillMenu()
-{  assert(menu==0); 
+{  assert(menu==0);
   menu=new Gtk::Menu();
   // Hauptmenü
   add_mitem(menu,_("Reset order"),sigc::mem_fun(*this,&SimpleTree_Basic::on_zuruecksetzen_clicked));
@@ -460,7 +460,7 @@ void SimpleTree_Basic::fillMenu()
   for (guint i=0;i<getStore()->MaxCol();++i)
     add_mitem(ranking_menu,Properties().Title(i),group,sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::menu_ranking),i));
 #endif
-  
+
   // separator
   for (std::list<std::pair<sigc::signal0<void>,Glib::ustring> >::iterator i=user_menuitems.begin();
         i!=user_menuitems.end();++i)
@@ -482,7 +482,7 @@ bool SimpleTree_Basic::MouseButton(GdkEventButton *event)
       if ((*it)[getStore()->m_columns.childrens_deep]) return false; // node
       int idx=-1;
       for (unsigned colno=0;colno<=VisibleColumns();++colno)
-         if (col==get_column(colno)) 
+         if (col==get_column(colno))
          {  idx=getStore()->currseq[colno];
             break;
          }
@@ -491,7 +491,7 @@ bool SimpleTree_Basic::MouseButton(GdkEventButton *event)
    if (event->type == GDK_BUTTON_PRESS && event->button==3  && menu)
    {  if (res)
       { Gtk::TreeModel::iterator it=getTreeModel()->get_iter(path);
-        if (!!it) 
+        if (!!it)
           menuContext=(*it)[getStore()->m_columns.leafdata];
         else menuContext=cH_RowDataBase();
       }
@@ -600,7 +600,7 @@ bool SimpleTree_Basic::clicked_impl(SimpleTree_Basic *_this, const cH_RowDataBas
    return handled;
 }
 
-sigc::signal<void,const cH_RowDataBase &,int,bool&> 
+sigc::signal<void,const cH_RowDataBase &,int,bool&>
 	  &SimpleTree_Basic::signal_clicked()
 { button_press_vfunc=&SimpleTree_Basic::clicked_impl;
   return clicked_sig;
@@ -682,9 +682,9 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
         else
           val=static_cast<cH_RowDataBase>((*i)[tv->getStore()->m_columns.leafdata])
               ->Value(tv->getStore()->get_seq()[c],tv->getStore()->ValueData());
-        
+
         std::string strval=val->getStrVal();
-          
+
         if (!!val.cast_dynamic<const EntryValueFixed<1> >())
           sheet->Cell(row,c)->SetDouble(val.cast_dynamic<const EntryValueFixed<1> >()->Wert().as_float());
         else if (!!val.cast_dynamic<const EntryValueFixed<2> >())
@@ -693,7 +693,7 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
           sheet->Cell(row,c)->SetDouble(val.cast_dynamic<const EntryValueFixed<3> >()->Wert().as_float());
         else if (!!val.cast_dynamic<const EntryValueFixed<2,double,long,false> >())
           sheet->Cell(row,c)->SetDouble(val.cast_dynamic<const EntryValueFixed<2,double,long,false> >()->Wert().as_float());
-        else if (!!val.cast_dynamic<const EntryValueIntString>() 
+        else if (!!val.cast_dynamic<const EntryValueIntString>()
             && itos(val->getIntVal())==strval)
           sheet->Cell(row,c)->SetInteger(val.cast_dynamic<const EntryValueIntString>()->getIntVal());
         else if (strval.empty()) ; // nichts tun
@@ -708,7 +708,7 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
 }
 
 void SimpleTree::write_excel(std::string const& filename) const
-{ 
+{
 
 
   YExcel::BasicExcel e;
@@ -728,19 +728,19 @@ void SimpleTree::write_excel(std::string const& filename) const
   unsigned row=1;
   SimpleTree* non_const_this=const_cast<SimpleTree*>(this);
   if(non_const_this->get_selection()->get_mode() != Gtk::SELECTION_MULTIPLE)
-   {Gtk::TreeModel::iterator iter = non_const_this->get_selection()->get_selected() ; 
+   {Gtk::TreeModel::iterator iter = non_const_this->get_selection()->get_selected() ;
     write_excel_sub(non_const_this,sheet,row,iter->children());
    }
   else
     write_excel_sub(non_const_this,sheet,row,non_const_this->get_model()->children());
 //  non_const_this->get_selection()->selected_foreach_iter(sigc::mem_fun(
 //                      *this,&write_excel_sub),non_const_this,&sheet,&row,non_const_this->get_model()->children());
-  
+
 //  konten_tree->get_selection()->selected_foreach_iter(sigc::bind(sigc::mem_fun(*this,
 //                   &fibumain::konto_print_one_node),&tf,&os));
 
 
-                   
+
   e.SaveAs(filename.c_str());
 }
 
@@ -748,7 +748,7 @@ void SimpleTree::write_excel_via_filerequester() const
 {
   if(get_selection()->get_selected_rows().size()!=1)
       return;
-    
+
   std::string fname=getStore()->Properties().InstanceName();
   if (fname.empty()) fname=_("Table");
   if (getenv("HOME")) fname=std::string(getenv("HOME"))+"/"+fname;
@@ -760,3 +760,16 @@ void SimpleTree::write_excel_via_filerequester() const
       const_cast<Gtk::Window*>(toplevel));
 }
 #endif
+
+bool SimpleTree::filter_key_handler(GdkEventKey* k)
+{
+  return false;
+}
+
+void SimpleTree::set_filter_match(sequence_t const& cols)
+{
+  key_connection.disconnect();
+  getStore()->set_filter_match(cols);
+  if (!cols.empty())
+    key_connection= signal_key_press_event().connect(sigc::mem_fun(*this,&SimpleTree::filter_key_handler));
+}
