@@ -172,9 +172,9 @@ class SimpleTree : public SimpleTree_Basic
 {
 public:
 	// attr is not needed any longer
-	SimpleTree(guint maxcol) : SimpleTree_Basic(maxcol)
+	SimpleTree(guint maxcol) : SimpleTree_Basic(maxcol), filter_column(-1), filter_time()
 	{}
-	SimpleTree(SimpleTreeModel_Properties &props) : SimpleTree_Basic(props)
+	SimpleTree(SimpleTreeModel_Properties &props) : SimpleTree_Basic(props), filter_column(-1), filter_time()
 	{}
 	__deprecated_ctor SimpleTree(guint maxcol, const std::vector<std::string>& T
                                 ,const std::vector<cH_RowDataBase>& D)
@@ -218,6 +218,8 @@ private:
 		std::vector<cH_RowDataBase> *res,bool include_nodes=false);
  bool filter_key_handler(GdkEventKey* k);
  sigc::connection key_connection;
+ guint32 filter_time;
+ int filter_column;
 
 public:
  struct SelectionError : public std::exception

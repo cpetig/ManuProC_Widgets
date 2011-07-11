@@ -411,6 +411,7 @@ public:
 
 	// filtering
 	void set_filter(std::string const& current_filter);
+	std::string const& get_filter() const { return current_filter; }
 	void set_filter_match(sequence_t const& v) { vec_filter_match=v; }
 	sequence_t const& get_filter_match() const { return vec_filter_match; }
 	void set_filterfunc(filter_func_t f) { filter_func=f; }

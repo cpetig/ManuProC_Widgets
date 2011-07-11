@@ -763,6 +763,37 @@ void SimpleTree::write_excel_via_filerequester() const
 
 bool SimpleTree::filter_key_handler(GdkEventKey* k)
 {
+  if (!has_focus()) return false;
+  if (k->keyval==GDK_KEY_BackSpace || k->keyval==GDK_KEY_Delete || k->keyval==GDK_KEY_KP_Delete)
+  {
+    getStore()->set_filter(std::string());
+    if (filter_column!=-1)
+    {
+      get_column(filter_column+FIRST_COLUMN)->set_title(getColTitle(filter_column));
+      filter_column=-1;
+    }
+    return true;
+  }
+//  unsigned time=k->time;
+  if (k->string && *k->string)
+  {
+    std::string new_filter;
+    if (k->time-filter_time<2000)
+      new_filter = getStore()->get_filter();
+    new_filter+=k->string;
+    getStore()->set_filter(new_filter);
+    if (filter_column==-1)
+    {
+      sequence_t const& fcol= getStore()->get_filter_match();
+      for (sequence_t::const_iterator i=fcol.begin();i!=fcol.end();++i)
+	if (getStore()->ColumnFromIndex(*i)!=-1)
+	{ filter_column=getStore()->ColumnFromIndex(*i);
+	  break;
+	}
+    }
+    if (filter_column!=-1)
+      get_column(filter_column+FIRST_COLUMN)->set_title("<"+new_filter+">");
+  }
   return false;
 }
 
