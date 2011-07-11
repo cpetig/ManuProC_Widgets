@@ -66,7 +66,7 @@ struct SimpleTreeModel_Properties : sigc::trackable
   { return Gtk::TREE_VIEW_COLUMN_AUTOSIZE; }
   virtual int get_fixed_width(guint _seqnr) const { return 0; }
   virtual bool visible_default(guint _seqnr) const { return true; }
-  
+
   sigc::signal1<void,guint> column_changed;
 };
 
@@ -79,7 +79,7 @@ class SimpleTreeModel_Proxy
 public:
 	SimpleTreeModel_Proxy();
 	~SimpleTreeModel_Proxy();
-	
+
 	SimpleTreeModel &getModel() { return *model; }
 	const SimpleTreeModel &getModel() const { return *model; }
 	void setModel(SimpleTreeModel &model);
@@ -101,7 +101,7 @@ public:
 	SimpleTreeModel_Properties_Proxy(SimpleTreeModel_Properties *p)
 	: props(p), we_own_props() {}
 	~SimpleTreeModel_Properties_Proxy();
-	
+
 	void setProperties(SimpleTreeModel_Properties &p, bool we_own=false);
 	const SimpleTreeModel_Properties &Properties() const
 	{ return *props; }
@@ -154,26 +154,26 @@ struct SimpleTreeStoreNode
 	SimpleTreeStoreNode *parent;
 	unsigned deep,childrens_deep;
 	// REMEMBER to change swap implementation if you add things here!
-	
+
 	// root?
 	// columns? pics?
 	// color, color_set?
 	// background
 	// value ist in map gespeichert (key)
 
-	SimpleTreeStoreNode(guint _deep=0, SimpleTreeStoreNode *_parent=0, 
+	SimpleTreeStoreNode(guint _deep=0, SimpleTreeStoreNode *_parent=0,
 			const cH_RowDataBase &v=cH_RowDataBase(),
-			unsigned c_deep=0) 
-	        : 
+			unsigned c_deep=0)
+	        :
 #ifdef MPC_STSN_MAGIC
 		  magic(MPC_STSN_MAGIC),
 #endif
-	          leafdata(v), parent(_parent), deep(_deep), 
+	          leafdata(v), parent(_parent), deep(_deep),
 	          childrens_deep(c_deep) {}
 #ifdef MPC_STSN_MAGIC
 	~SimpleTreeStoreNode() { magic=0; }
 #endif
-		
+
 	void swap(SimpleTreeStoreNode &b);
 	void fix_pointer();
 };
@@ -182,7 +182,7 @@ namespace std { // sigh
 void swap(SimpleTreeStoreNode &a,SimpleTreeStoreNode &b);
 };
 
-class SimpleTreeStore : virtual public Glib::Object, public Gtk::TreeModel, 
+class SimpleTreeStore : virtual public Glib::Object, public Gtk::TreeModel,
 		public Gtk::TreeDragSource, public Gtk::TreeDragDest,
 		public SimpleTreeModel_Proxy,
 		public SimpleTreeModel_Properties_Proxy
@@ -208,10 +208,10 @@ protected:
 	// first value is ":order", second is ":visible"
         static std::pair<std::string,std::string> default_load(const std::string&program, const std::string&instance);
         static void default_save(const std::string&program, const std::string&instance, const std::pair<std::string,std::string>&value);
-        
+
 	friend class SimpleTree_Basic;
 	friend class SimpleTree;
-	sequence_t currseq; 
+	sequence_t currseq;
 	SimpleTreeStoreNode root;
 
 private:
@@ -222,7 +222,7 @@ private:
 	std::vector<bool> vec_hide_cols; // index is index
 
 	// since we need the address of this variables, we can't use a bitfield
-	bool auffuellen_bool; 
+	bool auffuellen_bool;
 	bool expandieren_bool;
 	bool block_save;
 	bool color_bool; // or in Widget?, kann in SimpleTree, muss dann aber mitgespeichert werden
@@ -237,6 +237,15 @@ private:
 
 	unsigned stamp;
 
+	// for filtering
+	SimpleTreeModel *unfiltered_model;
+	bool unfiltered_model_ours;
+	std::string current_filter;
+	std::vector<bool> vec_filter_match;
+	typedef bool (*filter_func_t)(SimpleTreeStore const*, cH_RowDataBase const& row, std::string const& text);
+	filter_func_t filter_func;
+	static bool default_filter(SimpleTreeStore const*, cH_RowDataBase const& row, std::string const& text);
+
 	void save_remembered() const;
 	void load_remembered();
 
@@ -249,16 +258,16 @@ private:
 	void save_remembered1(gpointer) { save_remembered(); }
 	void on_visibly_changed(bvector_iterator it);
 	void value_change_impl(cH_RowDataBase row,unsigned idx,std::string const& newval, bool &has_changed);
-	
+
 	void redisplay();
 	void save_and_redisplay(gpointer);
 	void init();
-	void insertLine(Node &parent,const cH_RowDataBase &d, 
+	void insertLine(Node &parent,const cH_RowDataBase &d,
 			sequence_t::const_iterator q,guint deep,
 			bool summe_aktualisieren);
 	iterator MoveTree(iterator current_iter,
 		guint deep,guint child_s_deep,guint value_index,bool live);
-	
+
 	void on_line_appended(cH_RowDataBase);
 	void on_line_removed(cH_RowDataBase);
 	std::list<iterator> find_row(const cH_RowDataBase &,bool optimize=false);
@@ -277,7 +286,7 @@ private:
    Path getPath(iterator it) const;
    Path getPath(const_iterator it) const;
    TreeModel::iterator getIter(iterator it) const;
-   
+
    iterator iterbyNode(Node &nd) const;
    iterator iterbyValue(Node &parent,const cH_EntryValue &val) const;
    unsigned Node2nth_child(const Node &nd) const;
@@ -303,12 +312,12 @@ private:
    virtual bool iter_parent_vfunc(vfunc_constiter_t child, vfunc_iter_t iter) const;
    virtual bool get_iter_vfunc(const Path& path, vfunc_iter_t iter) const;
    virtual Path get_path_vfunc(const TreeModel::iterator& iter) const;
-   
+
    void resort(SimpleTreeStoreNode&, unsigned);
    void test();
    void test_sub(unsigned indent,const GtkTreeIter *i,const GtkTreeIter *parent);
    std::string SpaltenMarkierung(unsigned) const;
-   
+
 	enum e_spalten
 	{  s_row, s_deep, s_childrens_deep, s_leafdata, s_background,
 	   s_children_count, s_text_start
@@ -318,7 +327,7 @@ private:
 	SimpleTreeStore(SimpleTreeModel_Properties &props);
 public:
 	struct ModelColumns : public Gtk::TreeModelColumnRecord
-	{  // since we would also need to 
+	{  // since we would also need to
 	   Gtk::TreeModelColumn<Handle<TreeRow> > row;
 	   // our first printing column
 	   Gtk::TreeModelColumn<guint> deep;
@@ -327,14 +336,14 @@ public:
 	   Gtk::TreeModelColumn<guint> children_count;
 	   // if we're a node this is not 'our' data
 	   Gtk::TreeModelColumn<cH_RowDataBase> leafdata;
-	   
+
 	   Gtk::TreeModelColumn<Gdk::Color> background;
-	   
+
 	   std::vector<Gtk::TreeModelColumn<Glib::ustring> > cols;
-	   
+
 	   ModelColumns(int cols);
 	};
-	
+
 	ModelColumns m_columns;
 
 	static Glib::RefPtr<SimpleTreeStore> create(int max_colidx);
@@ -343,7 +352,7 @@ public:
 	SIMPLE_TREE_WARN void set_remember(const std::string &program, const std::string &instance);
 #endif
 	void setProperties(SimpleTreeModel_Properties &p,bool we_own=false);
-	
+
 	void set_showdeep(int i) {showdeep=i;}
 	guint Cols() const  { return columns;}
 	guint MaxCol() const  { return max_column;}
@@ -360,7 +369,7 @@ public:
 	sigc::signal<void> &signal_please_attach()
 	{  return please_attach; }
 	const std::string getColTitle(guint nr) const;
-	
+
 	const_iterator begin() const
 	{  return root.children.begin();
 	}
@@ -372,32 +381,38 @@ public:
         Path getPath(const cH_RowDataBase &data) const;
 
 	void setSequence(const sequence_t &seq, bool optimize=true);
-	
+
 	unsigned ColumnFromIndex(unsigned) const;
 	unsigned IndexFromColumn(unsigned c) const
 	{  return currseq[c]; }
-	
+
 	bool ColumnVisible(unsigned idx) const
 	{  return vec_hide_cols.at(idx); }
 	void set_tree_column_visibility(unsigned index,bool visible);
-	
+
 	// better use the new API (which maintains a consistent tree (e.g.sums))
 	void redisplay_old(cH_RowDataBase row, unsigned index);
 	void redisplay_old(Gtk::TreeModel::iterator row, unsigned index);
-	
+
 	// these are accessors for SimpleTreeStates
 	Model_ref<guint> ShowDeep() { return Model_ref<guint>(showdeep,signal_save); }
 	Model_ref<bool> OptionColor() { return Model_ref<bool>(color_bool,signal_redisplay_save); }
 	Model_ref<bool> OptionAuffullen() { return Model_ref<bool>(auffuellen_bool,signal_save); }
 	Model_ref<bool> OptionExpandieren() { return Model_ref<bool>(expandieren_bool,signal_save); }
 	Model_ref<bool> OptionCount() { return Model_ref<bool>(display_count,signal_redisplay_save); }
-	Model_ref<bvector_item> ShowColumn(unsigned idx) 
+	Model_ref<bvector_item> ShowColumn(unsigned idx)
 	{ return Model_ref<bvector_item>(vec_hide_cols.begin()+idx,signal_visibly_changed); }
-	
+
 	unsigned visible_size() { return currseq.size(); }
 	void setSortierspalte(unsigned idx=invisible_column, bool invert=false);
 	unsigned getSortCol() const { return sortierspalte; }
 	bool getInvert() const { return sortierspalte==invisible_column?false:invert_order.at(sortierspalte); }
+
+	// filtering
+	void set_filter(std::string const& current_filter);
+	void set_filter_match(std::vector<bool> const& v) { vec_filter_match=v; }
+	std::vector<bool>const& get_filter_match() const { return vec_filter_match; }
+	void set_filterfunc(filter_func_t f) { filter_func=f; }
 };
 
 #endif
