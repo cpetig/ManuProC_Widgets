@@ -325,6 +325,7 @@ private:
 
 	SimpleTreeStore(int max_col); // use create instead of this ctor
 	SimpleTreeStore(SimpleTreeModel_Properties &props);
+	~SimpleTreeStore();
 public:
 	struct ModelColumns : public Gtk::TreeModelColumnRecord
 	{  // since we would also need to

@@ -1284,6 +1284,18 @@ bool SimpleTreeStore::default_filter(SimpleTreeStore const* th, cH_RowDataBase c
   return false;
 }
 
+SimpleTreeStore::~SimpleTreeStore()
+{
+  if (unfiltered_model)
+  {
+    delete model;
+    model=unfiltered_model;
+    model_is_ours=unfiltered_model_ours;
+    unfiltered_model=0;
+  }
+}
+
+// be careful, this does not work well with changing the model when the filter is active
 void SimpleTreeStore::set_filter(std::string const& filter)
 {
   if (filter.empty())
