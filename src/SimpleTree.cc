@@ -85,6 +85,7 @@ void SimpleTree_Basic::init()
    getStore()->signal_spalten_geaendert().connect(sigc::mem_fun(*this,&SimpleTree_Basic::on_spalten_geaendert));
    fillMenu();
    signal_button_press_event().connect(sigc::mem_fun(*this,&SimpleTree_Basic::MouseButton),false);
+   set_enable_search(false);
 }
 
 SimpleTree_Basic::SimpleTree_Basic(unsigned maxcol)
@@ -780,6 +781,7 @@ bool SimpleTree::filter_key_handler(GdkEventKey* k)
     std::string new_filter;
     if (k->time-filter_time<2000)
       new_filter = getStore()->get_filter();
+    filter_time=k->time;
     new_filter+=k->string;
     getStore()->set_filter(new_filter);
     if (filter_column==-1)

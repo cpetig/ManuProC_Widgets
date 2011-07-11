@@ -237,4 +237,10 @@ with_class::with_class()
       std::cout << "=" << of.Sum() << '\n';
    }
 #endif   
+#if 1
+   SimpleTree::sequence_t search;
+   search.push_back(0);
+   search.push_back(1);
+   treebase->set_filter_match(search);
+#endif
 }
