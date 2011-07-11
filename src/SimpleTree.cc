@@ -762,6 +762,12 @@ void SimpleTree::write_excel_via_filerequester() const
 }
 #endif
 
+#if !defined(GDK_KEY_BackSpace) && defined(GDK_BackSpace)
+# define GDK_KEY_BackSpace GDK_BackSpace
+# define GDK_KEY_Delete GDK_Delete
+# define GDK_KEY_KP_Delete GDK_KP_Delete
+#endif
+
 bool SimpleTree::filter_key_handler(GdkEventKey* k)
 {
   if (!has_focus()) return false;
