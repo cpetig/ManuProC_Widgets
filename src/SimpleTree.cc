@@ -774,7 +774,13 @@ bool SimpleTree::filter_key_handler(GdkEventKey* k)
   if (k->keyval==GDK_KEY_BackSpace || k->keyval==GDK_KEY_Delete || k->keyval==GDK_KEY_KP_Delete)
   {
     getStore()->set_filter(std::string());
-    if (filter_column!=-1)
+    if (filter_entry)
+    {
+      entry_connection.block();
+      filter_entry->set_text(std::string());
+      entry_connection.block(false);
+    }
+    else if (filter_column!=-1)
     {
       get_column(filter_column+FIRST_COLUMN)->set_title(getColTitle(filter_column));
       filter_column=-1;
@@ -790,7 +796,7 @@ bool SimpleTree::filter_key_handler(GdkEventKey* k)
     filter_time=k->time;
     new_filter+=k->string;
     getStore()->set_filter(new_filter);
-    if (filter_column==-1)
+    if (filter_column==-1 && !filter_entry)
     {
       sequence_t const& fcol= getStore()->get_filter_match();
       for (sequence_t::const_iterator i=fcol.begin();i!=fcol.end();++i)
@@ -799,7 +805,13 @@ bool SimpleTree::filter_key_handler(GdkEventKey* k)
 	  break;
 	}
     }
-    if (filter_column!=-1)
+    if (filter_entry)
+    {
+      entry_connection.block();
+      filter_entry->set_text(new_filter);
+      entry_connection.block(false);
+    }
+    else if (filter_column!=-1)
       get_column(filter_column+FIRST_COLUMN)->set_title("<"+new_filter+">");
   }
   return false;
@@ -811,4 +823,20 @@ void SimpleTree::set_filter_match(sequence_t const& cols)
   getStore()->set_filter_match(cols);
   if (!cols.empty())
     key_connection= signal_key_press_event().connect(sigc::mem_fun(*this,&SimpleTree::filter_key_handler));
+}
+
+void SimpleTree::set_filter_entry(Gtk::Entry* e)
+{
+  entry_connection.disconnect();
+  filter_entry=e;
+  if (e)
+  {
+    entry_connection= e->signal_changed().connect(sigc::mem_fun(*this, &SimpleTree::filter_changed));
+    getStore()->set_filter(e->get_text());
+  }
+}
+
+void SimpleTree::filter_changed()
+{
+  getStore()->set_filter(filter_entry->get_text());
 }

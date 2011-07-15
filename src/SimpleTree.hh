@@ -172,9 +172,9 @@ class SimpleTree : public SimpleTree_Basic
 {
 public:
 	// attr is not needed any longer
-	SimpleTree(guint maxcol) : SimpleTree_Basic(maxcol), filter_column(-1), filter_time()
+	SimpleTree(guint maxcol) : SimpleTree_Basic(maxcol), filter_column(-1), filter_time(), filter_entry()
 	{}
-	SimpleTree(SimpleTreeModel_Properties &props) : SimpleTree_Basic(props), filter_column(-1), filter_time()
+	SimpleTree(SimpleTreeModel_Properties &props) : SimpleTree_Basic(props), filter_column(-1), filter_time(), filter_entry()
 	{}
 	__deprecated_ctor SimpleTree(guint maxcol, const std::vector<std::string>& T
                                 ,const std::vector<cH_RowDataBase>& D)
@@ -217,9 +217,12 @@ private:
  void getSelectedRowDataBase_vec_cb(const Gtk::TreeModel::iterator&it,
 		std::vector<cH_RowDataBase> *res,bool include_nodes=false);
  bool filter_key_handler(GdkEventKey* k);
+ void filter_changed();
  sigc::connection key_connection;
+ sigc::connection entry_connection;
  guint32 filter_time;
  int filter_column;
+ Gtk::Entry* filter_entry;
 
 public:
  struct SelectionError : public std::exception
@@ -310,6 +313,7 @@ public:
 #endif
 
  void set_filter_match(sequence_t const& cols);
+ void set_filter_entry(Gtk::Entry * e);
 };
 
 #endif
