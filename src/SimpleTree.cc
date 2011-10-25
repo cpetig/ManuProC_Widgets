@@ -450,6 +450,7 @@ void SimpleTree_Basic::fillMenu()
   add_mitem(menu,_("Fold all"),sigc::mem_fun(*this,&SimpleTree_Basic::Collapse));
 #ifdef MPC_ST_EXCEL_EXPORT
   add_mitem(menu,_("Export to .XLS"),sigc::mem_fun(*this,&SimpleTree_Basic::write_excel_via_filerequester));
+  add_mitem(menu,_("Export to .CSV"),sigc::mem_fun(*this,&SimpleTree_Basic::write_csv_via_filerequester));
 #endif
 #ifdef MPC_ST_ADVANCED
   Gtk::RadioMenuItem::Group group;
@@ -682,20 +683,29 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
         else
           val=static_cast<cH_RowDataBase>((*i)[tv->getStore()->m_columns.leafdata])
               ->Value(tv->getStore()->get_seq()[c],tv->getStore()->ValueData());
-        
+
         std::string strval=val->getStrVal();
-          
-        if (!!val.cast_dynamic<const EntryValueFixed<1> >())
-          sheet->Cell(row,c)->SetDouble(val.cast_dynamic<const EntryValueFixed<1> >()->Wert().as_float());
+        
+        
+        if (!!val.cast_dynamic<const EntryValueFixed<2,double,long,false> >())
+{	 double v=val.cast_dynamic<const EntryValueFixed<2,double,long,false> >()->Wert().as_float(); 
+         sheet->Cell(row,c)->SetDouble(v);  
+          std::cout << "fixed 2 double"<< v <<"\n"; 
+          }
+        else if (!!val.cast_dynamic<const EntryValueFixed<1> >())
+{          sheet->Cell(row,c)->SetDouble(val.cast_dynamic<const EntryValueFixed<1> >()->Wert().as_float());
+          std::cout << "fixed 1\n";}
         else if (!!val.cast_dynamic<const EntryValueFixed<2> >())
-          sheet->Cell(row,c)->SetDouble(val.cast_dynamic<const EntryValueFixed<2> >()->Wert().as_float());
+{          sheet->Cell(row,c)->SetDouble(val.cast_dynamic<const EntryValueFixed<2> >()->Wert().as_float());
+          std::cout << "fixed 2\n";}
         else if (!!val.cast_dynamic<const EntryValueFixed<3> >())
-          sheet->Cell(row,c)->SetDouble(val.cast_dynamic<const EntryValueFixed<3> >()->Wert().as_float());
-        else if (!!val.cast_dynamic<const EntryValueFixed<2,double,long,false> >())
-          sheet->Cell(row,c)->SetDouble(val.cast_dynamic<const EntryValueFixed<2,double,long,false> >()->Wert().as_float());
+{          sheet->Cell(row,c)->SetDouble(val.cast_dynamic<const EntryValueFixed<3> >()->Wert().as_float());
+                    std::cout << "fixed 3\n"; }
         else if (!!val.cast_dynamic<const EntryValueIntString>() 
             && itos(val->getIntVal())==strval)
-          sheet->Cell(row,c)->SetInteger(val.cast_dynamic<const EntryValueIntString>()->getIntVal());
+{          sheet->Cell(row,c)->SetInteger(val.cast_dynamic<const EntryValueIntString>()->getIntVal());
+          std::cout << "int\n";}
+          
         else if (strval.empty()) ; // nichts tun
         else if (is_ascii(strval))
           sheet->Cell(row,c)->SetString(strval.c_str());
@@ -706,6 +716,43 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
     }
   }
 }
+
+
+
+static void write_csv_sub(SimpleTree *tv,std::ofstream &f,unsigned &row,const Gtk::TreeModel::Children &ch)
+{ for (Gtk::TreeModel::iterator i=ch.begin();i!=ch.end();++i)
+  { Gtk::TreeModel::Path p(tv->get_model()->get_path(*i));
+    if (!i->children().empty() && tv->row_expanded(p))
+    { // recursion
+      write_csv_sub(tv,f,row,i->children());
+    }
+    else
+    { // output
+      for (unsigned int c=0;c<tv->VisibleColumns();++c)
+      { cH_EntryValue val;
+        if ((*i)[tv->getStore()->m_columns.childrens_deep]
+            && c>=(*i)[tv->getStore()->m_columns.childrens_deep])
+        { if (!!static_cast<Handle<TreeRow> >((*i)[tv->getStore()->m_columns.row]))
+            val=static_cast<Handle<TreeRow> >((*i)[tv->getStore()->m_columns.row])
+              ->Value(tv->getStore()->get_seq()[c],tv->getStore()->ValueData());
+          else
+            ; // leer lassen
+        }
+        else
+          val=static_cast<cH_RowDataBase>((*i)[tv->getStore()->m_columns.leafdata])
+              ->Value(tv->getStore()->get_seq()[c],tv->getStore()->ValueData());
+
+        std::string strval=val->getStrVal();
+        
+        if(c>0) f << ";";
+        f << strval;
+      }
+      f << "\n";
+      ++row;
+    }
+  }
+}
+
 
 void SimpleTree::write_excel(std::string const& filename) const
 { 
@@ -744,6 +791,34 @@ void SimpleTree::write_excel(std::string const& filename) const
   e.SaveAs(filename.c_str());
 }
 
+void SimpleTree::write_csv(std::string const& filename) const
+{ 
+ std::ofstream f(filename.c_str());
+ assert (f.good());
+         
+  for (unsigned int i=0;i<VisibleColumns();++i)
+  { std::string title=getColTitle(i);
+    if(i>0) f << ";";
+    f << title;
+  }
+  f << "\n";
+  
+  
+  unsigned row=1;
+  SimpleTree* non_const_this=const_cast<SimpleTree*>(this);
+  if(non_const_this->get_selection()->get_mode() != Gtk::SELECTION_MULTIPLE)
+   {Gtk::TreeModel::iterator iter = non_const_this->get_selection()->get_selected() ;
+    
+    write_csv_sub(non_const_this,f,row,iter->children());
+   }
+  else
+    write_csv_sub(non_const_this,f,row,non_const_this->get_model()->children());
+                   
+ f.close();
+}
+
+
+
 void SimpleTree::write_excel_via_filerequester() const
 {
   if(get_selection()->get_selected_rows().size()!=1)
@@ -759,4 +834,23 @@ void SimpleTree::write_excel_via_filerequester() const
       _("Excel tables (*.xls)")+patsep+_("*.xls")+patsep,"xls",_("Export table"),false,
       const_cast<Gtk::Window*>(toplevel));
 }
+
+
+void SimpleTree::write_csv_via_filerequester() const
+{
+  if(get_selection()->get_selected_rows().size()!=1)
+      return;
+    
+  std::string fname=getStore()->Properties().InstanceName();
+  if (fname.empty()) fname=_("Table");
+  if (getenv("HOME")) fname=std::string(getenv("HOME"))+"/"+fname;
+  fname+=".csv";
+  Gtk::Window const*toplevel=dynamic_cast<Gtk::Window const*>(get_toplevel());
+  std::string patsep(1,char(0));
+  WinFileReq::create(sigc::mem_fun(*this,&SimpleTree::write_csv),fname,
+      _("CSV files (*.csv)")+patsep+_("*.csv")+patsep,"csv",_("Export table"),false,
+      const_cast<Gtk::Window*>(toplevel));
+}
+
 #endif
+

@@ -123,6 +123,7 @@ private:
 	void on_spalten_geaendert();
 #ifdef MPC_ST_EXCEL_EXPORT
         virtual void write_excel_via_filerequester() const=0;
+        virtual void write_csv_via_filerequester() const=0;
 #endif
 	bool MouseButton(GdkEventButton *event);
 	void sel_change_cb(const Gtk::TreeModel::iterator&it,
@@ -302,7 +303,9 @@ public:
  
 #ifdef MPC_ST_EXCEL_EXPORT
  void write_excel(std::string const& filename) const;
+ void write_csv(std::string const& filename) const;
  void write_excel_via_filerequester() const;
+ void write_csv_via_filerequester() const;
 #endif
 };
 

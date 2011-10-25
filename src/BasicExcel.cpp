@@ -5502,7 +5502,7 @@ void BasicExcelWorksheet::Print(ostream& os, char delimiter, char textQualifier)
 					break;
 
 				case BasicExcelCell::DOUBLE:
-					os << setprecision(15) << cell->GetDouble();
+					os << setprecision(15) << (double)cell->GetDouble();
 					break;
 
 				case BasicExcelCell::STRING:
