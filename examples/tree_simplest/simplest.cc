@@ -23,15 +23,15 @@
 #include "treebase_data.h"
 #include <iostream>
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
+//#  include <sigc++/compatibility.h>
 #endif
 
 void simplest::on_Beenden_activate()
-{   
+{
 }
 
 void simplest::on_leaf_selected(cH_RowDataBase d)
-{  std::cout << d->Value(0,0)->getStrVal() << ',' << d->Value(1,0)->getStrVal() 
+{  std::cout << d->Value(0,0)->getStrVal() << ',' << d->Value(1,0)->getStrVal()
 	<< ',' << d->Value(2,0)->getStrVal() <<'\n';
 }
 
@@ -49,7 +49,11 @@ simplest::simplest()
    datavec.push_back(cH_RowDataStrings("10","B","<none>","3"));
    datavec.push_back(cH_RowDataStrings("10","B","<none>","3"));
    treebase->setDataVec(datavec);
-   
-   treebase->signal_leaf_selected().connect(SigC::slot(*this,&simplest::on_leaf_selected));
+
+   treebase->signal_leaf_selected().connect(sigc::mem_fun(*this,&simplest::on_leaf_selected));
+   SimpleTree::sequence_t search;
+   search.push_back(0);
+   search.push_back(1);
+   treebase->set_filter_match(search);
 }
 

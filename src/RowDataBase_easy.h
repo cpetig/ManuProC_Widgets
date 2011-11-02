@@ -40,11 +40,12 @@
 #include <RowDataBase.h>
 #include <SimpleTree.hh>
 
-template <typename A, typename B=EntryValue_easy::nil, typename C=EntryValue_easy::nil, 
-          typename D=EntryValue_easy::nil, typename E=EntryValue_easy::nil, 
-          typename F=EntryValue_easy::nil, typename G=EntryValue_easy::nil> 
+template <typename A, typename B=EntryValue_easy::nil, typename C=EntryValue_easy::nil,
+          typename D=EntryValue_easy::nil, typename E=EntryValue_easy::nil,
+          typename F=EntryValue_easy::nil, typename G=EntryValue_easy::nil,
+          typename H=EntryValue_easy::nil>
 class RowDataBase_easy : public RowDataBase
-{// the data 
+{// the data
  A a;
  B b;
  C c;
@@ -52,11 +53,12 @@ class RowDataBase_easy : public RowDataBase
  E e;
  F f;
  G g;
+ H h;
 public:
- typedef RowDataBase_easy<A,B,C,D,E,F,G> this_type;
+ typedef RowDataBase_easy<A,B,C,D,E,F,G,H> this_type;
 
- RowDataBase_easy(A const &_a, B const &_b=B(), C const &_c=C(), D const &_d=D(), E const&_e=E(), F const &_f=F(), G const &_g=G())
-  : a(_a), b(_b), c(_c), d(_d), e(_e), f(_f), g(_g)
+ RowDataBase_easy(A const &_a, B const &_b=B(), C const &_c=C(), D const &_d=D(), E const&_e=E(), F const &_f=F(), G const &_g=G(), H const &_h=H())
+  : a(_a), b(_b), c(_c), d(_d), e(_e), f(_f), g(_g), h(_h)
  { }
 
  typedef A type_0;
@@ -65,7 +67,8 @@ public:
  typedef D type_3;
  typedef E type_4;
  typedef F type_5;
- typedef F type_6;
+ typedef G type_6;
+ typedef H type_7;
 
  A const& get_0() const { return a; }
  B const& get_1() const { return b; }
@@ -74,6 +77,7 @@ public:
  E const& get_4() const { return e; }
  F const& get_5() const { return f; }
  G const& get_6() const { return g; }
+ H const& get_7() const { return h; }
 
  void set_0(A const& x) { a=x; }
  void set_1(B const& x) { b=x; }
@@ -82,6 +86,7 @@ public:
  void set_4(E const& x) { e=x; }
  void set_5(F const& x) { f=x; }
  void set_6(G const& x) { g=x; }
+ void set_7(H const& x) { h=x; }
 
  template <typename X>
   void update_and_select(SimpleTree *tree, void (this_type::*set)(X const&), X const& val)
@@ -101,6 +106,7 @@ public:
  void update_and_select_4(SimpleTree *tree, E const& x) { update_and_select(tree, &this_type::set_4, x); }
  void update_and_select_5(SimpleTree *tree, F const& x) { update_and_select(tree, &this_type::set_5, x); }
  void update_and_select_6(SimpleTree *tree, G const& x) { update_and_select(tree, &this_type::set_6, x); }
+ void update_and_select_7(SimpleTree *tree, H const& x) { update_and_select(tree, &this_type::set_7, x); }
 
  virtual cH_EntryValue Value(guint _seqnr, gpointer gp) const
  {
@@ -112,6 +118,7 @@ public:
      case 4: return EntryValue_easy::create(e);
      case 5: return EntryValue_easy::create(f);
      case 6: return EntryValue_easy::create(g);
+     case 7: return EntryValue_easy::create(h);
      default: return cH_EntryValue();
    }
  }
@@ -127,9 +134,10 @@ public:
        case 4: e = ManuProC::parse<E>(newvalue); return true;
        case 5: f = ManuProC::parse<F>(newvalue); return true;
        case 6: g = ManuProC::parse<G>(newvalue); return true;
+       case 7: h = ManuProC::parse<H>(newvalue); return true;
      }
    }
-   catch (...) 
+   catch (...)
    {}
    return false;
  }
@@ -150,24 +158,29 @@ cH_RowDataBase cH_RowDataBase_easy(A const &a, B const&b, C const&c)
 { return new RowDataBase_easy<A,B,C>(a,b,c);
 }
 
-template <typename A, typename B, typename C, typename D> 
+template <typename A, typename B, typename C, typename D>
 cH_RowDataBase cH_RowDataBase_easy(A const &a, B const &b, C const &c, D const &d)
 { return new RowDataBase_easy<A,B,C,D>(a,b,c,d);
 }
 
-template <typename A, typename B, typename C, typename D, typename E> 
+template <typename A, typename B, typename C, typename D, typename E>
 cH_RowDataBase cH_RowDataBase_easy(A const &a, B const &b, C const &c, D const &d, E const&e)
 { return new RowDataBase_easy<A,B,C,D,E>(a,b,c,d,e);
 }
 
-template <typename A, typename B, typename C, typename D, typename E, typename F> 
+template <typename A, typename B, typename C, typename D, typename E, typename F>
 cH_RowDataBase cH_RowDataBase_easy(A const &a, B const &b, C const &c, D const &d, E const&e, F const &f)
 { return new RowDataBase_easy<A,B,C,D,E,F>(a,b,c,d,e,f);
 }
 
-template <typename A, typename B, typename C, typename D, typename E, typename F, typename G> 
+template <typename A, typename B, typename C, typename D, typename E, typename F, typename G>
 cH_RowDataBase cH_RowDataBase_easy(A const &a, B const &b, C const &c, D const &d, E const&e, F const &f, G const &g)
 { return new RowDataBase_easy<A,B,C,D,E,F,G>(a,b,c,d,e,f,g);
+}
+
+template <typename A, typename B, typename C, typename D, typename E, typename F, typename G, typename H>
+cH_RowDataBase cH_RowDataBase_easy(A const &a, B const &b, C const &c, D const &d, E const&e, F const &f, G const &g, H const& h)
+{ return new RowDataBase_easy<A,B,C,D,E,F,G,H>(a,b,c,d,e,f,g,h);
 }
 
 // helper class to match against first column (use with selectFirstMatchingLine)

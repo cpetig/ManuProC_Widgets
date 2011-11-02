@@ -365,6 +365,7 @@ SimpleTreeStore::SimpleTreeStore(int max_col)
 	  color_bool(true), display_count(),
 	  sortierspalte(invisible_column), // invert_sortierspalte(),
 	  stamp(reinterpret_cast<long>(this)),
+	  unfiltered_model(), unfiltered_model_ours(), filter_func(&default_filter),
 	  m_columns(max_col)
 { init();
 }
@@ -379,6 +380,7 @@ SimpleTreeStore::SimpleTreeStore(SimpleTreeModel_Properties &props)
 	  color_bool(true), display_count(),
 	  sortierspalte(invisible_column), // invert_sortierspalte(),
 	  stamp(reinterpret_cast<long>(this)),
+	  unfiltered_model(), unfiltered_model_ours(), filter_func(&default_filter),
 	  m_columns(props.Columns())
 { init();
 }
@@ -1267,4 +1269,65 @@ std::string SimpleTreeStore::SpaltenMarkierung(unsigned idx) const
   if (idx==sortierspalte) return invert_order.at(idx) ? "⇑" : "⇓"; // double arrow
   if (invert_order.at(idx)) return "↑"; // up arrow
   return std::string();
+}
+
+bool SimpleTreeStore::default_filter(SimpleTreeStore const* th, cH_RowDataBase const& row, std::string const& text)
+{
+  if (text.empty())
+    return true;
+  if (th->vec_filter_match.empty())
+    return true;
+  unsigned idx=0;
+  for (sequence_t::const_iterator i=th->vec_filter_match.begin(); i!=th->vec_filter_match.end(); ++i,++idx)
+    if (row->Value(*i,th->ValueData())->getStrVal().substr(0,text.size())==text)
+      return true;
+  return false;
+}
+
+SimpleTreeStore::~SimpleTreeStore()
+{
+  if (unfiltered_model)
+  {
+    delete model;
+    model=unfiltered_model;
+    model_is_ours=unfiltered_model_ours;
+    unfiltered_model=0;
+  }
+}
+
+// be careful, this does not work well with changing the model when the filter is active
+void SimpleTreeStore::set_filter(std::string const& filter)
+{
+  if (filter.empty())
+  {
+    if (unfiltered_model)
+    {
+      model->signal_please_detach()();
+      assert(model_is_ours);
+      delete model;
+      model=unfiltered_model;
+      model_is_ours=unfiltered_model_ours;
+      unfiltered_model=0;
+      unfiltered_model_ours=false;
+      model->signal_please_attach()();
+    }
+  }
+  else
+  {
+    model->signal_please_detach()();
+    if (!unfiltered_model)
+    {
+      unfiltered_model= model;
+      unfiltered_model_ours= model_is_ours;
+      // correct way would be to set up the signals to point to a wrapper
+      model= new SimpleTreeModel(*unfiltered_model);
+      model_is_ours=true;
+    }
+    model->datavec.clear();
+    for (SimpleTreeModel::const_iterator i=unfiltered_model->begin(); i!=unfiltered_model->end();++i)
+      if ((*filter_func)(this,*i,filter))
+	model->datavec.push_back(*i);
+    model->signal_please_attach()();
+  }
+  current_filter= filter;
 }

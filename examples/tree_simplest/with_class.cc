@@ -27,7 +27,7 @@
 #include <iostream>
 #include <Misc/itos.h>
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
-#  include <sigc++/compatibility.h>
+//#  include <sigc++/compatibility.h>
 #endif
 
 void with_class::on_Beenden_activate()
@@ -228,7 +228,7 @@ with_class::with_class()
 #endif
    treebase->setDataVec(datavec);
    
-   treebase->signal_leaf_selected().connect(SigC::slot(*this,&with_class::on_leaf_selected));
+   treebase->signal_leaf_selected().connect(sigc::mem_fun(*this,&with_class::on_leaf_selected));
 #if 0   
    treebase->selectMatchingLines(2);
 
@@ -237,4 +237,10 @@ with_class::with_class()
       std::cout << "=" << of.Sum() << '\n';
    }
 #endif   
+#if 1
+   SimpleTree::sequence_t search;
+   search.push_back(0);
+   search.push_back(1);
+   treebase->set_filter_match(search);
+#endif
 }
