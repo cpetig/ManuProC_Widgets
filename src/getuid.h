@@ -17,11 +17,21 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#define getuid() getuid_ManuProC()
-
 #ifdef __cplusplus
 extern "C"
 #endif
- int getuid();
+ int getuid_ManuProC();
 
-extern void setuid_ManuProC(int id);
+#ifdef __cplusplus
+#include <string>
+
+void setuid_ManuProC(int id);
+namespace ManuProC
+{
+  std::string GetUserName();
+  std::string GetRealName();
+  bool IsAdministrator();
+}
+#endif
+
+#define getuid() getuid_ManuProC()

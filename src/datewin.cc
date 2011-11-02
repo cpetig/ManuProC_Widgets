@@ -28,7 +28,7 @@
 #include "datewin_popup.hh"
 
 
-void datewin::preferWeek(bool b) 
+void datewin::preferWeek(bool b)
 { if(kw_bevorzugen==b) return;
   kw_bevorzugen=b;
   set_value(get_value().KW());
@@ -48,11 +48,11 @@ std::cerr << "- " << num << '\n';
 #endif
 
  switch_page_connection.disconnect();
- if (popup) delete popup; 
- popup=0; 
+ if (popup) delete popup;
+ popup=0;
 }
 
-datewin::datewin() : // const std::string &inst) : block(false), 
+datewin::datewin() : // const std::string &inst) : block(false),
 	expandyear(true),kw_bevorzugen(), popup()
 {  set_value(ManuProC::Datum::today());
 //   jahr->signal_activate().connect(activate.make_slot());
@@ -94,14 +94,23 @@ void datewin::set_value (const ManuProC::Datum &d) throw()
    {  tag->set_value (d.Tag());
       monat->set_value (d.Monat());
       jahr->set_value (d.Jahr());
-      kw_spinbutton->set_value(d.KW().Woche());
-      jahr_spinbutton->set_value(d.KW().Jahr());
-      int pg=kw_bevorzugen?p_Woche:p_Datum;
-// Muß weg, da sonst bei jedem set_value auf "Datum" umgesprungen wird
-//      if (pg==p_Woche && d.Tag()!=ManuProC::Datum(d.KW()).Tag()) pg=p_Datum;
-      notebook->set_current_page(pg);
+      try
+      {
+	kw_spinbutton->set_value(d.KW().Woche());
+	jahr_spinbutton->set_value(d.KW().Jahr());
+	int pg=kw_bevorzugen?p_Woche:p_Datum;
+	// Muß weg, da sonst bei jedem set_value auf "Datum" umgesprungen wird
+	//      if (pg==p_Woche && d.Tag()!=ManuProC::Datum(d.KW()).Tag()) pg=p_Datum;
+	notebook->set_current_page(pg);
+      }
+      catch (ManuProC::Datumsfehler &e) // manche Jahre sind ungültig für die KW Berechnung
+      {
+	jahr_spinbutton->set_value(d.Jahr());
+	kw_spinbutton->set_value(42);
+	notebook->set_current_page(p_Datum);
+      }
    }
-   else 
+   else
    {  notebook->set_current_page(p_leer);
    }
    changed();
@@ -146,12 +155,12 @@ void datewin::setLabel(const std::string &s)
 }
 
 void datewin::datum_activate()
-{  kw_bevorzugen=false; // Datumsicht behalten  
+{  kw_bevorzugen=false; // Datumsicht behalten
    set_value(get_value());
    activate();
 }
 void datewin::kw_activate()
-{  kw_bevorzugen=true;  // Wochensicht behalten 
+{  kw_bevorzugen=true;  // Wochensicht behalten
    set_value(get_value());
    activate();
 }
@@ -170,9 +179,9 @@ void datewin::on_datewin_change_current_page(GtkNotebookPage *p0, guint p1)
 
 // display datewin_popup
 void datewin::on_togglebutton_menu_toggled()
-{ if (popup || !togglebutton_menu->get_active()) 
-  { if (popup) delete popup; 
-    popup=0; 
+{ if (popup || !togglebutton_menu->get_active())
+  { if (popup) delete popup;
+    popup=0;
   }
   else popup=new datewin_popup(this);
 }
