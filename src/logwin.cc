@@ -20,10 +20,11 @@
 
 #include "logwin.h"
 #include <gtkmm/adjustment.h>
+#include <gtk/gtkadjustment.h>
 
 void logwin::scroll() throw()
-{  Gtk::Adjustment *adj=static_cast<Gtk::Adjustment *>(get_vadjustment());
-   if (adj) adj->set_value(adj->gobj()->upper);
+{
+   emu.scroll_to_end();
 }
 
 logwin::logwin(guint minimum_size) : color()
