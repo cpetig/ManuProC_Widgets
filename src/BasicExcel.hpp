@@ -1213,7 +1213,7 @@ public:
 
 public:
 	enum {UNDEFINED, INT, DOUBLE, STRING, WSTRING};
-	enum style_t {ST_NONE, ST_YELLOW_BG, ST_BOLD, ST_DBL_ULINE }; // predefined styles
+	enum style_t {ST_NONE, ST_YELLOW_BG, ST_BOLD, ST_DBL_ULINE, ST_DATETIME }; // predefined styles
 	int Type() const;		///< Get type of value stored in current Excel cell. Returns one of the above enums.
 
 	bool Get(int& val) const;		///< Get an integer value. Returns false if cell does not contain an integer or a double.

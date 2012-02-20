@@ -721,6 +721,7 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
           t+=ts.MinutesFromGmt()*60;
           double dval=t/(24.0*60*60)+25569.0;
           sheet->Cell(row,c)->SetDouble(dval);
+          sheet->Cell(row,c)->SetStyle(YExcel::BasicExcelCell::ST_DATETIME);
           std::cout << "time " << dval << "\n";
         }
         else if (strval.empty()) ; // nichts tun
@@ -788,6 +789,7 @@ void SimpleTree::write_excel(std::string const& filename) const
       sheet->Cell(0,i)->SetWString(make_wstring(title).c_str());
     else
       sheet->Cell(0,i)->SetString(title.c_str());
+    sheet->Cell(0,i)->SetStyle(YExcel::BasicExcelCell::ST_BOLD);
   }
   unsigned row=1;
   SimpleTree* non_const_this=const_cast<SimpleTree*>(this);

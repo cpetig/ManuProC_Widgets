@@ -4522,6 +4522,10 @@ void BasicExcel::New(int sheets)
 	workbook_.XFs_[3].usedAttributes_|=0x8 << 2; // border
 	workbook_.XFs_[3].borderLines_= 0x6000; // bottom double border
 
+	workbook_.XFs_[BasicExcelCell::ST_DATETIME].protectionType_= 0x1; // needed to take effect
+	workbook_.XFs_[BasicExcelCell::ST_DATETIME].usedAttributes_|=0x1 << 2; // number format
+	workbook_.XFs_[BasicExcelCell::ST_DATETIME].formatRecordIndex_= 22; // predefined date time format
+
 	workbook_.styles_.resize(6);
 	workbook_.boundSheets_.resize(1);
 	worksheets_.resize(1);
