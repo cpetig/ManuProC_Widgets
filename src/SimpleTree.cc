@@ -686,12 +686,12 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
               ->Value(tv->getStore()->get_seq()[c],tv->getStore()->ValueData());
 
         std::string strval=val->getStrVal();
-        
-        
+
+
         if (!!val.cast_dynamic<const EntryValueFixed<2,double,long,false> >())
-{	 double v=val.cast_dynamic<const EntryValueFixed<2,double,long,false> >()->Wert().as_float(); 
-         sheet->Cell(row,c)->SetDouble(v);  
-          std::cout << "fixed 2 double"<< v <<"\n"; 
+{	 double v=val.cast_dynamic<const EntryValueFixed<2,double,long,false> >()->Wert().as_float();
+         sheet->Cell(row,c)->SetDouble(v);
+          std::cout << "fixed 2 double"<< v <<"\n";
           }
         else if (!!val.cast_dynamic<const EntryValueFixed<1> >())
 {          sheet->Cell(row,c)->SetDouble(val.cast_dynamic<const EntryValueFixed<1> >()->Wert().as_float());
@@ -704,9 +704,11 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
                     std::cout << "fixed 3\n"; }
         else if (!!val.cast_dynamic<const EntryValueIntString>()
             && itos(val->getIntVal())==strval)
-{          sheet->Cell(row,c)->SetInteger(val.cast_dynamic<const EntryValueIntString>()->getIntVal());
+{
+          int ival=val.cast_dynamic<const EntryValueIntString>()->getIntVal();
+          sheet->Cell(row,c)->SetInteger(ival);
           std::cout << "int\n";}
-          
+
         else if (strval.empty()) ; // nichts tun
         else if (is_ascii(strval))
           sheet->Cell(row,c)->SetString(strval.c_str());
@@ -744,7 +746,7 @@ static void write_csv_sub(SimpleTree *tv,std::ofstream &f,unsigned &row,const Gt
               ->Value(tv->getStore()->get_seq()[c],tv->getStore()->ValueData());
 
         std::string strval=val->getStrVal();
-        
+
         if(c>0) f << ";";
         f << strval;
       }
@@ -793,28 +795,28 @@ void SimpleTree::write_excel(std::string const& filename) const
 }
 
 void SimpleTree::write_csv(std::string const& filename) const
-{ 
+{
  std::ofstream f(filename.c_str());
  assert (f.good());
-         
+
   for (unsigned int i=0;i<VisibleColumns();++i)
   { std::string title=getColTitle(i);
     if(i>0) f << ";";
     f << title;
   }
   f << "\n";
-  
-  
+
+
   unsigned row=1;
   SimpleTree* non_const_this=const_cast<SimpleTree*>(this);
   if(non_const_this->get_selection()->get_mode() != Gtk::SELECTION_MULTIPLE)
    {Gtk::TreeModel::iterator iter = non_const_this->get_selection()->get_selected() ;
-    
+
     write_csv_sub(non_const_this,f,row,iter->children());
    }
   else
     write_csv_sub(non_const_this,f,row,non_const_this->get_model()->children());
-                   
+
  f.close();
 }
 
@@ -841,7 +843,7 @@ void SimpleTree::write_csv_via_filerequester() const
 {
   if(get_selection()->get_selected_rows().size()!=1)
       return;
-    
+
   std::string fname=getStore()->Properties().InstanceName();
   if (fname.empty()) fname=_("Table");
   if (getenv("HOME")) fname=std::string(getenv("HOME"))+"/"+fname;

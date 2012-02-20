@@ -4259,6 +4259,8 @@ size_t Worksheet::CellTable::RowBlock::Read(const char* data)
 				if (cellBlocks_.size()%1000==0) cellBlocks_.reserve(cellBlocks_.size()+1000);
 				bytesRead += cellBlocks_[cellBlocks_.size()-1].Read(data+bytesRead);
 				break;
+				
+			case CODE::YEOF: goto yeof_end;
 
 			default:
 				Record rec;
@@ -4267,6 +4269,7 @@ size_t Worksheet::CellTable::RowBlock::Read(const char* data)
 		LittleEndian::Read(data, code, bytesRead, 2);
 	}
 	bytesRead += dbcell_.Read(data+bytesRead);
+yeof_end:
 	return bytesRead;
 }
 size_t Worksheet::CellTable::RowBlock::Write(char* data)
@@ -4404,12 +4407,29 @@ double GetDoubleFromRKValue(int rkValue)
 }
 
 // Convert a rk value to an integer.
-int GetIntegerFromRKValue(int rkValue)
+int GetIntegerFromRKValue(int rkValue, int &ival, double &dval)
 {
 	bool isMultiplied = rkValue & 1;
 	rkValue >>= 2;
-	if (isMultiplied) rkValue *= 0.01;
-	return rkValue;
+	if (isMultiplied)
+    {
+        if ((rkValue % 100) == 0)
+        {
+            ival = rkValue / 100;
+            return true;
+        }
+        else
+        {
+            //is a double and not int
+            dval = rkValue / 100.;
+            return false;
+        }
+    }
+    else
+    {
+        ival = rkValue;
+    }
+    return true;
 }
 
 // Convert a double to a rk value.
@@ -4432,7 +4452,7 @@ int GetRKValueFromDouble(double value)
 	}
 
 	intdouble.doublevalue_ = value;
-	intdouble.intvalue_ >>= 34;
+	intdouble.intvalue_ = 0;
 
 	int rkValue = intdouble.intvalue_;
 	rkValue <<= 2;
@@ -5594,6 +5614,9 @@ bool BasicExcelWorksheet::EraseCell(size_t row, size_t col)
 // Update cells using information from BasicExcel.worksheets_.
 void BasicExcelWorksheet::UpdateCells()
 {
+	int	ival;
+	double	dval;
+
 	// Define some reference
 	Worksheet::Dimensions& dimension = excel_->worksheets_[sheetIndex_].dimensions_;
 	vector<Worksheet::CellTable::RowBlock>& rRowBlocks = excel_->worksheets_[sheetIndex_].cellTable_.rowBlocks_;
@@ -5661,7 +5684,12 @@ void BasicExcelWorksheet::UpdateCells()
 						int rkValue = rCellBlocks[j].mulrk_.XFRK_[k].RKValue_;
 						if (IsRKValueAnInteger(rkValue))
 						{
-							cells_[row][col].Set(GetIntegerFromRKValue(rkValue));
+							int	ival;
+							double	dval;
+							if (GetIntegerFromRKValue(rkValue, ival, dval))
+								cells_[row][col].Set(ival);
+							else
+								cells_[row][col].Set(dval);
 						}
 						else
 						{
@@ -5680,7 +5708,12 @@ void BasicExcelWorksheet::UpdateCells()
 					int rkValue = rCellBlocks[j].rk_.value_;
 					if (IsRKValueAnInteger(rkValue))
 					{
-						cells_[row][col].Set(GetIntegerFromRKValue(rkValue));
+						int	ival;
+						double	dval;
+						if (GetIntegerFromRKValue(rkValue, ival, dval))
+							cells_[row][col].Set(ival);
+						else
+							cells_[row][col].Set(dval);
 					}
 					else
 					{

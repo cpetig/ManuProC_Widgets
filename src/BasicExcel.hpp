@@ -1,3 +1,6 @@
+//************ heavily modified and patched (Layout, gcc compilation, fixes)          **************
+//************ see also http://www.codeproject.com/Articles/42504/ExcelFormat-Library **************
+
 // Created by Yap Chun Wei
 // Version 1.0 (20 April 2006)
 // Version 1.1 (22 April 2006)
@@ -1096,7 +1099,7 @@ public:
 bool IsRKValueAnInteger(int rkValue);		///< Returns true if the supplied rk value contains an integer.
 bool IsRKValueADouble(int rkValue);			///< Returns true if the supplied rk value contains a double.
 double GetDoubleFromRKValue(int rkValue);	///< Convert a rk value to a double.
-int GetIntegerFromRKValue(int rkValue);		///< Convert a rk value to an integer.
+int GetIntegerFromRKValue(int rkValue, int &ival, double &dval);		///< Convert a rk value to an integer.
 int GetRKValueFromDouble(double value);		///< Convert a double to a rk value.
 int GetRKValueFromInteger(int value);		///< Convert an integer to a rk value.
 bool CanStoreAsRKValue(double value);		///< Returns true if the supplied double can be stored as a rk value.
