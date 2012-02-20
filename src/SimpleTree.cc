@@ -33,8 +33,6 @@
 #  include <sigc++/bind.h>
 #endif
 #include <iostream>
-#include <Misc/EntryValueFixed.h>
-#include <Misc/EntryValueIntString.h>
 
 #define FIRST_COLUMN 1
 #define MPC_ST_ADVANCED
@@ -42,6 +40,9 @@
 #ifdef MPC_ST_EXCEL_EXPORT
 # include <WinFileReq.hh>
 # include "BasicExcel.hpp"
+# include <Misc/EntryValueTimeStamp.h>
+# include <Misc/EntryValueFixed.h>
+# include <Misc/EntryValueIntString.h>
 #endif
 
 void SimpleTree_Basic::detach()
@@ -704,11 +705,24 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
                     std::cout << "fixed 3\n"; }
         else if (!!val.cast_dynamic<const EntryValueIntString>()
             && itos(val->getIntVal())==strval)
-{
+        {
           int ival=val.cast_dynamic<const EntryValueIntString>()->getIntVal();
-          sheet->Cell(row,c)->SetInteger(ival);
-          std::cout << "int\n";}
-
+          if (ival>=0x20000000 || ival<-0x20000000)  // will be shifted by 2
+            sheet->Cell(row,c)->SetDouble(double(ival));
+          else
+            sheet->Cell(row,c)->SetInteger(ival);
+          std::cout << "int " << ival << "\n";
+        }
+        else if (!!val.cast_dynamic<const EntryValueTimeStamp>())
+        {
+          ManuProC::TimeStamp ts=val.cast_dynamic<const EntryValueTimeStamp>()->TimeStamp();
+          time_t t=time_t(ts);
+          // zone 'correction'
+          t+=ts.MinutesFromGmt()*60;
+          double dval=t/(24.0*60*60)+25569.0;
+          sheet->Cell(row,c)->SetDouble(dval);
+          std::cout << "time " << dval << "\n";
+        }
         else if (strval.empty()) ; // nichts tun
         else if (is_ascii(strval))
           sheet->Cell(row,c)->SetString(strval.c_str());

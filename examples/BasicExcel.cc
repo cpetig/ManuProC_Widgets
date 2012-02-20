@@ -17,7 +17,9 @@ int main(int argc, char **argv)
   sheet->Cell(1,1)->SetString("D");
   sheet->Cell(1,1)->SetStyle(YExcel::BasicExcelCell::ST_DBL_ULINE);
   sheet->Cell(2,0)->SetDouble(987654321.0);
-//  sheet->Cell(2,1)->SetTime(987654321.0);
+  sheet->Cell(2,1)->SetInteger(987654321);
+  sheet->Cell(3,0)->SetDouble(40940.5);
+//  sheet->Cell(3,0)->SetTime(987654321.0);
   e.SaveAs("BasicExcel.xls");
   return 0;
 }

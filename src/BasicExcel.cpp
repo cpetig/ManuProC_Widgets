@@ -4259,7 +4259,7 @@ size_t Worksheet::CellTable::RowBlock::Read(const char* data)
 				if (cellBlocks_.size()%1000==0) cellBlocks_.reserve(cellBlocks_.size()+1000);
 				bytesRead += cellBlocks_[cellBlocks_.size()-1].Read(data+bytesRead);
 				break;
-				
+
 			case CODE::YEOF: goto yeof_end;
 
 			default:
@@ -4435,29 +4435,24 @@ int GetIntegerFromRKValue(int rkValue, int &ival, double &dval)
 // Convert a double to a rk value.
 int GetRKValueFromDouble(double value)
 {
+	if ((int(value)<<2)==value*4.0)
+	  return (int(value)<<2)|2; // stored as integer
+
+	if ((int(value*100)<<2)==value*400.0)
+	  return (int(value*100)<<2)|3; // stored as integer/100
+
 	union
 	{
 		long long intvalue_;
 		double doublevalue_;
 	} intdouble;
 
-	bool isMultiplied = false;
-	int testVal1 = value;
-	testVal1 *= 100;
-	int testVal2 = value * 100;
-	if (testVal1!=testVal2)
-	{
-		isMultiplied = true;
-		value *= 100;
-	}
-
 	intdouble.doublevalue_ = value;
-	intdouble.intvalue_ = 0;
+	if (!(intdouble.intvalue_ &0x3ffffffff))
+	  return (intdouble.intvalue_>>32)&~3;
 
-	int rkValue = intdouble.intvalue_;
-	rkValue <<= 2;
-	rkValue |= isMultiplied;
-	return rkValue;
+	intdouble.doublevalue_ = value*100;  // store as multiplied value
+	return (intdouble.intvalue_>>32)&~3|1;
 }
 
 // Convert an integer to a rk value.
@@ -4471,11 +4466,23 @@ int GetRKValueFromInteger(int value)
 // Returns true if the supplied double can be stored as a rk value.
 bool CanStoreAsRKValue(double value)
 {
-	int testVal1 = value * 100;
-	testVal1 *= 100;
-	int testVal2 = value * 10000;
-	if (testVal1!=testVal2) return false;
-	else return true;
+	if ((int(value)<<2)==value*4.0) return true; // ok, stored as integer
+
+	if ((int(value*100)<<2)==value*400.0) return true; // ok, stored as integer/100
+
+	union
+	{
+		long long intvalue_;
+		double doublevalue_;
+	} intdouble;
+
+	intdouble.doublevalue_=value;
+	if (!(intdouble.intvalue_ &0x3ffffffff)) return true;
+
+	intdouble.doublevalue_=value*100;
+	if (!(intdouble.intvalue_ &0x3ffffffff)) return true; // ok if multiplied with 100
+
+	return false;
 }
 
 /************************************************************************************************************/

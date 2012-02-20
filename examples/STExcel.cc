@@ -31,7 +31,7 @@ namespace EntryValue_easy
 #include <gtkmm/window.h>
 #include <Misc/Date.h>
 
-typedef RowDataBase_easy<int,std::string,bool,ManuProC::TimeStamp> row_t;
+typedef RowDataBase_easy<int,std::string,ManuProC::TimeStamp,bool> row_t;
 
 namespace ManuProC {
 template <>
@@ -51,20 +51,21 @@ int main(int argc, char**argv)
   std::vector<std::string> headers;
   headers.push_back("Integer");
   headers.push_back("String");
-  headers.push_back("Boolean");
   headers.push_back("Time");
+  headers.push_back("Boolean");
   tree.setTitles(headers);
-  tree.getStore()->set_column_type(2, SimpleTreeModel_Properties::ct_bool);
+  tree.getStore()->set_column_type(3, SimpleTreeModel_Properties::ct_bool);
   std::vector<gfloat> align(4);
   align[0]=1.0;
   tree.getStore()->setAlignment(align);
   tree.getStore()->set_editable(0, true);
-  tree.getStore()->set_editable(2, true);
-  
+  tree.getStore()->set_editable(3, true);
+
   std::vector<cH_RowDataBase> vec;
-  vec.push_back(new row_t(987654321,"eins",true,ManuProC::TimeStamp(ManuProC::Date(2012,2,1),12,0)));
+  vec.push_back(new row_t(987654321,"eins",ManuProC::TimeStamp(ManuProC::Date(1,2,2012),12,0),true));
+  vec.push_back(new row_t(1,"zwei",ManuProC::TimeStamp("2012-06-01 12:00:00+2"),false));
   tree.setDataVec(vec);
-  
+
   tree.show();
   w.show();
 //  m.run(w);
