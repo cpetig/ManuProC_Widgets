@@ -4509,18 +4509,18 @@ void BasicExcel::New(int sheets)
 	workbook_.fonts_[1].weight_= 700; // bold
 
 	workbook_.XFs_.resize(21);
-	workbook_.XFs_[1].protectionType_= 0x1; // needed to take effect
-	workbook_.XFs_[1].usedAttributes_|=0x10 << 2; // background style
-	workbook_.XFs_[1].colour1_= (1<<26); // solid bg
-	workbook_.XFs_[1].colour2_= 5; // yellow
+	workbook_.XFs_[BasicExcelCell::ST_YELLOW_BG].protectionType_= 0x1; // needed to take effect
+	workbook_.XFs_[BasicExcelCell::ST_YELLOW_BG].usedAttributes_|=0x10 << 2; // background style
+	workbook_.XFs_[BasicExcelCell::ST_YELLOW_BG].colour1_= (1<<26); // solid bg
+	workbook_.XFs_[BasicExcelCell::ST_YELLOW_BG].colour2_= 5; // yellow
 
-	workbook_.XFs_[2].protectionType_= 0x1; // needed to take effect
-	workbook_.XFs_[2].usedAttributes_|=0x2 << 2; // font
-	workbook_.XFs_[2].fontRecordIndex_= 1; // bold
+	workbook_.XFs_[BasicExcelCell::ST_BOLD].protectionType_= 0x1; // needed to take effect
+	workbook_.XFs_[BasicExcelCell::ST_BOLD].usedAttributes_|=0x2 << 2; // font
+	workbook_.XFs_[BasicExcelCell::ST_BOLD].fontRecordIndex_= 1; // bold
 
-	workbook_.XFs_[3].protectionType_= 0x1; // needed to take effect
-	workbook_.XFs_[3].usedAttributes_|=0x8 << 2; // border
-	workbook_.XFs_[3].borderLines_= 0x6000; // bottom double border
+	workbook_.XFs_[BasicExcelCell::ST_DBL_ULINE].protectionType_= 0x1; // needed to take effect
+	workbook_.XFs_[BasicExcelCell::ST_DBL_ULINE].usedAttributes_|=0x8 << 2; // border
+	workbook_.XFs_[BasicExcelCell::ST_DBL_ULINE].borderLines_= 0x6000; // bottom double border
 
 	workbook_.XFs_[BasicExcelCell::ST_DATETIME].protectionType_= 0x1; // needed to take effect
 	workbook_.XFs_[BasicExcelCell::ST_DATETIME].usedAttributes_|=0x1 << 2; // number format
