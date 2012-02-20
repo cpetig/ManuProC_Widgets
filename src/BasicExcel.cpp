@@ -1,5 +1,8 @@
 #include "BasicExcel.hpp"
 #include <cstring>
+#ifdef WIN32
+# include <Misc/win32_utf8.h>
+#endif
 
 namespace YCompoundFiles
 {
@@ -887,6 +890,9 @@ int CompoundFile::WriteFile(const wchar_t* path, const vector<char>& data, size_
 /*************ANSI char compound file, directory and file functions******************/
 bool CompoundFile::Create(const char* filename)
 {
+#ifdef WIN32
+	return Create(ManuProC::make_wstring(filename).c_str());
+#else
 	size_t filenameLength = strlen(filename);
 	wchar_t* wname = new wchar_t[filenameLength+1];
 	mbstowcs(wname, filename, filenameLength);
@@ -894,6 +900,7 @@ bool CompoundFile::Create(const char* filename)
 	bool ret = Create(wname);
 	delete[] wname;
 	return ret;
+#endif
 }
 
 bool CompoundFile::Open(const char* filename, ios_base::openmode mode)
