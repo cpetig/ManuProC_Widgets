@@ -54,6 +54,7 @@ class datewin : public datewin_glade
 	void setLabel(const std::string &s);
 	void setExpandYear(bool exp) { expandyear=exp; }
 	void preferWeek(bool b=true);
+	void closePopup();
 	
 private:	
 	sigc::signal<void> activate;

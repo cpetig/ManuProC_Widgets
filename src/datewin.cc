@@ -186,3 +186,9 @@ void datewin::on_togglebutton_menu_toggled()
   else popup=new datewin_popup(this);
 }
 
+void datewin::closePopup()
+{
+ if (popup) delete popup;
+    popup=0;
+}
+
