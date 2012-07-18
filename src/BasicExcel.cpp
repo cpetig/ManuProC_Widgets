@@ -4455,7 +4455,7 @@ int GetRKValueFromDouble(double value)
 	} intdouble;
 
 	intdouble.doublevalue_ = value;
-	if (!(intdouble.intvalue_ &0x3ffffffff))
+	if (!(intdouble.intvalue_ &0x3fffffff)) //f))
 	  return (intdouble.intvalue_>>32)&~3;
 
 	intdouble.doublevalue_ = value*100;  // store as multiplied value
@@ -4484,10 +4484,10 @@ bool CanStoreAsRKValue(double value)
 	} intdouble;
 
 	intdouble.doublevalue_=value;
-	if (!(intdouble.intvalue_ &0x3ffffffff)) return true;
+	if (!(intdouble.intvalue_ &0x3fffffff)) return true; // f))
 
 	intdouble.doublevalue_=value*100;
-	if (!(intdouble.intvalue_ &0x3ffffffff)) return true; // ok if multiplied with 100
+	if (!(intdouble.intvalue_ &0x3fffffff)) return true; // ok if multiplied with 100 // f))
 
 	return false;
 }
