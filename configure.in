@@ -19,6 +19,12 @@ AC_PREFIX_DEFAULT(/usr/local)
 AC_PROG_CXX
 AM_PROG_LIBTOOL
 
+if echo __MINGW32__ | $CPP - - | fgrep -q __MINGW32__
+then mingw=false
+else mingw=true 
+fi
+AM_CONDITIONAL(WINDOWS, test x$mingw = xtrue)
+
 dnl *************************************************
 dnl gettext support
 dnl *************************************************
@@ -30,9 +36,8 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",
 
 dnl Add the languages which your application supports here.
 if test x$mingw = xtrue ; then
-  AM_GLIB_GNU_GETTEXT([external])
+  AM_GLIB_GNU_GETTEXT([])
 else
-  AM_GNU_GETTEXT_VERSION([0.17])
   AM_GNU_GETTEXT([external])
 fi
 
@@ -66,11 +71,6 @@ AC_SUBST(MPC_WIDGETS_INCLUDES)
 AC_SUBST(MPC_WIDGETS_LDFLAGS)
 AC_SUBST(MPC_WIDGETS_LIBS)
 
-if echo __MINGW32__ | $CPP - - | fgrep -q __MINGW32__
-then mingw=false
-else mingw=true 
-fi
-AM_CONDITIONAL(WINDOWS, test x$mingw = xtrue)
 
 AC_OUTPUT(Makefile src/Makefile examples/Makefile  po/Makefile.in\
    examples/dwhouse/Makefile examples/tree_simplest/Makefile \
