@@ -36,6 +36,7 @@ struct RowDataBase : HandleContent
  virtual cH_EntryValue Value(guint _seqnr,gpointer _g) const=0;
  virtual bool changeValue(guint _seqnr,gpointer _g, const Glib::ustring &newvalue)
  { return false; } // true bedeutet: Wert geändert
+ virtual std::string ToolTip(guint _seqnr,gpointer _g) const { return std::string(); }
 };
 
 class H_RowDataBase : public Handle<RowDataBase>

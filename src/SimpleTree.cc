@@ -951,3 +951,49 @@ void SimpleTree::filter_changed()
 {
   getStore()->set_filter(filter_entry->get_text());
 }
+
+
+void SimpleTree_Basic::EnableTooltips(const bool)
+{
+  set_has_tooltip(true);
+  tooltip_sig=signal_query_tooltip().connect(sigc::mem_fun(*this, &SimpleTree_Basic::on_query_tooltip));
+}
+
+bool SimpleTree_Basic::on_query_tooltip(int x, int y, bool keyboard_mode,
+    Glib::RefPtr<Gtk::Tooltip> const& tooltip)
+{
+  //std::cerr << "qt:\n";
+  Gtk::TreePath p;
+  Gtk::TreeViewColumn* focus = NULL;
+  // inspired by jobviewer.py from system-config-printer
+  if (keyboard_mode)
+  {
+    get_cursor(p, focus);
+    if (p.empty())
+      return false;
+  }
+  else
+  {
+    int bin_x, bin_y, cell_x, cell_y;
+    convert_widget_to_bin_window_coords(x, y, bin_x, bin_y);
+    bool ok = get_path_at_pos(bin_x, bin_y, p, focus, cell_x, cell_y);
+    if (!ok)
+      return false;
+  }
+  Gtk::TreeModel::const_iterator i = get_model()->get_iter(p);
+  int col = 0;
+  Glib::ListHandle<Gtk::TreeViewColumn*> cols = get_columns();
+  for (Glib::ListHandle<Gtk::TreeViewColumn*>::const_iterator iloop = cols.begin();
+      iloop != cols.end(); ++iloop, ++col)
+    if (*iloop == focus)
+      break;
+  //std::cerr << "qt:" << col << "\n";
+  if (col >= Cols())
+    return false;
+  std::string tip=static_cast<cH_RowDataBase>((*i)[getStore()->m_columns.leafdata])->ToolTip(IndexFromColumn(col),getStore()->ValueData());
+  tooltip->set_markup(tip);
+  set_tooltip_cell(tooltip, &p, focus,
+      focus->get_first_cell_renderer());
+  return true;
+}
+

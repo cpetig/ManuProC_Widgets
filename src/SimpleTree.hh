@@ -107,6 +107,8 @@ private:
 	sigc::signal<void> _reorder;
 	sigc::signal<void,const cH_RowDataBase &,int,bool&> clicked_sig;
 
+	sigc::connection tooltip_sig;
+
 protected:
 	cH_RowDataBase menuContext;
 
@@ -134,6 +136,8 @@ private:
         void on_column_toggled(const Glib::ustring &path, unsigned idx); // boolean editing
 	static bool clicked_impl(SimpleTree_Basic *_this, const cH_RowDataBase &row, int col_idx);
         void menu_ranking(int column);
+        bool on_query_tooltip(int,int,bool,Glib::RefPtr<Gtk::Tooltip> const&);
+
 public:
 	SimpleTree_Basic(unsigned max_col);
 	SimpleTree_Basic(SimpleTreeModel_Properties &props);
@@ -162,9 +166,13 @@ public:
 	SIMPLE_TREE_WARN void setResizeable(const std::vector<bool> &R);
 	SIMPLE_TREE_WARN void setResizeable(const bool b);
 
+	void EnableTooltips(const bool);
+       
+
 	void debug();
 
 	sigc::signal0<void> &addMenuItem(Glib::ustring const& text);
+        
 };
 
 // I put the more esoteric features here, so they may not confuse the
