@@ -988,6 +988,8 @@ bool SimpleTree_Basic::on_query_tooltip(int x, int y, bool keyboard_mode,
     if (*iloop == focus)
       break;
   //std::cerr << "qt:" << col << "\n";
+#warning ungeklaert
+  --col; // ????
   if (col >= Cols())
     return false;
   std::string tip=static_cast<cH_RowDataBase>((*i)[getStore()->m_columns.leafdata])->ToolTip(IndexFromColumn(col),getStore()->ValueData());
