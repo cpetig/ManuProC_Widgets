@@ -817,8 +817,14 @@ void SimpleTree::write_csv(std::string const& filename) const
 
   for (unsigned int i=0;i<VisibleColumns();++i)
   { std::string title=getColTitle(i);
+    std::string csv_title;
+    string::iterator it;
+    for ( it = title.begin() ; it < title.end(); ++it)
+      {if(*it!='\n')
+       csv_title+=*it;
+      }
     if(i>0) f << ";";
-    f << title;
+    f << csv_title;
   }
   f << "\n";
 
