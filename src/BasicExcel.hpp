@@ -77,7 +77,7 @@ public:
 
 // File handling functions
 	bool Create(const wchar_t* filename);
-	bool Open(const wchar_t* filename, ios_base::openmode mode=ios_base::in | ios_base::out);
+	bool Open(const wchar_t* filename, ios_base::openmode mode=ios_base::in | ios_base::out | ios_base::binary);
 	bool Close();
 	bool IsOpen();
 
@@ -255,7 +255,7 @@ public:
 public:
 	// Compound File functions
 	bool Create(const wchar_t* filename);
-	bool Open(const wchar_t* filename, ios_base::openmode mode=ios_base::in | ios_base::out);
+	bool Open(const wchar_t* filename, ios_base::openmode mode=ios_base::in | ios_base::out | ios_base::binary);
 	bool Close();
 	bool IsOpen();
 
@@ -280,7 +280,7 @@ public:
 
 	// ANSI char functions
 	bool Create(const char* filename);
-	bool Open(const char* filename, ios_base::openmode mode=ios_base::in | ios_base::out);
+	bool Open(const char* filename, ios_base::openmode mode=ios_base::in | ios_base::out | ios_base::binary);
 	int ChangeDirectory(const char* path);
 	int MakeDirectory(const char* path);
 	int PresentWorkingDirectory(char* path);

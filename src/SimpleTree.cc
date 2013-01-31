@@ -33,6 +33,9 @@
 #  include <sigc++/bind.h>
 #endif
 #include <iostream>
+#ifdef WIN32
+# include <Misc/win32_utf8.h>
+#endif
 
 #define FIRST_COLUMN 1
 #define MPC_ST_ADVANCED
@@ -728,7 +731,11 @@ static void write_excel_sub(SimpleTree *tv,YExcel::BasicExcelWorksheet* sheet,un
         else if (is_ascii(strval))
           sheet->Cell(row,c)->SetString(strval.c_str());
         else // unicode
+#ifdef WIN32
+          sheet->Cell(row,c)->SetWString(ManuProC::make_wstring(strval).c_str());
+#else          
           sheet->Cell(row,c)->SetWString(make_wstring(strval).c_str());
+#endif          
       }
       ++row;
     }
@@ -780,13 +787,23 @@ void SimpleTree::write_excel(std::string const& filename) const
   e.New(1);
   std::string name=getStore()->Properties().InstanceName();
   if (name.empty()) name=_("Table");
+#ifdef WIN32  
+  e.RenameWorksheet(size_t(0),ManuProC::make_wstring(name).c_str());
+#else  
   e.RenameWorksheet(size_t(0),make_wstring(name).c_str());
+#endif  
   YExcel::BasicExcelWorksheet* sheet = e.GetWorksheet(size_t(0));
   assert(sheet);
   for (unsigned int i=0;i<VisibleColumns();++i)
   { std::string title=getColTitle(i);
     if (!is_ascii(title))
+    {
+#ifdef WIN32  
+      sheet->Cell(0,i)->SetWString(ManuProC::make_wstring(title).c_str());
+#else      
       sheet->Cell(0,i)->SetWString(make_wstring(title).c_str());
+#endif      
+    }
     else
       sheet->Cell(0,i)->SetString(title.c_str());
     sheet->Cell(0,i)->SetStyle(YExcel::BasicExcelCell::ST_BOLD);
