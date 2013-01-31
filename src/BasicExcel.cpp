@@ -23,7 +23,7 @@ bool Block::Create(const wchar_t* filename)
 	wcstombs(name, filename, filenameLength);
 	name[filenameLength] = 0;
 
-	file_.open(name, ios_base::out | ios_base::trunc);
+	file_.open(name, ios_base::out | ios_base::trunc | ios_base::binary);
 	file_.close();
 	file_.clear();
 
