@@ -46,6 +46,7 @@ class datewin : public datewin_glade
         void on_togglebutton_menu_toggled();
         void on_datewin_change_current_page(GtkNotebookPage *p0, guint p1);
 
+
    public:
 	datewin();
 	~datewin();
@@ -55,13 +56,14 @@ class datewin : public datewin_glade
 	void setExpandYear(bool exp) { expandyear=exp; }
 	void preferWeek(bool b=true);
 	void closePopup();
+        void correct_day_of_month();	
 	
 private:	
 	sigc::signal<void> activate;
 	sigc::signal<void> changed;
 public:
-        sigc::signal<void> &signal_activate() { return activate; }
-        sigc::signal<void> &signal_changed() { return changed; }        
+        sigc::signal<void> &signal_activate() { correct_day_of_month(); return activate; }
+        sigc::signal<void> &signal_changed() { correct_day_of_month(); return changed; }        
 
 };
 

@@ -121,6 +121,7 @@ gint datewin::try_grab_focus(GtkWidget *w,gpointer gp) throw()
    assert(_this);
    switch(_this->notebook->get_current_page())
    {  case p_Datum:
+          _this->correct_day_of_month();
    	  _this->jahr->select_region(0,_this->jahr->get_text_length());
    	  _this->monat->select_region(0,_this->monat->get_text_length());
    	  _this->tag->select_region(0,_this->tag->get_text_length());
@@ -137,14 +138,28 @@ gint datewin::try_grab_focus(GtkWidget *w,gpointer gp) throw()
    return true;
 }
 
+
+void datewin::correct_day_of_month()
+{
+ int itag=tag->get_value();
+ int imonat=monat->get_value();
+ int ijahr=jahr->get_value();
+ int tim=ManuProC::Datum::Tage_in_Monat(imonat,ijahr);
+ 
+ if(itag>tim)
+   tag->set_value(tim);
+}
+
 void datewin::on_tag_activate()
 {
- this->monat->grab_focus();
+ correct_day_of_month();  
+ this->monat->grab_focus(); 
  this->monat->select_region(0,this->monat->get_text_length());
 }
 
 void datewin::on_monat_activate()
 {
+ correct_day_of_month();  
  this->jahr->grab_focus();
  this->jahr->select_region(0,this->jahr->get_text_length());
 }
@@ -156,6 +171,7 @@ void datewin::setLabel(const std::string &s)
 
 void datewin::datum_activate()
 {  kw_bevorzugen=false; // Datumsicht behalten
+   correct_day_of_month();  
    set_value(get_value());
    activate();
 }
