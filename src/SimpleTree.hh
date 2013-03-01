@@ -24,6 +24,7 @@
 
 #include <SimpleTreeStore.h>
 #include <gtkmm/treeview.h>
+#include <gtkmm/tooltips.h>
 
 #define MPC_ST_EXCEL_EXPORT
 
@@ -136,7 +137,7 @@ private:
         void on_column_toggled(const Glib::ustring &path, unsigned idx); // boolean editing
 	static bool clicked_impl(SimpleTree_Basic *_this, const cH_RowDataBase &row, int col_idx);
         void menu_ranking(int column);
-        bool on_query_tooltip(int,int,bool,Glib::RefPtr<Gtk::Tooltip> const&);
+        bool on_query_tooltip(int,int,bool,Glib::RefPtr<Gtk::Tooltips> const&);
 
 public:
 	SimpleTree_Basic(unsigned max_col);

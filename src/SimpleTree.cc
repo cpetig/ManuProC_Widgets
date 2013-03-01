@@ -29,6 +29,8 @@
 #include <bvector_item_CheckMenuItem.hh>
 #include <bool_CheckMenuItem.hh>
 #include <CellRendererSimpleTree.h>
+#include <gtkmm/tooltips.h>
+
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>2
 #  include <sigc++/bind.h>
 #endif
@@ -978,12 +980,15 @@ void SimpleTree::filter_changed()
 
 void SimpleTree_Basic::EnableTooltips(const bool)
 {
+#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>11
   set_has_tooltip(true);
   tooltip_sig=signal_query_tooltip().connect(sigc::mem_fun(*this, &SimpleTree_Basic::on_query_tooltip));
+#endif    
 }
 
+#if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>11
 bool SimpleTree_Basic::on_query_tooltip(int x, int y, bool keyboard_mode,
-    Glib::RefPtr<Gtk::Tooltip> const& tooltip)
+    Glib::RefPtr<Gtk::Tooltips> const& tooltip)
 {
   //std::cerr << "qt:\n";
   Gtk::TreePath p;
@@ -1016,9 +1021,12 @@ bool SimpleTree_Basic::on_query_tooltip(int x, int y, bool keyboard_mode,
   if (col >= Cols())
     return false;
   std::string tip=static_cast<cH_RowDataBase>((*i)[getStore()->m_columns.leafdata])->ToolTip(IndexFromColumn(col),getStore()->ValueData());
+
   tooltip->set_markup(tip);
   set_tooltip_cell(tooltip, &p, focus,
       focus->get_first_cell_renderer());
   return true;
 }
+
+#endif        
 
