@@ -988,7 +988,7 @@ void SimpleTree_Basic::EnableTooltips(const bool)
 
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>11
 bool SimpleTree_Basic::on_query_tooltip(int x, int y, bool keyboard_mode,
-    Glib::RefPtr<Gtk::Tooltips> const& tooltip)
+    Glib::RefPtr<Gtk::Tooltip> const& tooltip)
 {
   //std::cerr << "qt:\n";
   Gtk::TreePath p;
