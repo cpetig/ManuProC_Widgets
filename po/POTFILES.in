@@ -4,3 +4,4 @@
 ./src/IntStringBox.cc
 ./src/IntStringBox_glade.cc
 ./src/SimpleTree.cc
+./src/IntStringPopup_glade.cc
