@@ -121,7 +121,7 @@ private:
 	void on_title_clicked(unsigned no);
 	void fillMenu();
 	void on_neuordnen_clicked();
-	void on_zuruecksetzen_clicked();
+
 	void on_abbrechen_clicked();
 	void on_spalten_geaendert();
 #ifdef MPC_ST_EXCEL_EXPORT
@@ -170,6 +170,7 @@ public:
 	SIMPLE_TREE_WARN void setResizeable(const bool b);
 
 	void EnableTooltips(const bool);
+	void on_zuruecksetzen_clicked();
        
 
 	void debug();
