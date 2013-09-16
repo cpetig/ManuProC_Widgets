@@ -204,8 +204,9 @@ void SimpleTree_Basic::on_title_clicked(unsigned nr)
       else
 	{
 	 std::string tmptit=std::string("(")+itos(clicked_seq.size())+")";
-	 if(get_column(nr+FIRST_COLUMN)->get_title().size()>=3)
-	   tmptit+=get_column(nr+FIRST_COLUMN)->get_title().substr(3);
+//	 if(get_column(nr+FIRST_COLUMN)->get_title().size()>=3)
+//	   tmptit+=get_column(nr+FIRST_COLUMN)->get_title().substr(3);
+         tmptit+=get_column(nr+FIRST_COLUMN)->get_title();
 	 get_column(nr+FIRST_COLUMN)->set_title(tmptit);
 
 	}
