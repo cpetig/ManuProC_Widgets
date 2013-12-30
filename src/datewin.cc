@@ -96,8 +96,9 @@ void datewin::set_value (const ManuProC::Datum &d) throw()
       jahr->set_value (d.Jahr());
       try
       {
-	kw_spinbutton->set_value(d.KW().Woche());
-	jahr_spinbutton->set_value(d.KW().Jahr());
+        Kalenderwoche kw=d.KW();
+	kw_spinbutton->set_value(kw.Woche());
+	jahr_spinbutton->set_value(kw.Jahr());
 	int pg=kw_bevorzugen?p_Woche:p_Datum;
 	// Muß weg, da sonst bei jedem set_value auf "Datum" umgesprungen wird
 	//      if (pg==p_Woche && d.Tag()!=ManuProC::Datum(d.KW()).Tag()) pg=p_Datum;
