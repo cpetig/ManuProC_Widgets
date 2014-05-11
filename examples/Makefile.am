@@ -1,7 +1,7 @@
 SUBDIRS=newtree tree_simplest dwhouse MVC
 
 EXTRA_PROGRAMS = Event TreeViewUtil TreeSelection test_sts test_logwin \
-	test_clist datewintest EvenMoreSimpleUsage BasicExcel xlsview STExcel
+	test_clist datewintest EvenMoreSimpleUsage BasicExcel xlsview STExcel advanced_tree
 
 AM_CXXFLAGS=@MPC_WIDGETS_INCLUDES@ 
 #-Wl,--enable-runtime-pseudo-reloc
@@ -28,5 +28,7 @@ xlsview_SOURCES=xlsview.cc
 xlsview_LDADD=@MPC_WIDGETS_LIBS@
 STExcel_SOURCES=STExcel.cc
 STExcel_LDADD=@MPC_WIDGETS_LIBS@
+advanced_tree_SOURCES=advanced_tree.cc
+advanced_tree_LDADD=@MPC_WIDGETS_LIBS@
 
 AM_LDFLAGS=@MPC_WIDGETS_LDFLAGS@

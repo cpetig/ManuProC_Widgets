@@ -28,6 +28,7 @@
 //#include <glib.h>
 //#include <cassert>
 #include <glibmm/ustring.h>
+#include <pangomm/attrlist.h>
 
 struct RowDataBase : HandleContent
 {
@@ -37,6 +38,8 @@ struct RowDataBase : HandleContent
  virtual bool changeValue(guint _seqnr,gpointer _g, const Glib::ustring &newvalue)
  { return false; } // true bedeutet: Wert geändert
  virtual std::string ToolTip(guint _seqnr,gpointer _g) const { return std::string(); }
+ // font rendering attributes
+ virtual Pango::AttrList attributes(guint _seqnr,gpointer _g) const { return Pango::AttrList(); }
 };
 
 class H_RowDataBase : public Handle<RowDataBase>

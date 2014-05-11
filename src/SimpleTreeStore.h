@@ -66,6 +66,7 @@ struct SimpleTreeModel_Properties : sigc::trackable
   { return Gtk::TREE_VIEW_COLUMN_AUTOSIZE; }
   virtual int get_fixed_width(guint _seqnr) const { return 0; }
   virtual bool visible_default(guint _seqnr) const { return true; }
+  virtual bool attributes(guint _seqnr) const { return false; } // whether you specify custom pango attributes for this column
 
   sigc::signal1<void,guint> column_changed;
 };
@@ -341,8 +342,9 @@ public:
 	   Gtk::TreeModelColumn<Gdk::Color> background;
 
 	   std::vector<Gtk::TreeModelColumn<Glib::ustring> > cols;
+	   std::vector<Gtk::TreeModelColumn<Pango::AttrList> > attributes;
 
-	   ModelColumns(int cols);
+	   ModelColumns(int cols, bool attrs=false);
 	};
 
 	ModelColumns m_columns;
