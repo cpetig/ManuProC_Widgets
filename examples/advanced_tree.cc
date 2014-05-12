@@ -45,8 +45,8 @@ int main(int argc, char **argv)
   bigred= Pango::AttrList("<big><span foreground='red'>1</span></big>");
   Gtk::Window w;
   MyProperties prop;
-  SimpleTree s(prop);
-//  s.setProperties(prop,true);
+  SimpleTree s(2);
+  s.setProperties(prop,false);
   std::vector <cH_RowDataBase> datavec;
   datavec.push_back(new MyRow(1));
   datavec.push_back(new MyRow(1));

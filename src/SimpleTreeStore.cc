@@ -36,6 +36,8 @@
 #define getuid() 0
 #endif
 
+static bool has_any_attributes(SimpleTreeModel_Properties const &props);
+
 #ifdef ST_DEPRECATED
 struct SimpleTreeModel_Properties_Proxy::Standard : public SimpleTreeModel_Properties
 {	unsigned columns;
@@ -171,12 +173,20 @@ void SimpleTreeModel_Properties_Proxy::setProperties(SimpleTreeModel_Properties 
 
 void SimpleTreeStore::setProperties(SimpleTreeModel_Properties &p, bool we_own)
 { SimpleTreeModel_Properties_Proxy::setProperties(p, we_own);
+  if (m_columns.attributes.empty() && has_any_attributes(p))
+  {
+     for (int i=0; i<p.Columns(); ++i)
+     {
+       m_columns.attributes.push_back(Gtk::TreeModelColumn<Pango::AttrList>());
+       m_columns.add(m_columns.attributes.back());
+     }    
+  }
   load_remembered();
   column_changed(invisible_column);
 }
 
 SimpleTreeModel_Properties_Proxy::~SimpleTreeModel_Properties_Proxy()
-{ delete props;
+{ if (we_own_props) delete props;
 }
 
 void SimpleTreeModel_Proxy::setModel(SimpleTreeModel &_model)
@@ -370,7 +380,7 @@ SimpleTreeStore::SimpleTreeStore(int max_col)
 { init();
 }
 
-bool has_any_attributes(SimpleTreeModel_Properties const &props)
+static bool has_any_attributes(SimpleTreeModel_Properties const &props)
 {
   for (unsigned i=0;i<props.Columns();++i)
   {

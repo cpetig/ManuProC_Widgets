@@ -172,7 +172,7 @@ void SimpleTree_Basic::on_spalten_geaendert()
         pColumn->add_attribute(crst->property_childrens_deep(),sts->m_columns.childrens_deep);
         if (getStore()->OptionCount().Value())
           pColumn->add_attribute(crst->property_children_count(),sts->m_columns.children_count);
-        if (Properties().attributes(idx))
+        if (Properties().attributes(idx) && sts->m_columns.attributes.size()>idx)
            pColumn->add_attribute(crst->property_attributes(),sts->m_columns.attributes[idx]);
         crs= crst;
       }
