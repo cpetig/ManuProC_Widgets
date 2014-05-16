@@ -410,6 +410,7 @@ public:
 	void setSortierspalte(unsigned idx=invisible_column, bool invert=false);
 	unsigned getSortCol() const { return sortierspalte; }
 	bool getInvert() const { return sortierspalte==invisible_column?false:invert_order.at(sortierspalte); }
+	bool getInvert(unsigned s) const { return invert_order.at(s); }	
 
 	// filtering
 	void set_filter(std::string const& current_filter);

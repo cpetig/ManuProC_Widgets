@@ -426,7 +426,18 @@ static Gtk::MenuItem *add_mitem(Gtk::Menu *m,const std::string &text, Gtk::Radio
 }
 
 void SimpleTree_Basic::menu_ranking(int column)
-{ getStore()->setSortierspalte(column, true);
+{ 
+ if(column == -1) getStore()->setSortierspalte();
+ else getStore()->setSortierspalte(column, true);
+ for (unsigned i=0;i<VisibleColumns();++i)
+   get_column(i+FIRST_COLUMN)->set_title(getColTitle(i)); 
+}
+
+void SimpleTree_Basic::reset_ranking()
+{
+ for (unsigned i=0;i<getStore()->Properties().Columns();++i) getStore()->invert_order[i]=false;
+ getStore()->setSortierspalte();    
+ for (unsigned i=0;i<VisibleColumns();++i) get_column(i+FIRST_COLUMN)->set_title(getColTitle(i)); 
 }
 
 void SimpleTree_Basic::fillMenu()
@@ -464,12 +475,13 @@ void SimpleTree_Basic::fillMenu()
 #endif
 #ifdef MPC_ST_ADVANCED
   Gtk::RadioMenuItem::Group group;
-  Gtk::MenuItem *ranking=add_mitem(menu,_("Ranking"));
+  Gtk::MenuItem *ranking=add_mitem(menu,_("Sorting column"));
   Gtk::Menu *ranking_menu=manage(new Gtk::Menu);
   ranking->set_submenu(*ranking_menu);
   add_mitem(ranking_menu,_(" off "),group,sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::menu_ranking),-1));
   for (guint i=0;i<getStore()->MaxCol();++i)
     add_mitem(ranking_menu,Properties().Title(i),group,sigc::bind(sigc::mem_fun(*this,&SimpleTree_Basic::menu_ranking),i));
+  add_mitem(menu,_("Reset sorting order"),sigc::mem_fun(*this,&SimpleTree_Basic::reset_ranking));
 #endif
 
   // separator

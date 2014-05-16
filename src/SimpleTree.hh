@@ -137,6 +137,7 @@ private:
         void on_column_toggled(const Glib::ustring &path, unsigned idx); // boolean editing
 	static bool clicked_impl(SimpleTree_Basic *_this, const cH_RowDataBase &row, int col_idx);
         void menu_ranking(int column);
+        void reset_ranking();
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>11
         bool on_query_tooltip(int,int,bool,Glib::RefPtr<Gtk::Tooltip> const&);
 #endif
