@@ -969,12 +969,12 @@ void SimpleTreeStore::get_value_vfunc(const TreeModel::iterator& iter,
          if (int(s_text_start)<=column && column<int(s_text_start)+int(max_column)+int(m_columns.attributes.size()))
          {  int colno=column-int(s_text_start);
             if (colno<0) { VALUE_INIT0(G_TYPE_STRING); return; }
-            if (colno>=int(Cols()))
+            if (colno>=max_column)
             {
-              colno-=Cols();
+              colno-=max_column;
               if (colno>=m_columns.attributes.size()) VALUE_INIT0(G_TYPE_STRING);
-              else
-                VALUE_INIT3(boxed,attributes[colno],nd.leafdata->attributes(currseq[colno],ValueData()).gobj());
+              else // remember: the order of the text columns doesn't change, the order of attribute columns does
+                VALUE_INIT3(boxed,attributes[colno],nd.leafdata->attributes(colno,ValueData()).gobj());
               return;
             }
             unsigned idx=currseq[colno];
