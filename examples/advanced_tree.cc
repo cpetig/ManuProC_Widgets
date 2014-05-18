@@ -13,12 +13,14 @@ struct MyRow: RowDataBase
   MyRow(unsigned _i=0) : i(_i) {}
   virtual cH_EntryValue Value(guint _seqnr,gpointer gp) const
   {
-    return cH_EntryValueIntString(i);
+    return cH_EntryValueIntString(i==2 ? "big red" : (_seqnr+i)&1 ? "bold" : "italic");
+    //return cH_EntryValueIntString(i);
   }
   virtual std::string ToolTip(guint _seqnr,gpointer _g) const 
   { char buf[128]; snprintf(buf,sizeof(buf),"Tooltip for %d,%d", i, _seqnr); return buf; }
   // font rendering attributes
-  virtual Pango::AttrList attributes(guint _seqnr,gpointer _g) const { return i==2 ? bigred : (_seqnr+i)&1 ? bold : italic; }
+  virtual Pango::AttrList attributes(guint _seqnr,gpointer _g) const 
+  { return i==2 ? bigred : (_seqnr+i)&1 ? bold : italic; }
 };
 
 class MyProperties : public SimpleTreeModel_Properties
@@ -38,18 +40,24 @@ class MyProperties : public SimpleTreeModel_Properties
 int main(int argc, char **argv)
 {
   Gtk::Main m(argc,argv);
-//  Pango::Attribute a(Pango::Attribute::create_attr_size (30));
-//  bold.insert(a);
-  bold= Pango::AttrList("<b>1</b>");
-  italic= Pango::AttrList("<i>1</i>");
-  bigred= Pango::AttrList("<big><span foreground='red'>1</span></big>");
+  Pango::Attribute a(Pango::Attribute::create_attr_weight(Pango::WEIGHT_BOLD));
+  bold.insert(a);
+  
+  a= Pango::Attribute::create_attr_style(Pango::STYLE_ITALIC);
+  italic.insert(a);
+  
+  a= Pango::Attribute::create_attr_foreground(0xffff,0,0);
+  bigred.insert(a);
+  a= Pango::Attribute::create_attr_scale(1.2);
+  bigred.insert(a);
+   
   Gtk::Window w;
   MyProperties prop;
   SimpleTree s(2);
   s.setProperties(prop,false);
   std::vector <cH_RowDataBase> datavec;
   datavec.push_back(new MyRow(1));
-  datavec.push_back(new MyRow(1));
+//  datavec.push_back(new MyRow(1));
   datavec.push_back(new MyRow(2));
   datavec.push_back(new MyRow(3));
   s.setDataVec(datavec);
