@@ -13,11 +13,11 @@ noinst_HEADERS = \
 	window1_glade.hh \
 	window1.hh 
 
-AM_CXXFLAGS = @KOMPONENTEN_INCLUDES@
+AM_CXXFLAGS = @MPC_WIDGETS_INCLUDES@
 
-newtree_LDADD = @LIBS@ @KOMPONENTEN_LIBS@
+newtree_LDADD = @LIBS@ @MPC_WIDGETS_LIBS@
 
-AM_LDFLAGS= @KOMPONENTEN_LDFLAGS@ 
+AM_LDFLAGS= @MPC_WIDGETS_LDFLAGS@ 
 #-mwindows -Wl,--enable-runtime-pseudo-reloc
 
 

@@ -66,6 +66,7 @@ struct SimpleTreeModel_Properties : sigc::trackable
   { return Gtk::TREE_VIEW_COLUMN_AUTOSIZE; }
   virtual int get_fixed_width(guint _seqnr) const { return 0; }
   virtual bool visible_default(guint _seqnr) const { return true; }
+  virtual bool attributes(guint _seqnr) const { return false; } // whether you specify custom pango attributes for this column
 
   sigc::signal1<void,guint> column_changed;
 };
@@ -341,8 +342,9 @@ public:
 	   Gtk::TreeModelColumn<Gdk::Color> background;
 
 	   std::vector<Gtk::TreeModelColumn<Glib::ustring> > cols;
+	   std::vector<Gtk::TreeModelColumn<Pango::AttrList> > attributes;
 
-	   ModelColumns(int cols);
+	   ModelColumns(int cols, bool attrs=false);
 	};
 
 	ModelColumns m_columns;
@@ -408,6 +410,7 @@ public:
 	void setSortierspalte(unsigned idx=invisible_column, bool invert=false);
 	unsigned getSortCol() const { return sortierspalte; }
 	bool getInvert() const { return sortierspalte==invisible_column?false:invert_order.at(sortierspalte); }
+	bool getInvert(unsigned s) const { return invert_order.at(s); }	
 
 	// filtering
 	void set_filter(std::string const& current_filter);

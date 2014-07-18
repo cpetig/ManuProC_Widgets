@@ -121,7 +121,7 @@ private:
 	void on_title_clicked(unsigned no);
 	void fillMenu();
 	void on_neuordnen_clicked();
-	void on_zuruecksetzen_clicked();
+
 	void on_abbrechen_clicked();
 	void on_spalten_geaendert();
 #ifdef MPC_ST_EXCEL_EXPORT
@@ -137,6 +137,7 @@ private:
         void on_column_toggled(const Glib::ustring &path, unsigned idx); // boolean editing
 	static bool clicked_impl(SimpleTree_Basic *_this, const cH_RowDataBase &row, int col_idx);
         void menu_ranking(int column);
+        void reset_ranking();
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>11
         bool on_query_tooltip(int,int,bool,Glib::RefPtr<Gtk::Tooltip> const&);
 #endif
@@ -170,6 +171,7 @@ public:
 	SIMPLE_TREE_WARN void setResizeable(const bool b);
 
 	void EnableTooltips(const bool);
+	void on_zuruecksetzen_clicked();
        
 
 	void debug();

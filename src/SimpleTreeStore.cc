@@ -36,6 +36,8 @@
 #define getuid() 0
 #endif
 
+static bool has_any_attributes(SimpleTreeModel_Properties const &props);
+
 #ifdef ST_DEPRECATED
 struct SimpleTreeModel_Properties_Proxy::Standard : public SimpleTreeModel_Properties
 {	unsigned columns;
@@ -171,12 +173,20 @@ void SimpleTreeModel_Properties_Proxy::setProperties(SimpleTreeModel_Properties 
 
 void SimpleTreeStore::setProperties(SimpleTreeModel_Properties &p, bool we_own)
 { SimpleTreeModel_Properties_Proxy::setProperties(p, we_own);
+  if (m_columns.attributes.empty() && has_any_attributes(p))
+  {
+     for (int i=0; i<p.Columns(); ++i)
+     {
+       m_columns.attributes.push_back(Gtk::TreeModelColumn<Pango::AttrList>());
+       m_columns.add(m_columns.attributes.back());
+     }    
+  }
   load_remembered();
   column_changed(invisible_column);
 }
 
 SimpleTreeModel_Properties_Proxy::~SimpleTreeModel_Properties_Proxy()
-{ delete props;
+{ if (we_own_props) delete props;
 }
 
 void SimpleTreeModel_Proxy::setModel(SimpleTreeModel &_model)
@@ -370,6 +380,16 @@ SimpleTreeStore::SimpleTreeStore(int max_col)
 { init();
 }
 
+static bool has_any_attributes(SimpleTreeModel_Properties const &props)
+{
+  for (unsigned i=0;i<props.Columns();++i)
+  {
+//    printf("A %d %d\n", i, props.attributes(i));
+    if (props.attributes(i)) return true;
+  }
+  return false; 
+}
+
 SimpleTreeStore::SimpleTreeStore(SimpleTreeModel_Properties &props)
 	:
 	  Glib::ObjectBase( typeid(SimpleTreeStore) ), //register a custom GType.
@@ -381,7 +401,7 @@ SimpleTreeStore::SimpleTreeStore(SimpleTreeModel_Properties &props)
 	  sortierspalte(invisible_column), // invert_sortierspalte(),
 	  stamp(reinterpret_cast<long>(this)),
 	  unfiltered_model(), unfiltered_model_ours(), filter_func(&default_filter),
-	  m_columns(props.Columns())
+	  m_columns(props.Columns(),has_any_attributes(props))
 { init();
 }
 
@@ -390,7 +410,7 @@ SimpleTreeStore::SimpleTreeStore(SimpleTreeModel_Properties &props)
 
 #define MC_ADD(name) add(name); assert(name.index()==int(s_##name));
 
-SimpleTreeStore::ModelColumns::ModelColumns(int _cols)
+SimpleTreeStore::ModelColumns::ModelColumns(int _cols, bool attrs)
 {  // GType t=cH_entry_value_get_type();
 
    MC_ADD(row);
@@ -405,6 +425,15 @@ SimpleTreeStore::ModelColumns::ModelColumns(int _cols)
       add(cols.back());
       assert(cols.back().index()==int(s_text_start)+i);
    }
+   if (attrs)
+   {
+     for (int i=0; i<_cols; ++i)
+     {
+       attributes.push_back(Gtk::TreeModelColumn<Pango::AttrList>());
+       add(attributes.back());
+     }
+   }
+//   printf("attributes %d\n", attributes.size());
 }
 
 #if 0
@@ -841,7 +870,13 @@ GType SimpleTreeStore::get_column_type_vfunc(int index) const
       default:
         {
           int colno=index-int(s_text_start);
-          if (colno<0 || colno>=int(Cols())) return G_TYPE_STRING;
+          if (colno<0) return G_TYPE_STRING;
+          if (colno>=int(Cols()))
+          {
+            colno-=Cols();
+            if (colno>=m_columns.attributes.size()) return G_TYPE_STRING;
+            else return m_columns.attributes[colno].type();
+          }
           unsigned idx=currseq[colno];
           if (Properties().get_column_type(idx)==SimpleTreeModel_Properties::ct_bool) return G_TYPE_BOOLEAN;
         }
@@ -930,9 +965,18 @@ void SimpleTreeStore::get_value_vfunc(const TreeModel::iterator& iter,
       case s_background: VALUE_INIT3(boxed,background,colors[nd.deep%num_colors].gobj());
          return;
       default:
-         if (int(s_text_start)<=column && column<int(s_text_start)+int(max_column))
+//         printf("attr %d\n", column);
+         if (int(s_text_start)<=column && column<int(s_text_start)+int(max_column)+int(m_columns.attributes.size()))
          {  int colno=column-int(s_text_start);
-            if (colno<0 || colno>=int(Cols())) { VALUE_INIT0(G_TYPE_STRING); return; }
+            if (colno<0) { VALUE_INIT0(G_TYPE_STRING); return; }
+            if (colno>=max_column)
+            {
+              colno-=max_column;
+              if (colno>=m_columns.attributes.size()) VALUE_INIT0(G_TYPE_STRING);
+              else // remember: the order of the text columns doesn't change, the order of attribute columns does
+                VALUE_INIT3(boxed,attributes[colno],nd.leafdata->attributes(colno,ValueData()).gobj());
+              return;
+            }
             unsigned idx=currseq[colno];
             if (Properties().get_column_type(idx)==SimpleTreeModel_Properties::ct_bool)
             {
