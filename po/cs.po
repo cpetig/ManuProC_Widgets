@@ -1,0 +1,151 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Christof Petig
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: manuproc_widgets 0.8.0\n"
+"Report-Msgid-Bugs-To: manuproc-developer-de@berlios.de\n"
+"POT-Creation-Date: 2013-11-16 00:08+0100\n"
+"PO-Revision-Date: 2015-01-09 13:48+0100\n"
+"Last-Translator: \n"
+"Language-Team: Stahlwille\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"Language: cs\n"
+
+#: src/datewin_glade.cc:60 src/datewin_glade.cc:64
+msgid "."
+msgstr ""
+
+#: src/datewin_glade.cc:73
+msgid "'"
+msgstr ""
+
+#: src/datewin_glade.cc:79 src/datewin_popup_glade.cc:68
+#: src/datewin_popup_glade.cc:96 src/IntStringBox_glade.cc:60
+msgid "Empty"
+msgstr "Prázdný"
+
+#: src/datewin_popup_glade.cc:62 src/datewin_popup_glade.cc:80
+msgid "Date"
+msgstr "Datum"
+
+#: src/datewin_popup_glade.cc:65 src/datewin_popup_glade.cc:88
+msgid "Week"
+msgstr "Týden"
+
+#: src/datewin_popup_glade.cc:125
+msgid "Date properties"
+msgstr "Datum vlastnosti"
+
+#: src/IntStringBox.cc:30
+msgid "++ add to list ++"
+msgstr "++ Přidat k oblíbeným ++"
+
+#: src/IntStringBox_glade.cc:54
+msgid "Int"
+msgstr ""
+
+#: src/IntStringBox_glade.cc:55
+msgid "Name1"
+msgstr "Název1"
+
+#: src/IntStringBox_glade.cc:56
+msgid "Name2"
+msgstr "Název2"
+
+#: src/SimpleTree.cc:434
+msgid "Reset order"
+msgstr "Obnovit objednat"
+
+#: src/SimpleTree.cc:435
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: src/SimpleTree.cc:436
+msgid "Apply new order"
+msgstr "Použít nový řád"
+
+#: src/SimpleTree.cc:438
+msgid "Visble columns"
+msgstr "Viditelné sloupce"
+
+#: src/SimpleTree.cc:447
+msgid "Options"
+msgstr "Možnosti"
+
+#: src/SimpleTree.cc:450
+msgid ""
+"Fill with standard order\n"
+"(instead of current)"
+msgstr ""
+"Naplňte se standardním pořadí \n"
+" ( namísto proudu )"
+
+#: src/SimpleTree.cc:452
+msgid "Unfold selected columns"
+msgstr "Rozložte vybrané sloupce"
+
+#: src/SimpleTree.cc:453
+msgid "Colorize by depth"
+msgstr "Kolorování hloubkou"
+
+#: src/SimpleTree.cc:454
+msgid "Display children count"
+msgstr "Počet zobrazení děti"
+
+#: src/SimpleTree.cc:457
+msgid "Unfold all"
+msgstr "Rozložte všechny"
+
+#: src/SimpleTree.cc:458
+msgid "Fold all"
+msgstr "Složte všechny"
+
+#: src/SimpleTree.cc:460
+msgid "Export to .XLS"
+msgstr "Export do .XLS"
+
+#: src/SimpleTree.cc:461
+msgid "Export to .CSV"
+msgstr "Export do .CSV"
+
+#: src/SimpleTree.cc:465
+msgid "Ranking"
+msgstr "Žebříček"
+
+#: src/SimpleTree.cc:468
+msgid " off "
+msgstr "pryč"
+
+#: src/SimpleTree.cc:792 src/SimpleTree.cc:873 src/SimpleTree.cc:890
+msgid "Table"
+msgstr "stůl"
+
+#: src/SimpleTree.cc:879
+msgid "Excel tables (*.xls)"
+msgstr "Tabulky Excel ( * .xls )"
+
+#: src/SimpleTree.cc:879
+msgid "*.xls"
+msgstr ""
+
+#: src/SimpleTree.cc:879 src/SimpleTree.cc:896
+msgid "Export table"
+msgstr "Export table"
+
+#: src/SimpleTree.cc:896
+msgid "CSV files (*.csv)"
+msgstr "Soubory CSV ( * .csv )"
+
+#: src/SimpleTree.cc:896
+msgid "*.csv"
+msgstr ""
+
+#: src/IntStringPopup_glade.cc:55
+msgid "Reset"
+msgstr "Obnovit"
