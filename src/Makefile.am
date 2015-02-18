@@ -10,7 +10,7 @@ ADDONS_FILES=Gtk_OStream_label.cc \
 		 Gtk_OStream_optionmenu.cc Gtk_OStream_stream.cc \
 		 SearchCombo.cc TeX.cc Gtk_OStream.cc \
 		 gtksearchcombo.c Gtk_OStream_TreeView.cc \
-		 DoubleButton.cc doublebutton.c WinFileReq.cc \
+		 DoubleButton.cc doublebutton.c \
 		 ChoiceButton.cc gtkhacks.cc Gtk2TeX.cc \
 		 expander_hook.c 
 else
