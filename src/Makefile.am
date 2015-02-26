@@ -10,7 +10,7 @@ ADDONS_FILES=Gtk_OStream_label.cc \
 		 Gtk_OStream_optionmenu.cc Gtk_OStream_stream.cc \
 		 SearchCombo.cc TeX.cc Gtk_OStream.cc \
 		 gtksearchcombo.c Gtk_OStream_TreeView.cc \
-		 DoubleButton.cc doublebutton.c WinFileReq.cc \
+		 DoubleButton.cc doublebutton.c \
 		 ChoiceButton.cc gtkhacks.cc Gtk2TeX.cc \
 		 expander_hook.c 
 else
@@ -58,8 +58,10 @@ libManuProC_Widgets_la_SOURCES=EingabeBox.cc \
 		IntStringBox_gui.cc IntStringBox.cc IntStringBox_glade.cc \
 		IntStringPopup_glade.cc datewin.cc datewin_glade.cc \
 		datewin_popup.cc datewin_popup_glade.cc BasicExcel.cpp \
-		md5/md5.c md5/md5string.cc getuid.cc \
+		md5/md5.c md5/md5string.cc \
 		$(DLL_DEF) $(ADDONS_FILES)
+
+# getuid.cc
 
 BUILT_SOURCES=datewin.hh logwin.hh
 
