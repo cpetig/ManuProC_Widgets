@@ -48,6 +48,7 @@ void MyWindow::setPositionSize(Gtk::Window &window,const std::string &programm)
   if(x==0) x+=5;
   if(y==0) y+=15;
   window.get_window()->move(x,y);
-  window.set_default_size(width,height);
+//  window.set_default_size(width,height);
+  window.resize(width,height);
 }
 
