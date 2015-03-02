@@ -186,9 +186,9 @@ class SimpleTree : public SimpleTree_Basic
 {
 public:
 	// attr is not needed any longer
-	SimpleTree(guint maxcol) : SimpleTree_Basic(maxcol), filter_column(-1), filter_time(), filter_entry()
+	SimpleTree(guint maxcol) : SimpleTree_Basic(maxcol), filter_time(), filter_column(-1),  filter_entry()
 	{}
-	SimpleTree(SimpleTreeModel_Properties &props) : SimpleTree_Basic(props), filter_column(-1), filter_time(), filter_entry()
+	SimpleTree(SimpleTreeModel_Properties &props) : SimpleTree_Basic(props), filter_time(), filter_column(-1), filter_entry()
 	{}
 	__deprecated_ctor SimpleTree(guint maxcol, const std::vector<std::string>& T
                                 ,const std::vector<cH_RowDataBase>& D)
