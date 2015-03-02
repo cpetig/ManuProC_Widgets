@@ -234,8 +234,8 @@ private:
  void filter_changed();
  sigc::connection key_connection;
  sigc::connection entry_connection;
- int filter_column;
  guint32 filter_time;
+ int filter_column;
  Gtk::Entry* filter_entry;
 
 public:
