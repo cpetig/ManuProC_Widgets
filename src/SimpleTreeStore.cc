@@ -1324,11 +1324,13 @@ bool SimpleTreeStore::default_filter(SimpleTreeStore const* th, cH_RowDataBase c
   unsigned idx=0;
   for (sequence_t::const_iterator i=th->vec_filter_match.begin(); i!=th->vec_filter_match.end(); ++i,++idx)
    {
-    std::string valuedata=row->Value(*i,th->ValueData())->getStrVal().substr(0,text.size());
+    std::string valuedata=row->Value(*i,th->ValueData())->getStrVal();
     std::string textdata=text;
+    valuedata.erase(std::remove(valuedata.begin(), valuedata.end(), ' '), valuedata.end());
+    textdata.erase(std::remove(textdata.begin(), textdata.end(), ' '), textdata.end());    
     std::transform(valuedata.begin(),valuedata.end(),valuedata.begin(),::tolower);
     std::transform(textdata.begin(),textdata.end(),textdata.begin(),::tolower);    
-    if (valuedata==textdata)
+    if (valuedata.substr(0,textdata.size())==textdata || textdata.empty())
       return true;
    }
   return false;
