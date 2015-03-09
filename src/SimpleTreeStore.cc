@@ -37,6 +37,8 @@
 #endif
 
 static bool has_any_attributes(SimpleTreeModel_Properties const &props);
+static std::map<unsigned, std::map<char,unsigned> > colors_rgb;
+static std::map<char,unsigned> rgb;
 
 #ifdef ST_DEPRECATED
 struct SimpleTreeModel_Properties_Proxy::Standard : public SimpleTreeModel_Properties
@@ -291,6 +293,8 @@ void SimpleTreeStore::load_remembered()
    setSequence(s);
    signal_save(0);
    block_save=false;
+   
+
 }
 
 
@@ -329,10 +333,7 @@ void SimpleTreeStore::on_visibly_changed(bvector_iterator it)
    setSequence(currseq, optimize);
 }
 
-static const unsigned col0=0xffff, col1=0xf1ff, col2=0xe3ff, col3=0xd5ff, col4=0xc7ff;
-static const unsigned col5=0x00ff, col6=0xa2ff;
-static const unsigned col7=0xf1ff, col8=0x94ff;
-static const unsigned col9=0xe3ff, col10=0x86ff;
+
 
 
 void SimpleTreeStore::init()
@@ -359,25 +360,68 @@ void SimpleTreeStore::init()
    signal_redisplay_save.connect(sigc::mem_fun(*this,&SimpleTreeStore::save_and_redisplay));
    signal_visibly_changed.connect(sigc::mem_fun(*this,&SimpleTreeStore::on_visibly_changed));
   Gdk::Color c;
-/*
-  c.set_rgb(col1,col1,col1); colors.push_back(c); // white
-  c.set_rgb(col1,col0,col0); colors.push_back(c); // red
-  c.set_rgb(col1,col1,col0); colors.push_back(c); // yellow
-  c.set_rgb(col0,col1,col0); colors.push_back(c); // green
-  c.set_rgb(col0,col1,col1); colors.push_back(c); // cyan
-  c.set_rgb(col0,col0,col1); colors.push_back(c); // blue
-  c.set_rgb(col1,col0,col1); colors.push_back(c); // magenta
-  c.set_rgb(col0,col0,col0); colors.push_back(c); // dark grey
-*/  
-  c.set_rgb(col0,col0,col0); colors.push_back(c); // white
-  c.set_rgb(col1,col1,col1); colors.push_back(c); // grey1  
-  c.set_rgb(col2,col2,col2); colors.push_back(c); // grey2
-  c.set_rgb(col3,col3,col3); colors.push_back(c); // grey3
-  c.set_rgb(col4,col4,col4); colors.push_back(c); // grey4
-  c.set_rgb(col5,col0,col6); colors.push_back(c); // green1
-  c.set_rgb(col5,col7,col8); colors.push_back(c); // green2
-  c.set_rgb(col5,col9,col10); colors.push_back(c); // green3
+
+  rgb['r']=0xffff;
+  rgb['g']=0xffff;
+  rgb['b']=0xffff;	// white
+  colors_rgb[0]=rgb; rgb.clear();
+  rgb['r']=0xf1ff;
+  rgb['g']=0xf1ff;
+  rgb['b']=0xf1ff;	// grey1
+  colors_rgb[1]=rgb; rgb.clear();  
+  rgb['r']=0xe3ff;
+  rgb['g']=0xe3ff;
+  rgb['b']=0xe3ff;	// grey2
+  colors_rgb[2]=rgb; rgb.clear();    
+  rgb['r']=0xd5ff;
+  rgb['g']=0xd5ff;
+  rgb['b']=0xd5ff;	// grey3
+  colors_rgb[3]=rgb; rgb.clear();    
+  rgb['r']=0xc7ff;
+  rgb['g']=0xc7ff;
+  rgb['b']=0xc7ff;	// grey4
+  colors_rgb[4]=rgb; rgb.clear();    
+  rgb['r']=0x00ff;
+  rgb['g']=0xffff;
+  rgb['b']=0xa2ff;	// green1
+  colors_rgb[5]=rgb; rgb.clear();      
+  rgb['r']=0x00ff;
+  rgb['g']=0xf1ff;
+  rgb['b']=0x94ff;	// green2
+  colors_rgb[6]=rgb; rgb.clear();      
+  rgb['r']=0x00ff;
+  rgb['g']=0xe3ff;
+  rgb['b']=0x86ff;	// green3
+  colors_rgb[7]=rgb; rgb.clear();      
+
+   unsigned colidx=0;
+   while(colidx<num_colors)
+     {
+      std::string rgbstr=Global_Settings(0,"sensomaster","rgb_col"+itos(colidx)).get_Wert();      
+      if(!rgbstr.empty())
+        {
+         std::stringstream s;
+         unsigned value;
+         s << std::hex << rgbstr;
+         s >> value;
+         colors_rgb[colidx]['r']=((value>>0x10)<<0x8)+0xff;
+         colors_rgb[colidx]['g']=(((value>>0x8)&0xff)<<0x8)+0xff;         
+         colors_rgb[colidx]['b']=((value&0xff)<<0x8)+0xff;
+        }
+      colidx++;  
+     }
+
+  c.set_rgb(colors_rgb[0]['r'],colors_rgb[0]['g'],colors_rgb[0]['b']); colors.push_back(c);
+  c.set_rgb(colors_rgb[1]['r'],colors_rgb[1]['g'],colors_rgb[1]['b']); colors.push_back(c);  
+  c.set_rgb(colors_rgb[2]['r'],colors_rgb[2]['g'],colors_rgb[2]['b']); colors.push_back(c);
+  c.set_rgb(colors_rgb[3]['r'],colors_rgb[3]['g'],colors_rgb[3]['b']); colors.push_back(c);  
+  c.set_rgb(colors_rgb[4]['r'],colors_rgb[4]['g'],colors_rgb[4]['b']); colors.push_back(c);
+  c.set_rgb(colors_rgb[5]['r'],colors_rgb[5]['g'],colors_rgb[5]['b']); colors.push_back(c);  
+  c.set_rgb(colors_rgb[6]['r'],colors_rgb[6]['g'],colors_rgb[6]['b']); colors.push_back(c);
+  c.set_rgb(colors_rgb[7]['r'],colors_rgb[7]['g'],colors_rgb[7]['b']); colors.push_back(c);  
+  
   assert(colors.size()==num_colors);
+
   load_remembered();
 }
 
