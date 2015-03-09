@@ -293,7 +293,7 @@ void SimpleTreeStore::load_remembered()
    block_save=false;
 }
 
-static const unsigned col1=0xffff,col0=0xcfff;
+
 
 void SimpleTreeStore::on_visibly_changed(bvector_iterator it)
 { if (block_save) return;
@@ -329,6 +329,12 @@ void SimpleTreeStore::on_visibly_changed(bvector_iterator it)
    setSequence(currseq, optimize);
 }
 
+static const unsigned col0=0xffff, col1=0xf1ff, col2=0xe3ff, col3=0xd5ff, col4=0xc7ff;
+static const unsigned col5=0x00ff, col6=0xa2ff;
+static const unsigned col7=0xf1ff, col8=0x94ff;
+static const unsigned col9=0xe3ff, col10=0x86ff;
+
+
 void SimpleTreeStore::init()
 {
   //We need to specify a particular get_type() from one of the virtual base classes, but they should
@@ -353,6 +359,7 @@ void SimpleTreeStore::init()
    signal_redisplay_save.connect(sigc::mem_fun(*this,&SimpleTreeStore::save_and_redisplay));
    signal_visibly_changed.connect(sigc::mem_fun(*this,&SimpleTreeStore::on_visibly_changed));
   Gdk::Color c;
+/*
   c.set_rgb(col1,col1,col1); colors.push_back(c); // white
   c.set_rgb(col1,col0,col0); colors.push_back(c); // red
   c.set_rgb(col1,col1,col0); colors.push_back(c); // yellow
@@ -361,6 +368,15 @@ void SimpleTreeStore::init()
   c.set_rgb(col0,col0,col1); colors.push_back(c); // blue
   c.set_rgb(col1,col0,col1); colors.push_back(c); // magenta
   c.set_rgb(col0,col0,col0); colors.push_back(c); // dark grey
+*/  
+  c.set_rgb(col0,col0,col0); colors.push_back(c); // white
+  c.set_rgb(col1,col1,col1); colors.push_back(c); // grey1  
+  c.set_rgb(col2,col2,col2); colors.push_back(c); // grey2
+  c.set_rgb(col3,col3,col3); colors.push_back(c); // grey3
+  c.set_rgb(col4,col4,col4); colors.push_back(c); // grey4
+  c.set_rgb(col5,col0,col6); colors.push_back(c); // green1
+  c.set_rgb(col5,col7,col8); colors.push_back(c); // green2
+  c.set_rgb(col5,col9,col10); colors.push_back(c); // green3
   assert(colors.size()==num_colors);
   load_remembered();
 }
