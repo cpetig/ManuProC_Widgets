@@ -993,11 +993,14 @@ void SimpleTree::filter_changed()
 }
 
 
-void SimpleTree_Basic::EnableTooltips(const bool)
+void SimpleTree_Basic::EnableTooltips(const bool t)
 {
 #if GTKMM_MAJOR_VERSION==2 && GTKMM_MINOR_VERSION>11
-  set_has_tooltip(true);
-  tooltip_sig=signal_query_tooltip().connect(sigc::mem_fun(*this, &SimpleTree_Basic::on_query_tooltip));
+  set_has_tooltip(t);
+  if(t)
+    tooltip_sig=signal_query_tooltip().connect(sigc::mem_fun(*this, &SimpleTree_Basic::on_query_tooltip));
+  else
+    tooltip_sig.disconnect();  
 #endif    
 }
 

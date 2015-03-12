@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manuproc_widgets 0.8.0\n"
 "Report-Msgid-Bugs-To: manuproc-developer-de@berlios.de\n"
-"POT-Creation-Date: 2013-04-17 16:26+0200\n"
-"PO-Revision-Date: 2011-03-10 18:13+0100\n"
+"POT-Creation-Date: 2015-03-12 16:27+0100\n"
+"PO-Revision-Date: 2015-03-12 16:29+0100\n"
 "Last-Translator: Jacek Jakubowski, TuxSolutions <jacek@tuxsolutions.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: src/datewin_glade.cc:60 src/datewin_glade.cc:64
 msgid "."
@@ -27,7 +28,7 @@ msgstr "'"
 #: src/datewin_glade.cc:79 src/datewin_popup_glade.cc:68
 #: src/datewin_popup_glade.cc:96 src/IntStringBox_glade.cc:60
 msgid "Empty"
-msgstr "Leeren"
+msgstr "Leer"
 
 #: src/datewin_popup_glade.cc:62 src/datewin_popup_glade.cc:80
 msgid "Date"
@@ -43,7 +44,7 @@ msgstr "Datumseigenschaften"
 
 #: src/IntStringBox.cc:30
 msgid "++ add to list ++"
-msgstr ""
+msgstr "++ zur Liste hinzufügen ++"
 
 #: src/IntStringBox_glade.cc:54
 msgid "Int"
@@ -57,27 +58,27 @@ msgstr "Name1"
 msgid "Name2"
 msgstr "Name2"
 
-#: src/SimpleTree.cc:433
+#: src/SimpleTree.cc:447
 msgid "Reset order"
 msgstr "Zurücksetzen"
 
-#: src/SimpleTree.cc:434
+#: src/SimpleTree.cc:448
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: src/SimpleTree.cc:435
+#: src/SimpleTree.cc:449
 msgid "Apply new order"
 msgstr "Neuordnen"
 
-#: src/SimpleTree.cc:437
+#: src/SimpleTree.cc:451
 msgid "Visble columns"
 msgstr "Sichtbare Spalten"
 
-#: src/SimpleTree.cc:446
+#: src/SimpleTree.cc:460
 msgid "Options"
 msgstr "Optionen"
 
-#: src/SimpleTree.cc:449
+#: src/SimpleTree.cc:463
 msgid ""
 "Fill with standard order\n"
 "(instead of current)"
@@ -85,68 +86,73 @@ msgstr ""
 "Auffüllen mit Standardreihenfolge\n"
 "(statt der aktuellen)"
 
-#: src/SimpleTree.cc:451
+#: src/SimpleTree.cc:465
 msgid "Unfold selected columns"
 msgstr "Ausgewählte Spalten aufklappen"
 
-#: src/SimpleTree.cc:452
+#: src/SimpleTree.cc:466
 msgid "Colorize by depth"
 msgstr "Tiefe farblich markieren"
 
-#: src/SimpleTree.cc:453
+#: src/SimpleTree.cc:467
 msgid "Display children count"
 msgstr "Zeilen zählen"
 
-#: src/SimpleTree.cc:456
+#: src/SimpleTree.cc:470
 msgid "Unfold all"
 msgstr "Alles aufklappen"
 
-#: src/SimpleTree.cc:457
+#: src/SimpleTree.cc:471
 msgid "Fold all"
 msgstr "Alles zuklappen"
 
-#: src/SimpleTree.cc:459
+#: src/SimpleTree.cc:473
 msgid "Export to .XLS"
 msgstr "Excel-Datei schreiben"
 
-#: src/SimpleTree.cc:460
-#, fuzzy
+#: src/SimpleTree.cc:474
 msgid "Export to .CSV"
-msgstr "Excel-Datei schreiben"
+msgstr "Als CSV exportieren"
 
-#: src/SimpleTree.cc:464
-msgid "Ranking"
-msgstr "Rangfolge"
+#: src/SimpleTree.cc:478
+msgid "Sorting column"
+msgstr "Sortierspalte"
 
-#: src/SimpleTree.cc:467
+#: src/SimpleTree.cc:481
 msgid " off "
 msgstr " aus "
 
-#: src/SimpleTree.cc:791 src/SimpleTree.cc:872 src/SimpleTree.cc:889
+#: src/SimpleTree.cc:484
+msgid "Reset sorting order"
+msgstr "Sortierung zurücksetzen"
+
+#: src/SimpleTree.cc:806 src/SimpleTree.cc:887 src/SimpleTree.cc:904
 msgid "Table"
 msgstr "Tabelle"
 
-#: src/SimpleTree.cc:878
+#: src/SimpleTree.cc:893
 msgid "Excel tables (*.xls)"
 msgstr "Excel Tabellen (*.xls)"
 
-#: src/SimpleTree.cc:878
+#: src/SimpleTree.cc:893
 msgid "*.xls"
 msgstr ""
 
-#: src/SimpleTree.cc:878 src/SimpleTree.cc:895
+#: src/SimpleTree.cc:893 src/SimpleTree.cc:910
 msgid "Export table"
 msgstr "Tabelle speichern"
 
-#: src/SimpleTree.cc:895
+#: src/SimpleTree.cc:910
 msgid "CSV files (*.csv)"
-msgstr ""
+msgstr "CSV Dateien (*.csv)"
 
-#: src/SimpleTree.cc:895
+#: src/SimpleTree.cc:910
 msgid "*.csv"
 msgstr ""
 
 #: src/IntStringPopup_glade.cc:55
-#, fuzzy
 msgid "Reset"
 msgstr "Zurücksetzen"
+
+#~ msgid "Ranking"
+#~ msgstr "Rangfolge"

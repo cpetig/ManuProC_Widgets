@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manuproc_widgets 0.8.0\n"
 "Report-Msgid-Bugs-To: manuproc-developer-de@berlios.de\n"
-"POT-Creation-Date: 2013-04-17 16:26+0200\n"
+"POT-Creation-Date: 2015-03-12 16:27+0100\n"
 "PO-Revision-Date: 2010-11-15 13:54+0100\n"
 "Last-Translator: Christof Petig <petig@stahlwille.de>\n"
 "Language-Team: Danish\n"
@@ -57,89 +57,93 @@ msgstr ""
 msgid "Name2"
 msgstr ""
 
-#: src/SimpleTree.cc:433
+#: src/SimpleTree.cc:447
 msgid "Reset order"
 msgstr ""
 
-#: src/SimpleTree.cc:434
+#: src/SimpleTree.cc:448
 msgid "Cancel"
 msgstr ""
 
-#: src/SimpleTree.cc:435
+#: src/SimpleTree.cc:449
 msgid "Apply new order"
 msgstr ""
 
-#: src/SimpleTree.cc:437
+#: src/SimpleTree.cc:451
 msgid "Visble columns"
 msgstr ""
 
-#: src/SimpleTree.cc:446
+#: src/SimpleTree.cc:460
 msgid "Options"
 msgstr ""
 
-#: src/SimpleTree.cc:449
+#: src/SimpleTree.cc:463
 msgid ""
 "Fill with standard order\n"
 "(instead of current)"
 msgstr ""
 
-#: src/SimpleTree.cc:451
+#: src/SimpleTree.cc:465
 msgid "Unfold selected columns"
 msgstr ""
 
-#: src/SimpleTree.cc:452
+#: src/SimpleTree.cc:466
 msgid "Colorize by depth"
 msgstr ""
 
-#: src/SimpleTree.cc:453
+#: src/SimpleTree.cc:467
 msgid "Display children count"
 msgstr ""
 
-#: src/SimpleTree.cc:456
+#: src/SimpleTree.cc:470
 msgid "Unfold all"
 msgstr ""
 
-#: src/SimpleTree.cc:457
+#: src/SimpleTree.cc:471
 msgid "Fold all"
 msgstr ""
 
-#: src/SimpleTree.cc:459
+#: src/SimpleTree.cc:473
 msgid "Export to .XLS"
 msgstr ""
 
-#: src/SimpleTree.cc:460
+#: src/SimpleTree.cc:474
 msgid "Export to .CSV"
 msgstr ""
 
-#: src/SimpleTree.cc:464
-msgid "Ranking"
+#: src/SimpleTree.cc:478
+msgid "Sorting column"
 msgstr ""
 
-#: src/SimpleTree.cc:467
+#: src/SimpleTree.cc:481
 msgid " off "
 msgstr ""
 
-#: src/SimpleTree.cc:791 src/SimpleTree.cc:872 src/SimpleTree.cc:889
+#: src/SimpleTree.cc:484
+msgid "Reset sorting order"
+msgstr ""
+
+#: src/SimpleTree.cc:806 src/SimpleTree.cc:887 src/SimpleTree.cc:904
 msgid "Table"
 msgstr ""
 
-#: src/SimpleTree.cc:878
+#: src/SimpleTree.cc:893
 msgid "Excel tables (*.xls)"
 msgstr ""
 
-#: src/SimpleTree.cc:878
+#: src/SimpleTree.cc:893
 msgid "*.xls"
 msgstr ""
 
-#: src/SimpleTree.cc:878 src/SimpleTree.cc:895
+#: src/SimpleTree.cc:893 src/SimpleTree.cc:910
 msgid "Export table"
 msgstr ""
 
-#: src/SimpleTree.cc:895
+#: src/SimpleTree.cc:910
 msgid "CSV files (*.csv)"
 msgstr ""
 
-#: src/SimpleTree.cc:895
+#: src/SimpleTree.cc:910
 msgid "*.csv"
 msgstr ""
 
