@@ -25,7 +25,7 @@
 #include <BaseObjects/Model.h>
 #include <list>
 #include <gtkmm/tooltips.h>
-#include <sigc++/object.h>
+//#include <sigc++/object.h>
 
 struct TooltipAssociation : sigc::trackable
 {	Gtk::Widget *widget;

@@ -23,7 +23,7 @@
 #define MODELWIDGETCONNECTION_H
 
 #include <BaseObjects/Model.h>
-#include <sigc++/object.h>
+//#include <sigc++/object.h>
 #include <sigc++/connection.h>
 //#include <glib/gtypes.h>
 #include <glib.h>

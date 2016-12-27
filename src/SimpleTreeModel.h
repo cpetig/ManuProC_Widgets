@@ -23,8 +23,8 @@
 
 #include <string>
 #include <vector>
-#include <sigc++/object.h>
-#include <sigc++/signal.h>
+//#include <sigc++/object.h>
+//#include <sigc++/signal.h>
 //#include <glib/gtypes.h>
 #include <glib.h> // subinclude no longer possible with 2.31
 #include <RowDataBase.h>
