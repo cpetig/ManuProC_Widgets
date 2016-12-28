@@ -183,8 +183,15 @@ namespace std { // sigh
 void swap(SimpleTreeStoreNode &a,SimpleTreeStoreNode &b);
 };
 
-class SimpleTreeStore : virtual public Glib::Object, public Gtk::TreeModel,
+class SimpleTreeStore :
+#if !GLIB_CHECK_VERSION(2, 42, 0)
+		virtual public Glib::Object,
+#endif
+                public Gtk::TreeModel,
 		public Gtk::TreeDragSource, public Gtk::TreeDragDest,
+#if GLIB_CHECK_VERSION(2, 42, 0)
+	    public Glib::Object,
+#endif		
 		public SimpleTreeModel_Proxy,
 		public SimpleTreeModel_Properties_Proxy
 {public:
