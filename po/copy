@@ -3,9 +3,9 @@ for i in `cat LINGUAS`
 do
   rm ${i}.mo
   make ${i}.mo
-  mkdir -p /opt/jacek/stw_installer/share/locale/${i}/LC_MESSAGES 
+#  mkdir -p /opt/jacek/stw_installer/share/locale/${i}/LC_MESSAGES 
   sudo mkdir -p /usr/local/share/locale/${i}/LC_MESSAGES
-  cp ${i}.mo /opt/jacek/stw_installer/share/locale/${i}/LC_MESSAGES/ManuProC_Widgets.mo
+#  cp ${i}.mo /opt/jacek/stw_installer/share/locale/${i}/LC_MESSAGES/ManuProC_Widgets.mo
   sudo cp ${i}.mo /usr/local/share/locale/${i}/LC_MESSAGES/ManuProC_Widgets.mo
   cp ${i}.mo ManuProC_Widgets_${i}.mo
   cp ${i}.po ManuProC_Widgets_${i}.po
