@@ -1,2 +1,7 @@
 *.o
 *.lo
+/Makefile
+/Makefile.in
+/libManuProC_Widgets.la
+/libManuProC_Widgets.rc
+/logwin.hh
