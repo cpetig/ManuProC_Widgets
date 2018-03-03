@@ -20,3 +20,4 @@ SearchCombo.cc
 logwin.hh
 DoubleButton.cc
 Gtk2TeX.cc
+/datewin.hh
