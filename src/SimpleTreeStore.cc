@@ -32,6 +32,8 @@
 #include <Misc/EntryValueSort.h>
 #include <Misc/EntryValueInvert.h>
 
+#include <sstream>
+
 #ifdef __MINGW32__
 #define getuid() 0
 #endif
