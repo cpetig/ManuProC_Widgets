@@ -36,6 +36,7 @@
 //
 
 #include <Misc/EntryValue_easy.h>
+#include <Misc/EntryValueIntString.h>
 #include <Misc/create_parse.h>
 #include <RowDataBase.h>
 #include <SimpleTree.hh>
@@ -46,6 +47,7 @@ template <typename A, typename B=EntryValue_easy::nil, typename C=EntryValue_eas
           typename H=EntryValue_easy::nil>
 class RowDataBase_easy : public RowDataBase
 {// the data
+ cH_EntryValueIntString m_externalKey;
  A a;
  B b;
  C c;
@@ -61,6 +63,7 @@ public:
   : a(_a), b(_b), c(_c), d(_d), e(_e), f(_f), g(_g), h(_h)
  { }
 
+ typedef cH_EntryValueIntString ExternalKey;
  typedef A type_0;
  typedef B type_1;
  typedef C type_2;
@@ -69,6 +72,9 @@ public:
  typedef F type_5;
  typedef G type_6;
  typedef H type_7;
+
+ void setExternalKey(const int keyValue) { m_externalKey = keyValue; }
+ ExternalKey const& getExternalKey() const { return m_externalKey; }
 
  A const& get_0() const { return a; }
  B const& get_1() const { return b; }
@@ -190,6 +196,11 @@ template <class T>
 template <class T>
 bool operator==(cH_RowDataBase const& r, RDB_easy_comp_0<T> const& key)
 { return r.cast_static<T>()->get_0()==key.key0;
+}
+
+template <class T>
+bool operator==(cH_RowDataBase const& r, typename T::ExternalKey const& key)
+{ return r.cast_static<T>()->getExternalKey()==key.getIntVal();
 }
 
 #endif
