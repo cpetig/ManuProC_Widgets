@@ -268,12 +268,10 @@ public:
     notNodeSelected() {}
  };
 
- cH_RowDataBase getSelectedRowDataBase() const
- 	throw(noRowSelected,multipleRowsSelected,notLeafSelected);
+ cH_RowDataBase getSelectedRowDataBase() const;
  // the easy function if you don't care too much what's selected, please check for null
  cH_RowDataBase getFirstSelection() const throw();
- cH_RowDataBase getCursorRowDataBase() const
- 	throw(noRowSelected,multipleRowsSelected,notLeafSelected);
+ cH_RowDataBase getCursorRowDataBase() const;
  std::vector<cH_RowDataBase> getSelectedRowDataBase_vec(bool include_nodes=false) const throw();
 
 #if 1 // deprecated
@@ -290,8 +288,7 @@ public:
  template <class T> T getCursorRowDataBase_as() const
  {  return T::cast_dynamic(getCursorRowDataBase());
  }
- Handle<const TreeRow> getSelectedNode() const
- 	throw(noNodeSelected,multipleNodesSelected,notNodeSelected);
+ Handle<const TreeRow> getSelectedNode() const;
  template <typename T> Handle<const T> getSelectedNode_as() const
  {  return Handle<const T>::cast_dynamic(getSelectedNode());
  }

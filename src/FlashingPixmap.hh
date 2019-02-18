@@ -38,10 +38,8 @@ class FlashingPixmap : public Gtk::Image
       void setFlash(Glib::RefPtr<Gdk::Pixbuf> p) {flashPix=p;}
    public:
       FlashingPixmap() : stop(true),def(true) {}
-      /*__deprecated*/ FlashingPixmap(const gchar * const *d,const gchar * const *f,unsigned int msec);
       FlashingPixmap(Glib::RefPtr<Gdk::Pixbuf> d,Glib::RefPtr<Gdk::Pixbuf> f,unsigned int msec);
 
-      __deprecated void set(const gchar * const *d,const gchar * const *f,unsigned int msec);
       void set(Glib::RefPtr<Gdk::Pixbuf> d,Glib::RefPtr<Gdk::Pixbuf> f,unsigned int msec);
       void setTime(unsigned int sec) ;
 };

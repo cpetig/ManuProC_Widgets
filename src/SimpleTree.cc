@@ -301,7 +301,6 @@ void SimpleTree_Basic::on_selection_changed()
 }
 
 cH_RowDataBase SimpleTree::getSelectedRowDataBase() const
-	throw(noRowSelected,multipleRowsSelected,notLeafSelected)
 {  Gtk::TreeModel::iterator sel=const_cast<SimpleTree*>(this)
 		->get_selection()->get_selected();
    if (sel)
@@ -322,8 +321,6 @@ cH_RowDataBase SimpleTree::getFirstSelection() const throw()
 
 
 cH_RowDataBase SimpleTree::getCursorRowDataBase() const
-// actually it does not throw multipleRowsSelected
-	throw(noRowSelected,multipleRowsSelected,notLeafSelected)
 {  Gtk::TreeModel::Path path;
    Gtk::TreeViewColumn *col=0;
    const_cast<SimpleTree*>(this)->get_cursor(path,col);
@@ -338,7 +335,6 @@ cH_RowDataBase SimpleTree::getCursorRowDataBase() const
 
 
 Handle<const TreeRow> SimpleTree::getSelectedNode() const
- 	throw(noNodeSelected,multipleNodesSelected,notNodeSelected)
 {
   Gtk::TreeModel::iterator sel=const_cast<SimpleTree*>(this)
 		->get_selection()->get_selected();
@@ -1033,9 +1029,8 @@ bool SimpleTree_Basic::on_query_tooltip(int x, int y, bool keyboard_mode,
       iloop != cols.end(); ++iloop, ++col)
     if (*iloop == focus)
       break;
-  //std::cerr << "qt:" << col << "\n";
-#warning ungeklaert
-  --col; // ????
+
+  --col;
   if (col >= Cols())
     return false;
   std::string tip=static_cast<cH_RowDataBase>((*i)[getStore()->m_columns.leafdata])->ToolTip(IndexFromColumn(col),getStore()->ValueData());
