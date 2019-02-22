@@ -596,7 +596,7 @@ cH_RowDataBase TreeBase::getSelectedRowDataBase() const
    return (dynamic_cast<TreeRow*>(selectedrow))->LeafData();
 }
 
-std::vector<cH_RowDataBase> TreeBase::getSelectedRowDataBase_vec() const throw(notLeafSelected)
+std::vector<cH_RowDataBase> TreeBase::getSelectedRowDataBase_vec() const
 {  SelectionList::iterator e=selection().end();
 
    std::vector<cH_RowDataBase> v;

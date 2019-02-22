@@ -312,9 +312,8 @@ void IntStringBox::int_search(gboolean *_continue, GtkSCContext newsearch)
       	 case GTK_SEARCH_CLOSE:
 	   {
 	    Query("close int_search");
-      	    SQLerror::test(__FILELINE__);
-      	    tr.commit();
-      	    break;
+ 	    tr.commit();
+ 	    break;
 	   }
       }
    }
@@ -387,9 +386,8 @@ void IntStringBox::string2_search(gboolean *_continue, GtkSCContext newsearch)
       	 case GTK_SEARCH_CLOSE:
 	   {
 	    Query("close str2_search");
-      	    SQLerror::test(__FILELINE__);
-      	    tr.commit();
-      	    break;
+	    tr.commit();
+	    break;
 	   }
       }
    }
@@ -469,9 +467,8 @@ void IntStringBox::string1_search(gboolean *_continue, GtkSCContext newsearch)
       	 case GTK_SEARCH_CLOSE:
 	   {
 	    Query("close str1_search");
-      	    SQLerror::test(__FILELINE__);
-      	    tr.commit();
-      	    break;
+	    tr.commit();
+	    break;
 	   }
       }
    }
