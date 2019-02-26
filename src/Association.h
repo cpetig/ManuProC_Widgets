@@ -47,6 +47,6 @@ namespace ManuProC
 
 // attach an object to a widget (should this be a public interface?)
     void attach(Glib::Object &widget, void *obj, void(*dtor)(void*),
-	std::auto_ptr<Glib::Quark> &q,const char * const qname);
+	std::unique_ptr<Glib::Quark> &q,const char * const qname);
 }
 #endif

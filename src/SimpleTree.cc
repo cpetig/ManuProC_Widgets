@@ -301,7 +301,7 @@ void SimpleTree_Basic::on_selection_changed()
 }
 
 cH_RowDataBase SimpleTree::getSelectedRowDataBase() const
-	throw(noRowSelected,multipleRowsSelected,notLeafSelected)
+	
 {  Gtk::TreeModel::iterator sel=const_cast<SimpleTree*>(this)
 		->get_selection()->get_selected();
    if (sel)
@@ -323,7 +323,7 @@ cH_RowDataBase SimpleTree::getFirstSelection() const throw()
 
 cH_RowDataBase SimpleTree::getCursorRowDataBase() const
 // actually it does not throw multipleRowsSelected
-	throw(noRowSelected,multipleRowsSelected,notLeafSelected)
+	
 {  Gtk::TreeModel::Path path;
    Gtk::TreeViewColumn *col=0;
    const_cast<SimpleTree*>(this)->get_cursor(path,col);
@@ -338,7 +338,7 @@ cH_RowDataBase SimpleTree::getCursorRowDataBase() const
 
 
 Handle<const TreeRow> SimpleTree::getSelectedNode() const
- 	throw(noNodeSelected,multipleNodesSelected,notNodeSelected)
+ 	
 {
   Gtk::TreeModel::iterator sel=const_cast<SimpleTree*>(this)
 		->get_selection()->get_selected();
@@ -1008,15 +1008,18 @@ void SimpleTree_Basic::EnableTooltips(const bool t)
 bool SimpleTree_Basic::on_query_tooltip(int x, int y, bool keyboard_mode,
     Glib::RefPtr<Gtk::Tooltip> const& tooltip)
 {
-  //std::cerr << "qt:\n";
   Gtk::TreePath p;
   Gtk::TreeViewColumn* focus = NULL;
+  int col = 0;
+  
   // inspired by jobviewer.py from system-config-printer
   if (keyboard_mode)
   {
     get_cursor(p, focus);
     if (p.empty())
-      return false;
+      {
+        return false;
+      }
   }
   else
   {
@@ -1024,25 +1027,33 @@ bool SimpleTree_Basic::on_query_tooltip(int x, int y, bool keyboard_mode,
     convert_widget_to_bin_window_coords(x, y, bin_x, bin_y);
     bool ok = get_path_at_pos(bin_x, bin_y, p, focus, cell_x, cell_y);
     if (!ok)
-      return false;
+      {
+        return false;
+      }
   }
+
   Gtk::TreeModel::const_iterator i = get_model()->get_iter(p);
-  int col = 0;
   Glib::ListHandle<Gtk::TreeViewColumn*> cols = get_columns();
-  for (Glib::ListHandle<Gtk::TreeViewColumn*>::const_iterator iloop = cols.begin();
-      iloop != cols.end(); ++iloop, ++col)
+  
+  for (Glib::ListHandle<Gtk::TreeViewColumn*>::const_iterator iloop = cols.begin();iloop != cols.end(); ++iloop, ++col)
+  {
     if (*iloop == focus)
+    {
       break;
-  //std::cerr << "qt:" << col << "\n";
-#warning ungeklaert
-  --col; // ????
+    }
+  }
+
+  --col;
+
   if (col >= Cols())
+  { 
     return false;
+  }
+
   std::string tip=static_cast<cH_RowDataBase>((*i)[getStore()->m_columns.leafdata])->ToolTip(IndexFromColumn(col),getStore()->ValueData());
 
   tooltip->set_markup(tip);
-  set_tooltip_cell(tooltip, &p, focus,
-      focus->get_first_cell_renderer());
+  set_tooltip_cell(tooltip, &p, focus,focus->get_first_cell_renderer());
   return true;
 }
 

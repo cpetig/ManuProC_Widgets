@@ -582,7 +582,7 @@ TreeRow *SimpleTree::defaultNewNode
 {  return new TreeRow(deep,v,child_s_deep, child_s_data, expand); }
 
 cH_RowDataBase TreeBase::getSelectedRowDataBase() const
-	throw(noRowSelected,multipleRowsSelected,notLeafSelected)
+	
 {  SelectionList::iterator b=selection().begin(),
 			e=selection().end(),
 			second=b/* +1 */;
@@ -611,7 +611,7 @@ std::vector<cH_RowDataBase> TreeBase::getSelectedRowDataBase_vec() const throw(n
 }
 
 TCListNode &TreeBase::getSelectedNode() const
-	throw(noNodeSelected,multipleNodesSelected,notNodeSelected)
+	
 {  SelectionList::iterator b=selection().begin(),
 			e=selection().end(),
 			second=b/* +1 */;
