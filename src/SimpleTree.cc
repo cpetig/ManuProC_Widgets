@@ -301,7 +301,6 @@ void SimpleTree_Basic::on_selection_changed()
 }
 
 cH_RowDataBase SimpleTree::getSelectedRowDataBase() const
-	
 {  Gtk::TreeModel::iterator sel=const_cast<SimpleTree*>(this)
 		->get_selection()->get_selected();
    if (sel)
@@ -320,10 +319,8 @@ cH_RowDataBase SimpleTree::getFirstSelection() const throw()
    return (*i)[getStore()->m_columns.leafdata];
 }
 
-
-cH_RowDataBase SimpleTree::getCursorRowDataBase() const
 // actually it does not throw multipleRowsSelected
-	
+cH_RowDataBase SimpleTree::getCursorRowDataBase() const
 {  Gtk::TreeModel::Path path;
    Gtk::TreeViewColumn *col=0;
    const_cast<SimpleTree*>(this)->get_cursor(path,col);
@@ -338,7 +335,6 @@ cH_RowDataBase SimpleTree::getCursorRowDataBase() const
 
 
 Handle<const TreeRow> SimpleTree::getSelectedNode() const
- 	
 {
   Gtk::TreeModel::iterator sel=const_cast<SimpleTree*>(this)
 		->get_selection()->get_selected();
