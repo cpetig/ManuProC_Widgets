@@ -30,7 +30,11 @@
 #include <glibmm/quark.h>
 #include <memory>
 
+#if __cplusplus <= 199711L    			
+static std::auto_ptr<Glib::Quark> quark;
+#else
 static std::unique_ptr<Glib::Quark> quark;
+#endif
 static const char * const quarkname = "ManuProC::Association";
 
 // sigc::trackable has no longer a virtal destructor, 
@@ -52,7 +56,11 @@ static C *lookup(Glib::Object &widget)
 }
 
 void ManuProC::attach(Glib::Object &widget, void *obj, void(*dtor)(void*),
+#if __cplusplus <= 199711L    			
+	std::auto_ptr<Glib::Quark> &q,const char * const qname)
+#else       
 	std::unique_ptr<Glib::Quark> &q,const char * const qname)
+#endif
 {  if (!q.get()) q.reset(new Glib::Quark(qname));
    widget.set_data(*q,obj,dtor);
 }

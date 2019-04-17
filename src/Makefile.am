@@ -1,6 +1,6 @@
 # $Id: Makefile.am,v 1.35 2004/07/15 08:10:00 christof Exp $
 AM_CXXFLAGS= @COMMONGTK2_INCLUDES@ @MPC_BASE_INCLUDES@ -DlibManuProC_Widgets_COMPILATION -DlibManuProC_Base_COMPILATION
-AM_CFLAGS= @GTKMM2_INCLUDES@ -DlibManuProC_Widgets_COMPILATION -I../../GtkmmAddons/searchcombo/src
+AM_CFLAGS= @GTKMM2_INCLUDES@ -DlibManuProC_Widgets_COMPILATION -I../../ManuProC_GtkmmAddons/searchcombo/src
 
 if WINDOWS
 WIN_LDFLAGS=-no-undefined -export-symbols libManuProC_Widgets.def @MPC_BASE_LDFLAGS@
@@ -76,5 +76,5 @@ logwin.hh: logwin.h
 CLEANFILES= *~ $(BUILT_SOURCES)
 
 $(ADDONS_FILES):
-	ln -sf ../../GtkmmAddons/src/$@ .
+	ln -sf ../../ManuProC_GtkmmAddons/src/$@ .
 	
