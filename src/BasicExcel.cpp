@@ -4650,7 +4650,7 @@ BasicExcelWorksheet* BasicExcel::AddWorksheet(int sheetIndex)
 	do
 	{
 		char sname[50];
-		sprintf(sname, "Sheet%ld", sheetNo++);
+		sprintf(sname, "Sheet%lu", sheetNo++);
 		yesheet = AddWorksheet(sname, sheetIndex);
 	} while (!yesheet);
 	return yesheet;
