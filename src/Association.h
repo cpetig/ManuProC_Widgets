@@ -49,7 +49,11 @@ namespace ManuProC
     void attach(Glib::Object &widget, 
     			void *obj, 
     			void(*dtor)(void*),
+#if __cplusplus <= 199711L  
+				std::auto_ptr<Glib::Quark> &q,
+#else
 				std::unique_ptr<Glib::Quark> &q,
+#endif
 				const char * const qname);
 }
 #endif
