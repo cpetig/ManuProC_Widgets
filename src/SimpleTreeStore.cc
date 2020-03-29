@@ -396,10 +396,12 @@ void SimpleTreeStore::init()
   rgb['b']=0x86ff;	// green3
   colors_rgb[7]=rgb; rgb.clear();      
 
-   unsigned colidx=0;
-   while(colidx<num_colors)
+   if(Properties().ProgramName()=="sensomaster")
+   {
+    unsigned colidx=0;
+    while(colidx<num_colors)
      {
-      std::string rgbstr=Global_Settings(0,"sensomaster","rgb_col"+itos(colidx)).get_Wert();      
+      std::string rgbstr=Global_Settings(0,Properties().ProgramName(),"rgb_col"+itos(colidx)).get_Wert();      
       if(!rgbstr.empty())
         {
          std::stringstream s;
@@ -412,6 +414,7 @@ void SimpleTreeStore::init()
         }
       colidx++;  
      }
+   }
 
   c.set_rgb(colors_rgb[0]['r'],colors_rgb[0]['g'],colors_rgb[0]['b']); colors.push_back(c);
   c.set_rgb(colors_rgb[1]['r'],colors_rgb[1]['g'],colors_rgb[1]['b']); colors.push_back(c);  
