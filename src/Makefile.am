@@ -4,7 +4,7 @@ AM_CFLAGS= @GTKMM2_INCLUDES@ -DlibManuProC_Widgets_COMPILATION -I../../ManuProC_
 
 if WINDOWS
 WIN_LDFLAGS=-no-undefined -export-symbols libManuProC_Widgets.def @MPC_BASE_LDFLAGS@
-DLL_LDADD=@GTKMM2_LIBS@ @MPC_BASE_LIBS@ @SIGC_LIBS@ @ECPG_LIBS@ -lcomdlg32
+DLL_LDADD=@GTKMM2_LIBS@ @MPC_BASE_LIBS@ @SIGC_LIBS@ -lcomdlg32
 DLL_DEF=libManuProC_Widgets.def
 ADDONS_FILES=Gtk_OStream_label.cc \
 		 Gtk_OStream_optionmenu.cc Gtk_OStream_stream.cc \
@@ -15,7 +15,7 @@ ADDONS_FILES=Gtk_OStream_label.cc \
 		 expander_hook.c 
 else
 WIN_LDFLAGS=
-DLL_LDADD=@SIGC_LIBS@ @ECPG_LIBS@
+DLL_LDADD=@SIGC_LIBS@ 
 DLL_DEF=
 ADDONS_FILES=
 endif
@@ -58,14 +58,14 @@ libManuProC_Widgets_la_SOURCES=EingabeBox.cc \
 		IntStringBox_gui.cc IntStringBox.cc IntStringBox_glade.cc \
 		IntStringPopup_glade.cc datewin.cc datewin_glade.cc \
 		datewin_popup.cc datewin_popup_glade.cc BasicExcel.cpp \
-		md5/md5.c md5/md5string.cc \
 		$(DLL_DEF) $(ADDONS_FILES)
+#		md5/md5.c md5/md5string.cc 
 
 # getuid.cc
 
 BUILT_SOURCES=datewin.hh logwin.hh
 
-AM_LDFLAGS=@LDFLAGS@ @ECPG_LDFLAGS@ $(WIN_LDFLAGS)
+AM_LDFLAGS=@LDFLAGS@ $(WIN_LDFLAGS)
 
 # alias links
 datewin.hh: datewin.h
