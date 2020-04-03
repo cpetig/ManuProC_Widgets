@@ -8,12 +8,10 @@ EXPORTS
 	_ZN16SimpleTree_Basic5debugEv
 	_ZN16SimpleTree_Basic6attachEv
 	_ZN16SimpleTree_Basic6detachEv
-	_ZN16SimpleTree_Basic9setTitlesERKSt6vectorISsSaISsEE
 	_ZN16SimpleTree_BasicC1Ej
 	_ZN16SimpleTree_BasicC2Ej
 	_ZN16SimpleTree_BasicD2Ev
 	_ZN21SimpleTreeStore_Proxy11set_NewNodeEPF6HandleI7TreeRowERKS0_IKS1_EE
-	_ZN21SimpleTreeStore_Proxy12set_rememberERKSsS1_
 	_ZNK10SimpleTree22getSelectedRowDataBaseEv
 	_ZTT10SimpleTree
 	_ZTV10SimpleTree

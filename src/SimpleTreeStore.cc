@@ -34,8 +34,14 @@
 
 #include <sstream>
 
-#ifdef __MINGW32__
+#if defined __MINGW32__ && !defined(getuid)
 #define getuid() 0
+#endif
+
+#ifdef _WIN64
+typedef uint64_t pointer_int;
+#else
+typedef long pointer_int;
 #endif
 
 static bool has_any_attributes(SimpleTreeModel_Properties const &props);
@@ -439,7 +445,7 @@ SimpleTreeStore::SimpleTreeStore(int max_col)
 	  showdeep(), auffuellen_bool(), expandieren_bool(true), block_save(),
 	  color_bool(true), display_count(),
 	  sortierspalte(invisible_column), // invert_sortierspalte(),
-	  stamp(reinterpret_cast<long>(this)),
+	  stamp(reinterpret_cast<pointer_int>(this)),
 	  unfiltered_model(), unfiltered_model_ours(), filter_func(&default_filter),
 	  m_columns(max_col)
 { init();
@@ -464,7 +470,7 @@ SimpleTreeStore::SimpleTreeStore(SimpleTreeModel_Properties &props)
 	  showdeep(), auffuellen_bool(), expandieren_bool(true), block_save(),
 	  color_bool(true), display_count(),
 	  sortierspalte(invisible_column), // invert_sortierspalte(),
-	  stamp(reinterpret_cast<long>(this)),
+	  stamp(reinterpret_cast<pointer_int>(this)),
 	  unfiltered_model(), unfiltered_model_ours(), filter_func(&default_filter),
 	  m_columns(props.Columns(),has_any_attributes(props))
 { init();
